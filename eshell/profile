@@ -1,0 +1,45 @@
+source ~/.config/profile
+
+alias ls 'ls --color=always'
+alias ll 'ls -lho --time-style=iso --group-directories-first'
+alias la 'ls -A'
+alias lla 'ls -lAho --time-style=iso --group-directories-first'
+alias grep 'grep --color=always'
+alias egrep 'egrep --color=always'
+alias fgrep 'fgrep --color=always'
+alias diff 'diff --color=always'
+alias rg 'rg --color ansi'
+alias yd 'pwd > $XDG_CACHE_HOME/currentdirectory'
+alias pd 'cd $(cat $XDG_CACHE_HOME/currentdirectory)'
+alias qd 'cat $XDG_CACHE_HOME/currentdirectory'
+alias sudo 'doas --'
+# alias doas 'doas --'
+alias de 'doasedit'
+
+# Apps
+alias ones 'onedrive --synchronize'
+alias onesr 'onedrive --synchronize --resync'
+alias psg 'ps ax | grep'
+
+# Desktop specific
+alias xclip 'xclip -selection clipboard'
+
+# Git
+alias gs 'git status'
+alias ga 'git add'
+alias gc 'git commit -m'
+alias gca 'git commit -a -m'
+alias gps 'git push'
+alias gpl 'git pull'
+alias gb 'git branch'
+alias gck 'git checkout'
+alias gcb 'git checkout -b'
+alias gd 'git diff'
+
+# Stolen
+# alias g++14 "g++ -std=c++14 -Wall -g"
+alias g++14 "g++ -std=c++14 -g"
+alias glg "git log --graph --abbrev-commit --decorate --format=format:'%C(bold green)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold yellow)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
+
+alias c 'clear 1'
+alias cdc 'cd && c'

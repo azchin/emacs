@@ -1,0 +1,39 @@
+ls
+cd projects/slstatus/
+ls
+clear
+clear
+ls
+ls
+clear
+cd projects/dwm/
+doas make clean install
+ls
+which which
+which command
+command -v which
+clear
+cd
+ls
+ls videos/
+vi
+clear 1
+exit
+c
+cd drive/cs350-os161/
+ls
+cd os161-1.99/kern/
+grep -r "addrspace"
+man grep
+grep -r "addrspace" .
+rg "addrspace"
+echo $XDG_CONFIG_HOME
+ls
+ll
+ls 
+ll
+psg emacs
+ps ax | grep
+ps ax
+ps ax | grep bin
+cdc

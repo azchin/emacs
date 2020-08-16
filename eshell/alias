@@ -1,0 +1,34 @@
+alias cdc cd && c
+alias c clear 1
+alias glg git log --graph --abbrev-commit --decorate --format=format:'%C(bold green)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold yellow)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+alias g++14 g++ -std=c++14 -g
+alias gd git diff
+alias gcb git checkout -b
+alias gck git checkout
+alias gb git branch
+alias gpl git pull
+alias gps git push
+alias gca git commit -a -m
+alias gc git commit -m
+alias ga git add
+alias gs git status
+alias xclip xclip -selection clipboard
+alias psg ps ax | grep
+alias onesr onedrive --synchronize --resync
+alias ones onedrive --synchronize
+alias de doasedit
+alias sudo doas --
+alias qd cat $XDG_CACHE_HOME/currentdirectory
+alias pd cd $(cat $XDG_CACHE_HOME/currentdirectory)
+alias yd pwd > $XDG_CACHE_HOME/currentdirectory
+alias less less -R
+alias rg rg --color ansi
+alias diff diff --color=always
+alias fgrep fgrep --color=always
+alias egrep egrep --color=always
+alias grep grep --color=always
+alias lsg ls | grep
+alias lla ls -lAho --time-style=iso --group-directories-first
+alias la ls -A
+alias ll ls -lho --time-style=iso --group-directories-first
+alias ls ls --color=always
