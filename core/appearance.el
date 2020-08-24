@@ -22,8 +22,10 @@
 
 (add-hook 'prog-mode-hook 'enable-lines)
 (add-hook 'text-mode-hook 'enable-lines)
+(add-hook 'special-mode-hook 'enable-lines)
 (add-hook 'pdf-view-mode-hook 'disable-lines)
 (add-hook 'image-mode-hook 'disable-lines)
+;; (add-hook 'minibuffer-inactive-mode-hook 'disable-lines)
 
 (setq dired-listing-switches
       "-Ahlo --group-directories-first --time-style=iso")

@@ -4,3 +4,4 @@ elpa
 convention.el
 eshell/lastdir
 eshell/history
+transient

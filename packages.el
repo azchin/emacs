@@ -88,10 +88,16 @@
   (evil-org-agenda-set-keys))
 
 (use-package smartparens
- :config
- (require 'smartparens-config)
- (add-hook 'prog-mode-hook #'smartparens-mode)
- (add-hook 'text-mode-hook #'smartparens-mode))
+  :config
+  (require 'smartparens-config)
+  (smartparens-strict-mode)
+  (add-hook 'prog-mode-hook #'smartparens-mode)
+  (add-hook 'special-mode-hook #'smartparens-mode)
+  (add-hook 'text-mode-hook #'smartparens-mode))
+
+(use-package evil-smartparens
+  :config
+  (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode))
 
 ; (use-package doom-themes
 ;  :config
@@ -161,7 +167,7 @@
 ;;   :custom
 ;;   (pop-up-frames t)
 ;;   :config
-;; 	(purpose-mode)
+;;   (purpose-mode)
 ;;   (add-to-list 'purpose-user-mode-purposes '(help-mode . pop-frame))
 ;;   (add-to-list 'purpose-user-mode-purposes '(eshell-mode . pop-frame))
 ;;   (add-to-list 'purpose-user-mode-purposes '(image-mode . pop-frame))
@@ -182,6 +188,20 @@
 ;;   (fcitx-default-setup)
 ;;   (fcitx-prefix-keys-add "C-x" "C-c" "C-h" "M-s" "M-o")
 ;;   (fcitx-prefix-keys-turn-on))
+
+(use-package magit)
+
+(use-package ivy
+  :custom
+  (ivy-count-format "")
+  :config
+  (ivy-mode 1))
+
+(use-package counsel
+  :config
+  (counsel-mode 1))
+
+(use-package swiper)
 
 (load "~/.emacs.d/leader.el")
 

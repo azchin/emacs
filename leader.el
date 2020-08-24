@@ -11,6 +11,8 @@
   "o c" 'org-capture
   "c t t" (lambda () (interactive) (tabify (window-start) (window-end)))
   "c t u" (lambda () (interactive) (untabify (window-start) (window-end)))
+  "c e" 'eval-last-sexp
+  "c r" 'rename-uniquely
   "f f" 'find-file
   "f b" 'switch-to-buffer
   "f s" (lambda () (interactive) (switch-to-buffer "*scratch*"))

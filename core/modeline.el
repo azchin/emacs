@@ -26,5 +26,7 @@ Containing LEFT, and RIGHT aligned respectively."
 	           " "
 	           "[%m]"))
      ;; Right.
-     (quote ("%e (%l %C) %p "))))))
+     (quote ("%e "
+             evil-mode-line-tag
+             "(%l %C) %p "))))))
 

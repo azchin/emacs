@@ -1,1 +1,2 @@
 source ~/.config/profile
+export VISUAL=emacsclient

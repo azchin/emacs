@@ -1,12 +1,21 @@
+;; (defun add-to-display-buffer-list
+;;     (add-to-list 'display-buffer-alist
+;;                   ))
+
 (add-to-list 'display-buffer-alist
              '("\\*Buffer List\\*\\|\\*Help\\*\\|\\*eshell\\*\\|\\*Messages\\*\\|\\*.*-scratch\\*\\|\\*Org Select\\*"
                (display-buffer-reuse-window display-buffer-pop-up-frame)
                (reusable-frames . 0)))
                ;; . ((display-buffer-reuse-window display-buffer-pop-up-frame)
                ;;    (reusable-frames . 0))))
+
 ;; (add-to-list 'display-buffer-alist
-;;              '(".*\\.pdf\\|\\*Latex Preview Pane Welcome\\*"
-;;                (display-buffer-reuse-window display-buffer-pop-up-frame)))
+;;              '("\\*grep\\*"
+;;                display-buffer-same-window))
+
+(setq Man-notify-method 'aggressive)
+;; (setq grep-command "grep --color -nH --null ")
+;; (setq grep-command "grep ")
 
 (setq revert-without-query '(".*"))
 
