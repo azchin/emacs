@@ -175,13 +175,13 @@
 ;;                  purpose-display-reuse-window-purpose
 ;;                  purpose-display-pop-up-frame)))
 
-(use-package fcitx
-  :custom
-  (fcitx-use-dbus t)
-  :config
-  (fcitx-default-setup)
-  (fcitx-prefix-keys-add "C-x" "C-c" "C-h" "M-s" "M-o")
-  (fcitx-prefix-keys-turn-on))
+;; (use-package fcitx
+;;   :custom
+;;   (fcitx-use-dbus t)
+;;   :config
+;;   (fcitx-default-setup)
+;;   (fcitx-prefix-keys-add "C-x" "C-c" "C-h" "M-s" "M-o")
+;;   (fcitx-prefix-keys-turn-on))
 
 (load "~/.emacs.d/leader.el")
 

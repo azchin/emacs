@@ -20,11 +20,11 @@
 (set-face-background 'whitespace-tab nil)
 
 ;; TODO when new frames are made, highlight gets overridden
-;; (defun change-highlight-face ()
-;;   (set-face-attribute 'highlight nil
-;;                       :weight 'bold
-;;                       :foreground nil ;; "#ffd866" ;; "#9aedfe" 
-;;                       :background nil))
+(defun change-highlight-face (&optional frame)
+  (set-face-attribute 'highlight frame
+                      :weight 'bold
+                      :foreground nil ;; "#ffd866" ;; "#9aedfe" 
+                      :background nil))
 
-;; (add-to-list 'after-make-frame-functions 'change-highlight-face)
-;; (change-highlight-face)
+(add-to-list 'after-make-frame-functions 'change-highlight-face)
+(change-highlight-face)
