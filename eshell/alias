@@ -21,14 +21,14 @@ alias sudo doas --
 alias qd cat $XDG_CACHE_HOME/currentdirectory
 alias pd cd $(cat $XDG_CACHE_HOME/currentdirectory)
 alias yd pwd > $XDG_CACHE_HOME/currentdirectory
-alias less less -R
 alias rg rg --color ansi
 alias diff diff --color=always
 alias fgrep fgrep --color=always
 alias egrep egrep --color=always
 alias grep grep --color=always
-alias lsg ls | grep
 alias lla ls -lAho --time-style=iso --group-directories-first
 alias la ls -A
 alias ll ls -lho --time-style=iso --group-directories-first
 alias ls ls --color=always
+alias lsg ls | grep
+alias less less -R

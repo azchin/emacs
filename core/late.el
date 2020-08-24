@@ -1,6 +1,4 @@
-
 (global-hl-line-mode 1)
-(set-face-bold hl-line-face t)
 ; (set-face-attribute hl-line-face nil 
 ;  :foreground nil
 ;  :background nil
@@ -8,6 +6,25 @@
 
 (show-paren-mode 1)
 (set-face-attribute 'show-paren-match nil
- :background (face-attribute 'default :background)
- :foreground "#ff5c57")
-; (electric-pair-mode 0)
+                    :weight 'bold
+                    :foreground "#ff5c57"
+                    :background (face-attribute 'default :background))
+
+(set-face-italic 'font-lock-comment-face nil)
+
+;; (custom-set-faces
+;;  '(whitespace-tab ((t (:foreground "#636363")))))
+;; (set-face-attribute 'whitespace-tab nil
+;;                     :background nil
+;;                     :foreground "#636363")
+(set-face-background 'whitespace-tab nil)
+
+;; TODO when new frames are made, highlight gets overridden
+;; (defun change-highlight-face ()
+;;   (set-face-attribute 'highlight nil
+;;                       :weight 'bold
+;;                       :foreground nil ;; "#ffd866" ;; "#9aedfe" 
+;;                       :background nil))
+
+;; (add-to-list 'after-make-frame-functions 'change-highlight-face)
+;; (change-highlight-face)

@@ -8,20 +8,20 @@
 (global-set-key (kbd "TAB") 'tab-to-tab-stop)
 (setq-default indent-tabs-mode t)
 (setq-default tab-width custom-tab-width)
+(setq-default python-indent-offset custom-tab-width)
 
 (add-hook 'prog-mode-hook 'enable-tabs)
 (add-hook 'text-mode-hook 'enable-tabs)
+(add-hook 'special-mode-hook 'enable-tabs)
 
 ; Add hooks here to disable tabs as desired
 (add-hook 'lisp-mode-hook 'disable-tabs)
 (add-hook 'emacs-lisp-mode-hook 'disable-tabs)
 
-; (global-whitespace-mode)
-; (setq whitespace-style '(face tabs tab-mark trailing))
-; (custom-set-faces
-;  '(whitespace-tab ((t (:foreground "#636363")))))
-; (setq whitespace-display-mappings
-;   '((tab-mark 9 [124 9] [92 9])))
+(global-whitespace-mode)
+(setq whitespace-style '(face tabs tab-mark))
+(setq whitespace-display-mappings
+  '((tab-mark 9 [187 9] [124 9] [92 9])))
 
 (defun backspace-whitespace-to-tab-stop ()
   "Delete whitespace backwards to the next tab-stop, otherwise delete one character."

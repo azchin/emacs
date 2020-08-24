@@ -15,6 +15,16 @@
            (lambda () (message "Updating packages...")))
  (auto-package-update-maybe))
 
+(use-package undo-tree
+  :custom
+  (undo-tree-visualizer-diff t)
+  (undo-tree-visualizer-timestamps t)
+  (undo-tree-visualizer-relative-timestamps t)
+  (undo-tree-auto-save-history t)
+  (undo-tree-history-directory-alist '(("." . "~/.local/share/emacs/history")))
+  :config
+  (global-undo-tree-mode 1))
+
 (use-package evil
  :custom
  (evil-shift-width custom-tab-width)
@@ -63,6 +73,20 @@
   :config
   (evil-collection-init))
 
+(use-package evil-org
+  :after (org evil) 
+  :config
+  (require 'org-tempo)
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (evil-org-mode)
+              ;; (evil-define-key 'normal evil-org-mode-map
+              ;;   (kbd ""))
+              ))
+  (add-hook 'evil-org-mode-hook (lambda () (evil-org-set-key-theme)))
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
+
 (use-package smartparens
  :config
  (require 'smartparens-config)
@@ -97,41 +121,69 @@
  (add-hook 'pdf-view-mode-hook 'auto-revert-mode)
  (pdf-tools-install))
 
-; (use-package latex-preview-pane)
- ; :config
- ; (latex-preview-pane-enable))
-
 ; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
 (use-package tex
- :ensure auctex
- :custom
- (TeX-auto-save t)
- (TeX-parse-self t)
- :config
- ; (add-hook 'TeX-after-compilation-finished-functions 
- ;           #'TeX-revert-document-buffer)
- ; (add-hook 'LaTeX-mode-hook
- ;  				 (lambda () (reftex-mode t) (flyspell-mode t)))
-)
+  :ensure auctex
+  :after evil
+  ;; :mode ("\\.tex\\'" . latex-mode)
+  :custom
+  (TeX-source-correlate-mode t)
+  (TeX-auto-save t)
+  (TeX-parse-self t)
+  (latex-preview-pane-use-frame t)
+  :config
+  (add-hook 'LaTeX-mode-hook
+            (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
+  ; (add-hook 'TeX-after-compilation-finished-functions 
+  ;           #'TeX-revert-document-buffer)
+  ; (add-hook 'LaTeX-mode-hook
+  ;  				 (lambda () (reftex-mode t) (flyspell-mode t)))
+  )
+
 
 (use-package midnight
- :custom
- (clean-buffer-list-delay-special 600)
- (clean-buffer-list-timer (run-at-time t 3600 'clean-buffer-list))
- (clean-buffer-list-kill-regexps '("^.*$"))
- (clean-buffer-list-kill-never-buffer-names 
-	'("*scratch*" "*Messages*" "*cmd*" "*eshell*"))
- (clean-buffer-list-kill-never-regexps 
-	'("\\` \\*Minibuf-.*\\*\\'" "^\\*EMMS Playlist\\*.*$")))
+  :custom
+  (clean-buffer-list-delay-special 600)
+  (clean-buffer-list-timer (run-at-time t 3600 'clean-buffer-list))
+  (clean-buffer-list-kill-regexps '("^.*$"))
+  (clean-buffer-list-kill-never-buffer-names
+   '("*scratch*" "*Messages*" "*cmd*" "*eshell*"))
+  (clean-buffer-list-kill-never-regexps
+   '("\\*.*scratch\\*" "\\` \\*Minibuf-.*\\*\\'" "^\\*EMMS Playlist\\*.*$")))
 
-(use-package dired-subtree :ensure t
+(use-package dired-subtree
   :after dired
   :config
   (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map)
   (bind-key "<backtab>" #'dired-subtree-cycle dired-mode-map))
 
-(load "~/.emacs.d/evil/leader.el")
+;; (use-package window-purpose
+;;   :custom
+;;   (pop-up-frames t)
+;;   :config
+;; 	(purpose-mode)
+;;   (add-to-list 'purpose-user-mode-purposes '(help-mode . pop-frame))
+;;   (add-to-list 'purpose-user-mode-purposes '(eshell-mode . pop-frame))
+;;   (add-to-list 'purpose-user-mode-purposes '(image-mode . pop-frame))
+;;   (add-to-list 'purpose-user-mode-purposes '(Buffer-menu-mode . pop-frame))
+;;   ; (add-to-list 'purpose-user-mode-purposes '(dired-mode . pop-frame))
+;;   ;; (add-to-list 'purpose-user-regexp-purposes '("." . pop-frame))
+;;   (purpose-compile-user-configuration)
+;;   (add-to-list 'purpose-special-action-sequences
+;;                '(popup-frame
+;;                  purpose-display-reuse-window-buffer
+;;                  purpose-display-reuse-window-purpose
+;;                  purpose-display-pop-up-frame)))
 
+(use-package fcitx
+  :custom
+  (fcitx-use-dbus t)
+  :config
+  (fcitx-default-setup)
+  (fcitx-prefix-keys-add "C-x" "C-c" "C-h" "M-s" "M-o")
+  (fcitx-prefix-keys-turn-on))
+
+(load "~/.emacs.d/leader.el")
 
 ;; Manually cloned
 ;; TODO periodically run "git pull" using midnight (or a cron)

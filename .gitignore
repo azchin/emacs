@@ -1,3 +1,6 @@
 .last-package-update-day
 auto-save-list
 elpa
+convention.el
+eshell/lastdir
+eshell/history
