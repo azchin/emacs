@@ -5,3 +5,5 @@ convention.el
 eshell/lastdir
 eshell/history
 transient
+recentf
+cache

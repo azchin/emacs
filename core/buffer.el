@@ -100,6 +100,7 @@ BUFFER may be either a buffer or its name (a string)."
         (new-window (display-buffer (get-buffer-create name))))
     (select-window new-window)
     (funcall mode)
+    (whitespace-mode)
     (unless live-scratch
       (insert (concat mode-name scratch-skeleton))
       (comment-line -5)

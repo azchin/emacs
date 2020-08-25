@@ -13,7 +13,7 @@
 # To create a file, visit it with \\[find-file] and enter text in its buffer.\n\n")
 ;; (fringe-mode 0)
 (fringe-mode '(0 . 1))
-(setq echo-keystrokes 0.5)
+(setq echo-keystrokes 0.2)
 
 ;; Line numbers
 (global-display-line-numbers-mode)

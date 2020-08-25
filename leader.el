@@ -9,26 +9,25 @@
   "o l" 'org-store-link
   "o a" 'org-agent
   "o c" 'org-capture
-  "c t t" (lambda () (interactive) (tabify (window-start) (window-end)))
-  "c t u" (lambda () (interactive) (untabify (window-start) (window-end)))
+  "c t" 'conditional-tabify
+  ;; "c t u" (lambda () (interactive) (untabify (window-start) (window-end)))
   "c e" 'eval-last-sexp
   "c r" 'rename-uniquely
   "f f" 'find-file
-  "f b" 'switch-to-buffer
   "f s" (lambda () (interactive) (switch-to-buffer "*scratch*"))
   "f e" 'eshell
-  "f c a" (lambda () (interactive) (find-file "~/.emacs.d/core/appearance.el"))
-  "f c b" (lambda () (interactive) (find-file "~/.emacs.d/core/buffer.el"))
-  "f c p" (lambda () (interactive) (find-file "~/.emacs.d/packages.el"))
-  "f c i" (lambda () (interactive) (find-file "~/.emacs.d/init.el"))
-  "f c k" (lambda () (interactive) (find-file "~/.emacs.d/leader.el"))
-  "f c l" (lambda () (interactive) (find-file "~/.emacs.d/core/late.el"))
-  "f c t" (lambda () (interactive) (find-file "~/.emacs.d/core/tabs.el"))
+  "f c a" (lambda () (interactive) (find-file (emacsd "core/appearance.el")))
+  "f c b" (lambda () (interactive) (find-file (emacsd "core/buffer.el")))
+  "f c p" (lambda () (interactive) (find-file (emacsd "packages.el")))
+  "f c i" (lambda () (interactive) (find-file (emacsd "init.el")))
+  "f c k" (lambda () (interactive) (find-file (emacsd "leader.el")))
+  "f c l" (lambda () (interactive) (find-file (emacsd "core/late.el")))
+  "f c t" (lambda () (interactive) (find-file (emacsd "core/tabs.el")))
   "d d" 'dired-jump
   ;; dired-jump opens new window, dired uses current window
   "d h" (lambda () (interactive) (dired "~/"))
   "d c" (lambda () (interactive) (dired "~/.config/"))
-  "d e" (lambda () (interactive) (dired "~/.emacs.d/"))
+  "d e" (lambda () (interactive) (dired (emacsd "")))
   "d r" (lambda () (interactive) (dired "~/drive/"))
   "d p" (lambda () (interactive) (dired "~/projects"))
   "d l" (lambda () (interactive) (dired "~/clone"))
@@ -58,6 +57,8 @@
   "n c" (lambda () (interactive) (create-scratch-frame 'c++-mode "*cpp-scratch*"))
   "n p" (lambda () (interactive) (create-scratch-frame 'python-mode "*python-scratch*"))
   "n t" (lambda () (interactive) (create-scratch-frame 'text-mode "*text-scratch*"))
+  "n s" (lambda () (interactive)
+          (create-scratch-frame 'shell-script-mode "*script-scratch*"))
   "n l" (lambda () (interactive)
           (create-scratch-frame 'lisp-interaction-mode "*lisp-scratch*"))
   "s" 'evil-write
@@ -95,3 +96,16 @@
 
 ;; (global-unset-key (kbd "C-SPC")) ;; set-mark-command
 (evil-define-key 'normal dired-mode-map "f" 'find-file)
+;; (defun company-backspace ()
+;;   (if (equal company-selection 0)
+;;       (backspace-whitespace-to-tab-stop)
+;;     (company-abort)))
+
+;; (define-key company-active-map (kbd "<backspace>") 'company-abort)
+;; (define-key company-active-map (kbd "C-h") nil)
+;; (evil-define-key 'insert company-mode-map (kbd "C-n") 'company-select-next)
+;; (evil-define-key 'insert company-mode-map (kbd "C-p") 'company-select-previous)
+;; (evil-define-key 'insert company-active-map (kbd "C-n")
+;;   'company-select-next-or-abort)
+;; (evil-define-key 'insert company-active-map (kbd "C-p")
+;;   'company-select-previous-or-abort)

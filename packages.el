@@ -11,8 +11,7 @@
  (auto-package-update-delete-old-versions t)
  (auto-package-update-hide-results t)
  :config
- (add-hook 'auto-package-update-before-hook
-           (lambda () (message "Updating packages...")))
+ (add-hook 'auto-package-update-before-hook (lambda () (message "Updating packages...")))
  (auto-package-update-maybe))
 
 (use-package undo-tree
@@ -21,7 +20,7 @@
   (undo-tree-visualizer-timestamps t)
   (undo-tree-visualizer-relative-timestamps t)
   (undo-tree-auto-save-history t)
-  (undo-tree-history-directory-alist '(("." . "~/.local/share/emacs/history")))
+  (undo-tree-history-directory-alist `(("." . ,(emacsd "cache/undotree"))))
   :config
   (global-undo-tree-mode 1))
 
@@ -57,9 +56,9 @@
  (evil-snipe-scope 'buffer)
  (evil-snipe-use-vim-sneak-bindings t)
  :config
- (evil-snipe-mode 1)
+ (add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode)
+ (evil-snipe-mode 1))
  ; (evil-snipe-override-mode 1) ; this overrides f F t T
- (add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode))
 
 (use-package evil-quickscope
  :requires evil
@@ -77,27 +76,25 @@
   :after (org evil) 
   :config
   (require 'org-tempo)
+  (require 'evil-org-agenda)
   (add-hook 'org-mode-hook
             (lambda ()
               (evil-org-mode)
-              ;; (evil-define-key 'normal evil-org-mode-map
-              ;;   (kbd ""))
               ))
-  (add-hook 'evil-org-mode-hook (lambda () (evil-org-set-key-theme)))
-  (require 'evil-org-agenda)
+  (add-hook 'evil-org-mode (lambda () (evil-org-set-key-theme)))
   (evil-org-agenda-set-keys))
 
 (use-package smartparens
   :config
   (require 'smartparens-config)
-  (smartparens-strict-mode)
   (add-hook 'prog-mode-hook #'smartparens-mode)
   (add-hook 'special-mode-hook #'smartparens-mode)
-  (add-hook 'text-mode-hook #'smartparens-mode))
+  (add-hook 'text-mode-hook #'smartparens-mode)
+  (smartparens-strict-mode))
 
 (use-package evil-smartparens
   :config
-  (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode))
+  (add-hook 'smartparens-enabled-hook 'evil-smartparens-mode))
 
 ; (use-package doom-themes
 ;  :config
@@ -106,44 +103,49 @@
 ;  (load-theme 'doom-one t))
 
 (use-package monokai-pro-theme
- :config
- (load-theme 'monokai-pro t))
+  :config
+  (load-theme 'monokai-pro t))
 
 ;; (use-package gruvbox-theme
 ;;  :config
 ;;  (load-theme 'gruvbox t))
 
 (use-package haskell-mode)
+(use-package markdown-mode)
 
 (use-package minimap
- :custom
- (minimap-window-location 'right)
- (minimap-update-delay 0)
- (minimap-width-fraction 0.08)
- (minimap-minimum-width 15))
+  :custom
+  (minimap-window-location 'right)
+  (minimap-update-delay 0)
+  (minimap-width-fraction 0.08)
+  (minimap-minimum-width 15))
 
 (use-package pdf-tools
- :config 
- (add-hook 'pdf-view-mode-hook 'auto-revert-mode)
- (pdf-tools-install))
+  :config 
+  (add-hook 'pdf-view-mode 'auto-revert-mode)
+  (pdf-tools-install))
 
 ; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
 (use-package tex
   :ensure auctex
-  :after evil
+  :after evil pdf-tools
   ;; :mode ("\\.tex\\'" . latex-mode)
   :custom
   (TeX-source-correlate-mode t)
+  (TeX-source-correlate-start-server t)
   (TeX-auto-save t)
   (TeX-parse-self t)
   (latex-preview-pane-use-frame t)
+  ;; (TeX-view-program-selection '((output-pdf "PDF Tools")))
+  ;; (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
   :config
   (add-hook 'LaTeX-mode-hook
-            (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
-  ; (add-hook 'TeX-after-compilation-finished-functions 
-  ;           #'TeX-revert-document-buffer)
+   (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
+
+  ;; (add-hook 'TeX-after-compilation-finished-functions 
+  ;;           #'TeX-revert-document-buffer)
   ; (add-hook 'LaTeX-mode-hook
-  ;  				 (lambda () (reftex-mode t) (flyspell-mode t)))
+  ;           (lambda () (reftex-mode t) (flyspell-mode t)))
   )
 
 
@@ -189,24 +191,71 @@
 ;;   (fcitx-prefix-keys-add "C-x" "C-c" "C-h" "M-s" "M-o")
 ;;   (fcitx-prefix-keys-turn-on))
 
-(use-package magit)
 
 (use-package ivy
   :custom
   (ivy-count-format "")
+  (ivy-re-builders-alist
+   '((counsel-describe-variable . ivy--regex-ignore-order)
+     (counsel-describe-function . ivy--regex-ignore-order)
+     (t . ivy--regex-fuzzy)))
+  (ivy-use-virtual-buffers t)
+  (ivy-initial-inputs-alist nil)
   :config
   (ivy-mode 1))
 
+(use-package magit)
+(use-package ivy-hydra)
+(use-package swiper)
 (use-package counsel
   :config
   (counsel-mode 1))
 
-(use-package swiper)
+(use-package company
+  :custom
+  (company-idle-delay 0.2)
+  (company-minimum-prefix-length 2)
+  (company-show-numbers t)
+  (company-selection-wrap-around t)
+  (company-backends
+   '((company-semantic company-capf company-files company-etags company-keywords
+                      company-dabbrev company-dabbrev-code company-cmake)))
+  :config
+  (defun add-to-company-backends (list)
+    (setq company-backends `(,(append list (car company-backends)))))
+  (global-company-mode))
+(use-package company-c-headers
+  :after company
+  :config
+  (add-to-company-backends '(company-c-headers)))
+(use-package company-shell
+  :after company
+  :custom
+  (add-to-company-backends '(company-shell company-shell-env)))
+(use-package company-auctex
+  :after company
+  :config
+  (add-to-company-backends '(company-auctex))
+  (company-auctex-init))
 
-(load "~/.emacs.d/leader.el")
+;; (use-package lsp-mode
+;;   :hook
+;;   ((prog-mode-hook . lsp)
+;;    (text-mode-hook . lsp)
+;;    (special-mode-hook . lsp))
+;;   :commands lsp)
+;; (use-package lsp-ivy)
+;; (use-package ccls)
+;; (use-package lsp-latex)
+;; (use-package lsp-haskell)
+;; (use-package lsp-python-ms
+;;   :custom
+;;   (lsp-python-ms-auto-install-server t))
+
+(cload "leader.el")
 
 ;; Manually cloned
 ;; TODO periodically run "git pull" using midnight (or a cron)
-(load "~/.emacs.d/clone/evil-unimpaired/evil-unimpaired.el")
+(cload "clone/evil-unimpaired/evil-unimpaired.el")
 (require 'evil-unimpaired)
 (evil-unimpaired-mode)
