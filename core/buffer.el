@@ -116,15 +116,7 @@ BUFFER may be either a buffer or its name (a string)."
   (kill-emacs))
 
 
-(defvar scratch-skeleton
-  " buffer for temporary work\n\n"
-  "Message for custom made scratch buffers")
-
-(auto-insert-mode 1)
-(setq auto-insert-query nil)
-(define-auto-insert "\\*.*-scratch\\*" 'scratch-skeleton)
-
-(defun create-scratch-frame (mode name)
+(defun create-scratch-frame (name mode)
   "Create a scratch frame"
   (interactive)
   (let ((live-scratch (buffer-live-p (get-buffer name)))
@@ -139,12 +131,18 @@ BUFFER may be either a buffer or its name (a string)."
 
 (defun create-new-frame (name &optional mode)
   "Create a new frame with specified buffer"
-  (interactive)
-  (let ((live (buffer-live-p (get-buffer name)))
-        (new-window (display-buffer (get-buffer-create name))))
-    (select-window new-window)
-    (unless live
-      (funcall (or mode text-mode)))))
+  (interactive (list (read-buffer "Buffer name:" (current-buffer) nil)))
+  (let ((new-frame (make-frame-command)))
+    (select-frame new-frame)
+    (switch-to-buffer (get-buffer-create name))
+    (funcall (or mode 'text-mode))
+    (whitespace-mode)
+    (auto-insert)))
+  ;; (let ((new-f (buffer-live-p (get-buffer name)))
+  ;;       (new-window (display-buffer (get-buffer-create name))))
+  ;;   (select-window new-window)
+  ;;   (unless live
+  ;;     (funcall (or mode 'text-mode)))))
 
 (defun create-dired-frame (&optional dir)
   "Create a dired frame"

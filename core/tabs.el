@@ -1,6 +1,7 @@
 (setq custom-tab-width 2)
 (defun choose-tabs (tabs &optional arg-width)
   (setq tab-width (or arg-width custom-tab-width))
+  (setq evil-shift-width tab-width)
   (setq indent-tabs-mode tabs))
 (defun disable-tabs (&optional arg-width) 
   (funcall 'choose-tabs nil arg-width))
@@ -29,27 +30,33 @@
 
 ;; TODO convert manual-tabs into a minor mode
 (defvar tab-control-auto t)
+(setq backward-delete-char-untabify-method 'hungry)
+(evil-define-key 'insert 'global
+  (kbd "<backspace>") 'backward-delete-char-untabify
+  (kbd "TAB") 'indent-for-tab-command)
+
 (defun auto-tabs ()
   (set (make-local-variable 'tab-control-auto) t)
   (set (make-local-variable 'backward-delete-char-untabify-method) 'hungry)
-  (evil-local-set-key 'insert (kbd "<backspace>") 'backward-delete-char-untabify)
-  (evil-local-set-key 'insert (kbd "TAB") 'indent-for-tab-command))
+  (evil-define-key 'insert 'local
+    (kbd "<backspace>") 'backward-delete-char-untabify
+    (kbd "TAB") 'indent-for-tab-command))
 (defun manual-tabs ()
   (set (make-local-variable 'tab-control-auto) nil)
   (set (make-local-variable 'backward-delete-char-untabify-method) nil)
-  (evil-local-set-key 'insert (kbd "<backspace>") 'backspace-whitespace-to-tab-stop)
-  (evil-local-set-key 'insert (kbd "TAB") 'tab-to-tab-stop))
+  (evil-define-key 'insert 'local
+    (kbd "<backspace>") 'backspace-whitespace-to-tab-stop
+    (kbd "TAB") 'tab-to-tab-stop))
 (defun toggle-tabs () (interactive)
   (if tab-control-auto
       (funcall 'manual-tabs)
     (funcall 'auto-tabs)))
 
-(evil-global-set-key 'insert (kbd "<backspace>") 'backward-delete-char-untabify)
-(evil-global-set-key 'insert (kbd "TAB") 'indent-for-tab-command)
 (setq-default indent-tabs-mode t)
 (setq-default tab-width custom-tab-width)
 (setq-default evil-shift-width custom-tab-width)
 (setq python-indent-offset 4)
+(setq sh-basic-offset custom-tab-width)
 
 (add-hook 'prog-mode-hook 'enable-tabs)
 (add-hook 'special-mode-hook 'enable-tabs)
@@ -62,12 +69,6 @@
 (add-hook 'emacs-lisp-mode-hook 'disable-tabs)
 (add-hook 'python-mode-hook (lambda () (disable-tabs python-indent-offset)))
 (add-hook 'org-mode-hook 'disable-tabs)
-; (add-hook 'org-mode-hook
-;           (lambda () (disable-tabs nil 'hungry)
-;             (evil-global-set-key 'insert (kbd "<backspace>")
-;                                  'backward-delete-char-untabify)
-;             (evil-global-set-key 'insert (kbd "TAB") 'indent-for-tab-command)
-;             ))
 
 (global-whitespace-mode)
 (setq whitespace-style '(face tabs tab-mark))
@@ -79,3 +80,7 @@
   (if indent-tabs-mode
       (tabify (window-start) (window-end))
     (untabify (window-start) (window-end))))
+
+(defun indent-whole-buffer ()
+  (interactive)
+  (indent-region (window-start) (window-end)))

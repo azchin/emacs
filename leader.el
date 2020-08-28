@@ -13,6 +13,7 @@
     "m m" 'magit-status
     "c t" 'toggle-tabs
     "c y" 'conditional-tabify
+    "c i" 'indent-whole-buffer
     ;; "c t u" (lambda () (interactive) (untabify (window-start) (window-end)))
     "c e" 'eval-last-sexp
     "c r" 'rename-uniquely
@@ -61,14 +62,12 @@
     "n b" 'list-buffers
     "n d" 'create-dired-frame
     "n D" (lambda () (interactive) (create-dired-frame home-dir))
-    "n o" (lambda () (interactive) (create-scratch-frame 'org-mode "*org-scratch*"))
-    "n c" (lambda () (interactive) (create-scratch-frame 'c++-mode "*cpp-scratch*"))
-    "n p" (lambda () (interactive) (create-scratch-frame 'python-mode "*python-scratch*"))
-    "n t" (lambda () (interactive) (create-scratch-frame 'text-mode "*text-scratch*"))
-    "n s" (lambda () (interactive)
-            (create-scratch-frame 'shell-script-mode "*script-scratch*"))
-    "n l" (lambda () (interactive)
-            (create-scratch-frame 'lisp-interaction-mode "*lisp-scratch*"))
+    "n o" (lambda () (interactive) (create-new-frame "*org-scratch*" 'org-mode))
+    "n c" (lambda () (interactive) (create-new-frame "*cpp-scratch*" 'c++-mode))
+    "n p" (lambda () (interactive) (create-new-frame "*python-scratch*" 'python-mode))
+    "n t" (lambda () (interactive) (create-new-frame "*text-scratch*" 'text-mode))
+    "n s" (lambda () (interactive) (create-new-frame "*script-scratch*" 'shell-script-mode))
+    "n l" (lambda () (interactive) (create-new-frame "*lisp-scratch*" 'lisp-interaction-mode))
     "s" 'evil-write
     "a" 'evil-quit
     ";" 'eval-expression
@@ -109,23 +108,43 @@
 (evil-define-key 'normal dired-mode-map "f" 'find-file)
 (defun company-backspace ()
   (interactive)
-  (if (and (equal company-selection 0) (equal company-selection-changed nil))
+  (if (equal company-selection-changed nil)
       (if tab-control-auto (backward-delete-char-untabify 1)
         (backspace-whitespace-to-tab-stop))
     (company-abort)))
 
+(defun company-select-next-or-complete-selection (&optional arg)
+  "Insert selection if appropriate, or select the next candidate."
+  (interactive)
+  (if (not (company-tooltip-visible-p)) (company-manual-begin))
+  (if (> company-candidates-length 1)
+      (company-select-next arg)
+    (company-complete-selection)))
+
+(defun company-select-previous-or-complete-selection ()
+  "Insert selection if appropriate, or select the previous candidate."
+  (interactive)
+  (company-select-next-or-complete-selection -1))
+
 (define-key company-active-map (kbd "<backspace>") 'company-backspace)
 (define-key company-active-map (kbd "C-h") nil)
-(evil-define-key 'insert company-mode-map (kbd "C-n") 'company-manual-begin)
+
+(evil-define-key 'insert company-mode-map (kbd "C-n")
+  'company-select-next-or-complete-selection)
 (evil-define-key 'insert company-mode-map (kbd "C-p")
-  'company-select-previous)
+  'company-select-previous-or-complete-selection)
 (evil-define-key 'insert company-active-map (kbd "C-n")
-  'company-select-next-if-tooltip-visible-or-complete-selection)
+  'company-select-next)
 (evil-define-key 'insert company-active-map (kbd "C-p")
-  'company-select-previous-or-abort)
+  'company-select-previous)
+(evil-define-key 'insert company-active-map (kbd "ESC")
+  (lambda () (interactive) (company-abort)(evil-normal-state)))
 
 (evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
 (evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
 
 (evil-define-key 'normal pdf-view-mode-map (kbd "J") 'pdf-view-next-page)
 (evil-define-key 'normal pdf-view-mode-map (kbd "K") 'pdf-view-previous-page)
+
+(evil-define-key 'normal 'global "G"
+  (lambda () (interactive) (evil-goto-line) (forward-line -1)))

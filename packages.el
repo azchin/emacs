@@ -35,8 +35,6 @@
   (evil-want-integration t)
   (evil-want-keybinding nil)
   :config
-  (evil-global-set-key 'normal (kbd "G")
-                       (lambda () (interactive) (evil-goto-line) (forward-line -1)))
   (evil-mode 1))
 
 (use-package evil-surround
@@ -180,6 +178,7 @@
 (use-package ivy
   :custom
   (ivy-count-format "")
+  (ivy-height 16)
   (ivy-re-builders-alist
    '((counsel-describe-variable . ivy--regex-ignore-order)
      (counsel-describe-function . ivy--regex-ignore-order)
