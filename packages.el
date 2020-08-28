@@ -7,12 +7,12 @@
 
 ;; MELPA use-package
 (use-package auto-package-update
- :custom
- (auto-package-update-delete-old-versions t)
- (auto-package-update-hide-results t)
- :config
- (add-hook 'auto-package-update-before-hook (lambda () (message "Updating packages...")))
- (auto-package-update-maybe))
+  :custom
+  (auto-package-update-delete-old-versions t)
+  (auto-package-update-hide-results t)
+  :config
+  (add-hook 'auto-package-update-before-hook (lambda () (message "Updating packages...")))
+  (auto-package-update-maybe))
 
 (use-package undo-tree
   :custom
@@ -25,47 +25,46 @@
   (global-undo-tree-mode 1))
 
 (use-package evil
- :custom
- (evil-shift-width custom-tab-width)
- (evil-want-C-u-scroll t)
- (evil-want-C-u-delete t)
- (evil-want-C-w-scroll t)
- (evil-want-C-w-delete t)
- (evil-want-C-i-jump t)
- (evil-want-Y-yank-to-eol t)
- (evil-want-integration t)
- (evil-want-keybinding nil)
- :config
- (define-key evil-insert-state-map (kbd "<backspace>") 
-             'backspace-whitespace-to-tab-stop)
- (evil-mode 1))
+  :custom
+  (evil-want-C-u-scroll t)
+  (evil-want-C-u-delete t)
+  (evil-want-C-w-scroll t)
+  (evil-want-C-w-delete t)
+  (evil-want-C-i-jump t)
+  (evil-want-Y-yank-to-eol t)
+  (evil-want-integration t)
+  (evil-want-keybinding nil)
+  :config
+  (evil-global-set-key 'normal (kbd "G")
+                       (lambda () (interactive) (evil-goto-line) (forward-line -1)))
+  (evil-mode 1))
 
 (use-package evil-surround
- :requires evil
- :config
- (global-evil-surround-mode 1))
+  :requires evil
+  :config
+  (global-evil-surround-mode 1))
 
 (use-package evil-commentary
- :requires evil
- :config
- (evil-commentary-mode))
+  :requires evil
+  :config
+  (evil-commentary-mode))
 
 (use-package evil-snipe
- :requires evil
- :custom
- (evil-snipe-scope 'buffer)
- (evil-snipe-use-vim-sneak-bindings t)
- :config
- (add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode)
- (evil-snipe-mode 1))
- ; (evil-snipe-override-mode 1) ; this overrides f F t T
+  :requires evil
+  :custom
+  (evil-snipe-scope 'buffer)
+  (evil-snipe-use-vim-sneak-bindings t)
+  :config
+  (add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode)
+  (evil-snipe-mode 1))
+  ; (evil-snipe-override-mode 1) ; this overrides f F t T
 
 (use-package evil-quickscope
- :requires evil
- :config
- (global-evil-quickscope-mode 1)
- (set-face-foreground 'evil-quickscope-first-face "#FBFF00")
- (set-face-foreground 'evil-quickscope-second-face "#AE57FF"))
+  :requires evil
+  :config
+  ;; (set-face-foreground 'evil-quickscope-first-face "#FBFF00")
+  ;; (set-face-foreground 'evil-quickscope-second-face "#AE57FF")
+  (global-evil-quickscope-mode 1))
 
 (use-package evil-collection
   :requires evil
@@ -96,19 +95,23 @@
   :config
   (add-hook 'smartparens-enabled-hook 'evil-smartparens-mode))
 
-; (use-package doom-themes
-;  :config
-;  ; (load-theme 'doom-monokai-spectrum t))
-;  ; (load-theme 'doom-monokai-pro t))
-;  (load-theme 'doom-one t))
+;; (use-package monokai-pro-theme
+;;   :config
+;;   (load-theme 'monokai-pro t))
 
-(use-package monokai-pro-theme
-  :config
-  (load-theme 'monokai-pro t))
+(use-package gruvbox-theme
+ :config
+ (load-theme 'gruvbox-dark-hard t)
+ ;; (load-theme 'gruvbox-dark-medium t)
+ ;; (load-theme 'gruvbox-light-soft t)
+ )
 
-;; (use-package gruvbox-theme
-;;  :config
-;;  (load-theme 'gruvbox t))
+;; (use-package modus-operandi-theme
+;;   :config
+;;   (load-theme 'modus-operandi t))
+;; (use-package modus-vivendi-theme
+;;   :config
+;;   (load-theme 'modus-vivendi t))
 
 (use-package haskell-mode)
 (use-package markdown-mode)
@@ -122,28 +125,27 @@
 
 (use-package pdf-tools
   :config 
-  (add-hook 'pdf-view-mode 'auto-revert-mode)
+  ;; (add-hook 'pdf-view-mode 'auto-revert-mode)
+  (add-hook 'pdf-view-mode 'pdf-view-midnight-minor-mode)
   (pdf-tools-install))
 
 ; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
 (use-package tex
   :ensure auctex
-  :after evil pdf-tools
-  ;; :mode ("\\.tex\\'" . latex-mode)
+  :after (evil pdf-tools)
   :custom
   (TeX-source-correlate-mode t)
   (TeX-source-correlate-start-server t)
   (TeX-auto-save t)
   (TeX-parse-self t)
-  (latex-preview-pane-use-frame t)
-  ;; (TeX-view-program-selection '((output-pdf "PDF Tools")))
-  ;; (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+  (TeX-view-program-selection '((output-pdf "PDF Tools")))
+  (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
   :config
   (add-hook 'LaTeX-mode-hook
    (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
 
-  ;; (add-hook 'TeX-after-compilation-finished-functions 
-  ;;           #'TeX-revert-document-buffer)
+  (add-hook 'TeX-after-compilation-finished-functions 
+            #'TeX-revert-document-buffer)
   ; (add-hook 'LaTeX-mode-hook
   ;           (lambda () (reftex-mode t) (flyspell-mode t)))
   )
@@ -165,23 +167,6 @@
   (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map)
   (bind-key "<backtab>" #'dired-subtree-cycle dired-mode-map))
 
-;; (use-package window-purpose
-;;   :custom
-;;   (pop-up-frames t)
-;;   :config
-;;   (purpose-mode)
-;;   (add-to-list 'purpose-user-mode-purposes '(help-mode . pop-frame))
-;;   (add-to-list 'purpose-user-mode-purposes '(eshell-mode . pop-frame))
-;;   (add-to-list 'purpose-user-mode-purposes '(image-mode . pop-frame))
-;;   (add-to-list 'purpose-user-mode-purposes '(Buffer-menu-mode . pop-frame))
-;;   ; (add-to-list 'purpose-user-mode-purposes '(dired-mode . pop-frame))
-;;   ;; (add-to-list 'purpose-user-regexp-purposes '("." . pop-frame))
-;;   (purpose-compile-user-configuration)
-;;   (add-to-list 'purpose-special-action-sequences
-;;                '(popup-frame
-;;                  purpose-display-reuse-window-buffer
-;;                  purpose-display-reuse-window-purpose
-;;                  purpose-display-pop-up-frame)))
 
 ;; (use-package fcitx
 ;;   :custom
@@ -198,13 +183,27 @@
   (ivy-re-builders-alist
    '((counsel-describe-variable . ivy--regex-ignore-order)
      (counsel-describe-function . ivy--regex-ignore-order)
+     (counsel-describe-symbol . ivy--regex-ignore-order)
+     (counsel-describe-face . ivy--regex-ignore-order)
+     (counsel-descbinds . ivy--regex-ignore-order)
+     (counsel-M-x . ivy--regex-ignore-order)
+     (counsel-find-file . ivy--regex-plus)
+     (counsel-dired . ivy--regex-plus)
      (t . ivy--regex-fuzzy)))
   (ivy-use-virtual-buffers t)
-  (ivy-initial-inputs-alist nil)
+  ;; (ivy-initial-inputs-alist nil)
   :config
+  ;; (add-to-list 'ivy-initial-inputs-alist '(counsel-find-file . "^"))
+  (add-to-list 'ivy-initial-inputs-alist '(counsel-minor . ""))
   (ivy-mode 1))
 
 (use-package magit)
+(use-package evil-magit
+  :after (magit evil)
+  :custom
+  (evil-magit-use-y-for-yank t)
+  :config
+  (add-hook 'magit-mode-hook (lambda () (evil-snipe-local-mode 0))))
 (use-package ivy-hydra)
 (use-package swiper)
 (use-package counsel
@@ -252,10 +251,10 @@
 ;;   :custom
 ;;   (lsp-python-ms-auto-install-server t))
 
-(cload "leader.el")
+(eload "leader.el")
 
 ;; Manually cloned
 ;; TODO periodically run "git pull" using midnight (or a cron)
-(cload "clone/evil-unimpaired/evil-unimpaired.el")
+(eload "clone/evil-unimpaired/evil-unimpaired.el")
 (require 'evil-unimpaired)
 (evil-unimpaired-mode)

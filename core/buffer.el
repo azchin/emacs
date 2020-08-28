@@ -1,21 +1,52 @@
-;; (defun add-to-display-buffer-list
-;;     (add-to-list 'display-buffer-alist
-;;                   ))
+(defvar pop-up-frame-regexp-list '("\\*Buffer List\\*"
+                                   "\\*eshell\\*"
+                                   "\\*.*-scratch\\*"
+                                   "\\*Org Select\\*"
+                                   )
+  "List of regular expressions that denote the buffers to be displayed
+in a pop-up frame")
+(add-to-list 'pop-up-frame-regexp-list "\\*Buffer List\\*")
+(add-to-list 'pop-up-frame-regexp-list "\\*eshell\\*")
+(add-to-list 'pop-up-frame-regexp-list "\\*.*-scratch\\*")
+(add-to-list 'pop-up-frame-regexp-list "\\*Org Select\\*")
+
+(defun construct-regexp-from-list (list)
+  "Constructs a regular expression that matches one of the elements in `list'"
+  (cond ((equal list nil) "")
+        ((equal (length list) 1) (car list))
+        (t (concat (car list) "\\|" (construct-regexp-from-list (cdr list))))))
+
+(defvar pop-up-frame-modes '(help-mode
+                             pdf-view-mode
+                             messages-buffer-mode
+                             magit-status-mode
+                             )
+  "List of major modes that denote the buffers to be displayed
+in a pop-up frame")
+
+(defun display-buffer-query-mode (name action)
+  "Function passed to `display-buffer-alist' that checks a buffer's major mode against
+`pop-up-frame-modes'"
+  (member (buffer-local-value 'major-mode (get-buffer name)) pop-up-frame-modes))
+
+(defun display-buffer-pdf-from-dired (name action)
+  "Special logic to display pdf files in pop-up frames unless the current buffer
+is dired"
+  (and (equal (buffer-local-value 'major-mode (get-buffer name) 'pdf-view-mode))
+       (not (equal major-mode 'dired-mode))))
 
 (add-to-list 'display-buffer-alist
-             '("\\*Buffer List\\*\\|\\*Help\\*\\|\\*eshell\\*\\|\\*Messages\\*\\|\\*.*-scratch\\*\\|\\*Org Select\\*"
+             '(display-buffer-query-mode
                (display-buffer-reuse-window display-buffer-pop-up-frame)
                (reusable-frames . 0)))
-               ;; . ((display-buffer-reuse-window display-buffer-pop-up-frame)
-               ;;    (reusable-frames . 0))))
 
-;; (add-to-list 'display-buffer-alist
-;;              '("\\*grep\\*"
-;;                display-buffer-same-window))
+(add-to-list 'display-buffer-alist
+             `(,(construct-regexp-from-list pop-up-frame-regexp-list)
+               (display-buffer-reuse-window display-buffer-pop-up-frame)
+               (reusable-frames . 0)))
 
 (setq Man-notify-method 'aggressive)
 ;; (setq grep-command "grep --color -nH --null ")
-;; (setq grep-command "grep ")
 
 (setq revert-without-query '(".*"))
 
@@ -103,7 +134,7 @@ BUFFER may be either a buffer or its name (a string)."
     (whitespace-mode)
     (unless live-scratch
       (insert (concat mode-name scratch-skeleton))
-      (comment-line -5)
+      (unless (equal comment-use-syntax 'undecided) (comment-line -5))
       (forward-line 1))))
 
 (defun create-new-frame (name &optional mode)
@@ -133,3 +164,5 @@ BUFFER may be either a buffer or its name (a string)."
         (seq-filter 
          (lambda (x) (string-match-p (or regexp buffer-regexp-name) (buffer-name x)))
          (buffer-list))))
+
+(setq frame-auto-hide-function 'delete-frame)

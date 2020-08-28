@@ -4,8 +4,13 @@
 (blink-cursor-mode 0)
 (setq visible-cursor nil)
 (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-9"))
+;; (add-to-list 'default-frame-alist '(font . "FuraCode Nerd Font-9"))
+;; (set-frame-parameter (selected-frame) 'alpha '(95 . 86))
+;; (add-to-list 'default-frame-alist '(alpha . (95 . 86))) ;; first(?) frame flickers
+;; (add-to-list 'default-frame-alist '(alpha . 95))
 (setq inhibit-startup-screen t)
 (setq-default frame-title-format '("emacs %b"))
+
 (setq scroll-conservatively 128)
 (setq initial-major-mode 'org-mode)
 (setq initial-scratch-message
