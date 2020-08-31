@@ -190,11 +190,22 @@
      (counsel-dired . ivy--regex-plus)
      (t . ivy--regex-fuzzy)))
   (ivy-use-virtual-buffers t)
+  (ivy-use-selectable-prompt t)
   ;; (ivy-initial-inputs-alist nil)
   :config
   ;; (add-to-list 'ivy-initial-inputs-alist '(counsel-find-file . "^"))
   (add-to-list 'ivy-initial-inputs-alist '(counsel-minor . ""))
+  ;; (add-hook 'ebuild-mode-hook
+  ;;           (lambda () (setq-local completing-read-function #'completing-read-default)))
+  ;; (add-to-list 'ivy-completing-read-handlers-alist
+  ;;              '(ebuild-mode-insert-skeleton . completing-read-default))
   (ivy-mode 1))
+
+(use-package ivy-hydra)
+(use-package swiper)
+(use-package counsel
+  :config
+  (counsel-mode 1))
 
 (use-package magit)
 (use-package evil-magit
@@ -203,11 +214,6 @@
   (evil-magit-use-y-for-yank t)
   :config
   (add-hook 'magit-mode-hook (lambda () (evil-snipe-local-mode 0))))
-(use-package ivy-hydra)
-(use-package swiper)
-(use-package counsel
-  :config
-  (counsel-mode 1))
 
 (use-package company
   :custom
