@@ -165,6 +165,7 @@
   (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map)
   (bind-key "<backtab>" #'dired-subtree-cycle dired-mode-map))
 
+(use-package dired-x)
 
 ;; (use-package fcitx
 ;;   :custom

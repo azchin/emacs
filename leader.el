@@ -148,3 +148,6 @@
 
 (evil-define-key 'normal 'global "G"
   (lambda () (interactive) (evil-goto-line) (forward-line -1)))
+
+;; (define-key global-map (kbd "C-SPC") nil)
+;; (define-key global-map (kbd "C-S-SPC") nil)
