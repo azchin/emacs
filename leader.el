@@ -117,9 +117,8 @@
   "Insert selection if appropriate, or select the next candidate."
   (interactive)
   (if (not (company-tooltip-visible-p)) (company-manual-begin))
-  (if (> company-candidates-length 1)
-      (company-select-next arg)
-    (company-complete-selection)))
+  (cond ((> company-candidates-length 1) (company-select-next arg))
+        ((equal company-candidates-length 1) (company-finish (car company-candidates)))))
 
 (defun company-select-previous-or-complete-selection ()
   "Insert selection if appropriate, or select the previous candidate."
