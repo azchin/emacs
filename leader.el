@@ -93,14 +93,16 @@
     "q e" 'server-shutdown
     )
   (evil-leader/set-key-for-mode 'latex-mode
-    "s" (lambda () (interactive)
+    "m c" (lambda () (interactive)
           (save-buffer) (TeX-command-run-all nil))
     ;; "l l" (lambda () (interactive)
     ;;         (progn (latex-preview-pane-mode 'toggle)
     ;;                (latex-preview-pane-update)))
     )
   (evil-leader/set-key-for-mode 'org-mode
-    "i" 'org-insert-structure-template
+    "m i" 'org-insert-structure-template
+    "m s" 'org-schedule
+    "m a" 'org-agenda
     )
   )
 
