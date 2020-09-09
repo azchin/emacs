@@ -71,6 +71,8 @@
 
 (use-package evil-org
   :after (org evil) 
+  :custom
+  (evil-org-special-o/O '(table-row))
   :config
   (require 'org-tempo)
   (require 'evil-org-agenda)
@@ -97,12 +99,12 @@
 ;;   :config
 ;;   (load-theme 'monokai-pro t))
 
-(use-package gruvbox-theme
- :config
- (load-theme 'gruvbox-dark-hard t)
- ;; (load-theme 'gruvbox-dark-medium t)
- ;; (load-theme 'gruvbox-light-soft t)
- )
+;; (use-package gruvbox-theme
+;;  :config
+;;  (load-theme 'gruvbox-dark-hard t)
+;;  ;; (load-theme 'gruvbox-dark-medium t)
+;;  ;; (load-theme 'gruvbox-light-soft t)
+;;  )
 
 ;; (use-package modus-operandi-theme
 ;;   :config
@@ -110,6 +112,11 @@
 ;; (use-package modus-vivendi-theme
 ;;   :config
 ;;   (load-theme 'modus-vivendi t))
+
+(use-package monokai-pro-theme)
+(use-package gruvbox-theme)
+(use-package modus-operandi-theme)
+(load-theme 'gruvbox-dark-hard t)
 
 (use-package haskell-mode)
 (use-package markdown-mode)
@@ -243,12 +250,12 @@
   (add-to-company-backends '(company-auctex))
   (company-auctex-init))
 
-;; (use-package lsp-mode
-;;   :hook
-;;   ((prog-mode-hook . lsp)
-;;    (text-mode-hook . lsp)
-;;    (special-mode-hook . lsp))
-;;   :commands lsp)
+(use-package lsp-mode
+  :hook
+  ((prog-mode-hook . lsp)
+   (text-mode-hook . lsp)
+   (special-mode-hook . lsp))
+  :commands lsp)
 ;; (use-package lsp-ivy)
 ;; (use-package ccls)
 ;; (use-package lsp-latex)

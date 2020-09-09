@@ -4,18 +4,23 @@
   (global-evil-leader-mode)
   (evil-leader/set-leader "<SPC>")
   ;; global: (o m c f d h b n w q t s a ; 1)
-  ;; local: (l i)
+  ;; local: (m i)
+  ;; convention: if global prefx exists then use same prefix for local; else use 'm' as prefix
   (evil-leader/set-key
     "o l" 'org-store-link
-    "o a" 'org-agent
+    ;; "o a" 'org-agent
     "o c" 'org-capture
+    "o a" (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows))
     "m i" 'magit-init
     "m m" 'magit-status
     "c t" 'toggle-tabs
     "c y" 'conditional-tabify
     "c i" 'indent-whole-buffer
     ;; "c t u" (lambda () (interactive) (untabify (window-start) (window-end)))
-    "c e" 'eval-last-sexp
+    "c e" (lambda () (interactive)
+            (unless visual-line-mode (evil-visual-line))
+            (call-interactively 'eval-last-sexp)
+            (evil-exit-visual-state))
     "c r" 'rename-uniquely
     "f f" 'find-file
     "f h" (lambda () (interactive) (if (equal major-mode 'dired-mode)
@@ -30,6 +35,9 @@
     "f c k" (lambda () (interactive) (find-file (emacsd "leader.el")))
     "f c l" (lambda () (interactive) (find-file (emacsd "core/late.el")))
     "f c t" (lambda () (interactive) (find-file (emacsd "core/tabs.el")))
+    "f c o" (lambda () (interactive) (find-file (emacsd "core/org.el")))
+    "f o a" (lambda () (interactive) (find-file (concat org-directory "agenda.org")))
+    "f o i" (lambda () (interactive) (find-file (concat org-directory "index.org")))
     "d d" 'dired-jump
     ;; dired-jump opens new window, dired uses current window
     "d h" (lambda () (interactive) (dired home-dir))
@@ -100,9 +108,9 @@
     ;;                (latex-preview-pane-update)))
     )
   (evil-leader/set-key-for-mode 'org-mode
-    "m i" 'org-insert-structure-template
-    "m s" 'org-schedule
-    "m a" 'org-agenda
+    "o i" 'org-insert-structure-template
+    "o s" 'org-schedule
+    "o d" 'org-deadline
     )
   )
 
@@ -147,8 +155,8 @@
 (evil-define-key 'normal pdf-view-mode-map (kbd "J") 'pdf-view-next-page)
 (evil-define-key 'normal pdf-view-mode-map (kbd "K") 'pdf-view-previous-page)
 
-(evil-define-key 'normal 'global "G"
-  (lambda () (interactive) (evil-goto-line) (forward-line -1)))
+;; (evil-define-key 'normal 'global "G"
+;;   (lambda () (interactive) (evil-goto-line) (forward-line -1)))
 
 ;; (define-key global-map (kbd "C-SPC") nil)
 ;; (define-key global-map (kbd "C-S-SPC") nil)

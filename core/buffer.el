@@ -2,13 +2,11 @@
                                    "\\*eshell\\*"
                                    "\\*.*-scratch\\*"
                                    "\\*Org Select\\*"
+                                   "\\*Org Agenda\\*"
+                                   "\\*Agenda Commands\\*"
                                    )
   "List of regular expressions that denote the buffers to be displayed
 in a pop-up frame")
-(add-to-list 'pop-up-frame-regexp-list "\\*Buffer List\\*")
-(add-to-list 'pop-up-frame-regexp-list "\\*eshell\\*")
-(add-to-list 'pop-up-frame-regexp-list "\\*.*-scratch\\*")
-(add-to-list 'pop-up-frame-regexp-list "\\*Org Select\\*")
 
 (defun construct-regexp-from-list (list)
   "Constructs a regular expression that matches one of the elements in `list'"
@@ -143,6 +141,13 @@ BUFFER may be either a buffer or its name (a string)."
   ;;   (select-window new-window)
   ;;   (unless live
   ;;     (funcall (or mode 'text-mode)))))
+
+(defun create-new-frame-command (command)
+  "Create a new frame and evaluate command"
+  (let ((new-frame (make-frame-command)))
+    (select-frame new-frame)
+    (switch-to-buffer (get-buffer-create "*Untitled*"))
+    (funcall command)))
 
 (defun create-dired-frame (&optional dir)
   "Create a dired frame"

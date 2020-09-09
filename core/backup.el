@@ -2,7 +2,9 @@
   backup-by-copying t
   ; my-backup-dir (emacsd "cache/backups")
   backup-directory-alist `(("." . ,(emacsd "cache/backups")))
-  auto-save-default nil
+  auto-save-file-name-transforms `((".*" ,(emacsd "cache/saves/") t))
+  auto-save-default t
+  ;; auto-save-visited-mode t
   create-lockfiles nil
   version-control t
   delete-old-versions t

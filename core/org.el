@@ -1,0 +1,6 @@
+(setq org-directory "~/org/")
+(setq org-startup-folded t)
+(setq org-agenda-files `(,(concat org-directory "agenda.org")))
+(setq org-agenda-span 'month)
+;; (setq org-agenda-files '(org-directory))
+;; (setq org-agenda-file-regexp "agenda.org")

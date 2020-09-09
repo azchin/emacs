@@ -9,7 +9,7 @@
 ;; (add-to-list 'default-frame-alist '(alpha . (95 . 86))) ;; first(?) frame flickers
 ;; (add-to-list 'default-frame-alist '(alpha . 95))
 (setq inhibit-startup-screen t)
-(setq-default frame-title-format '("emacs %b"))
+(setq-default frame-title-format '("Emacs: %b"))
 
 (setq scroll-conservatively 128)
 (setq initial-major-mode 'org-mode)
