@@ -99,12 +99,12 @@
 ;;   :config
 ;;   (load-theme 'monokai-pro t))
 
-;; (use-package gruvbox-theme
-;;  :config
-;;  (load-theme 'gruvbox-dark-hard t)
-;;  ;; (load-theme 'gruvbox-dark-medium t)
-;;  ;; (load-theme 'gruvbox-light-soft t)
-;;  )
+(use-package gruvbox-theme
+ :config
+ (load-theme 'gruvbox-dark-hard t)
+ ;; (load-theme 'gruvbox-dark-medium t)
+ ;; (load-theme 'gruvbox-light-soft t)
+ )
 
 ;; (use-package modus-operandi-theme
 ;;   :config
@@ -113,10 +113,10 @@
 ;;   :config
 ;;   (load-theme 'modus-vivendi t))
 
-(use-package monokai-pro-theme)
-(use-package gruvbox-theme)
-(use-package modus-operandi-theme)
-(load-theme 'gruvbox-dark-hard t)
+;; (use-package monokai-pro-theme)
+;; (use-package gruvbox-theme)
+;; (use-package modus-operandi-theme)
+;; (load-theme 'gruvbox-dark-hard t)
 
 (use-package haskell-mode)
 (use-package markdown-mode)
