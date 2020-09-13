@@ -24,12 +24,14 @@
 (global-display-line-numbers-mode)
 (defun enable-lines() (setq display-line-numbers-type 'relative))
 (defun disable-lines() (setq display-line-numbers-type nil))
+(defun absolute-lines() (setq display-line-numbers-type t))
 
 (add-hook 'prog-mode-hook 'enable-lines)
 (add-hook 'text-mode-hook 'enable-lines)
 (add-hook 'special-mode-hook 'enable-lines)
 (add-hook 'pdf-view-mode-hook 'disable-lines)
 (add-hook 'image-mode-hook 'disable-lines)
+(add-hook 'org-mode-hook 'absolute-lines)
 ;; (add-hook 'minibuffer-inactive-mode-hook 'disable-lines)
 
 (setq dired-listing-switches

@@ -2,5 +2,6 @@
 (setq org-startup-folded t)
 (setq org-agenda-files `(,(concat org-directory "agenda.org")))
 (setq org-agenda-span 'month)
+(add-hook 'org-mode-hook 'org-indent-mode)
 ;; (setq org-agenda-files '(org-directory))
 ;; (setq org-agenda-file-regexp "agenda.org")

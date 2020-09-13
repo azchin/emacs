@@ -116,6 +116,7 @@
 (use-package monokai-pro-theme)
 (use-package gruvbox-theme)
 (use-package modus-operandi-theme)
+(use-package modus-vivendi-theme)
 (load-theme 'gruvbox-dark-hard t)
 
 (use-package haskell-mode)
@@ -158,7 +159,7 @@
 
 (use-package midnight
   :custom
-  (clean-buffer-list-delay-special 600)
+  (clean-buffer-list-delay-special 0)
   (clean-buffer-list-timer (run-at-time t 3600 'clean-buffer-list))
   (clean-buffer-list-kill-regexps '("^.*$"))
   (clean-buffer-list-kill-never-buffer-names
