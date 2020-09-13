@@ -6,4 +6,9 @@ eshell/lastdir
 eshell/history
 transient
 recentf
-cache
+cache/backups/*
+cache/saves/*
+cache/undotree/*
+!cache/backups/.keep
+!cache/saves/.keep
+!cache/undotree/.keep
