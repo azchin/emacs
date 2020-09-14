@@ -1,6 +1,7 @@
 .last-package-update-day
 auto-save-list
 elpa
+tramp
 convention.el
 eshell/lastdir
 eshell/history
