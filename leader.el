@@ -27,7 +27,6 @@
                                   (counsel-find-file)
                                 (counsel-find-file (concat home-dir "^"))))
     "f s" (lambda () (interactive) (switch-to-buffer "*scratch*"))
-    "f e" (lambda () (interactive) (let ((default-directory home-dir)) (eshell)))
     "f c a" (lambda () (interactive) (find-file (emacsd "core/appearance.el")))
     "f c b" (lambda () (interactive) (find-file (emacsd "core/buffer.el")))
     "f c p" (lambda () (interactive) (find-file (emacsd "packages.el")))
@@ -69,6 +68,7 @@
     "n n" 'make-frame-command
     "n b" 'list-buffers
     "n d" 'create-dired-frame
+    "n e" (lambda () (interactive) (let ((default-directory home-dir)) (eshell)))
     "n D" (lambda () (interactive) (create-dired-frame home-dir))
     "n o" (lambda () (interactive) (create-new-frame "*org-scratch*" 'org-mode))
     "n c" (lambda () (interactive) (create-new-frame "*cpp-scratch*" 'c++-mode))
