@@ -72,7 +72,7 @@
 (use-package evil-org
   :after (org evil) 
   :custom
-  (evil-org-special-o/O '(table-row))
+  (evil-org-special-o/O '(table-row item))
   :config
   (require 'org-tempo)
   (require 'evil-org-agenda)
@@ -113,18 +113,10 @@
 ;;   :config
 ;;   (load-theme 'modus-vivendi t))
 
-<<<<<<< HEAD
-(use-package monokai-pro-theme)
-(use-package gruvbox-theme)
-(use-package modus-operandi-theme)
-(use-package modus-vivendi-theme)
-(load-theme 'gruvbox-dark-hard t)
-=======
 ;; (use-package monokai-pro-theme)
 ;; (use-package gruvbox-theme)
 ;; (use-package modus-operandi-theme)
 ;; (load-theme 'gruvbox-dark-hard t)
->>>>>>> 6011f34955bb3a9d9c54c3420356ae228407fb53
 
 (use-package haskell-mode)
 (use-package markdown-mode)
@@ -153,6 +145,7 @@
   (TeX-parse-self t)
   (TeX-view-program-selection '((output-pdf "PDF Tools")))
   (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+  (TeX-engine 'xetex)
   :config
   (add-hook 'LaTeX-mode-hook
    (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
