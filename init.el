@@ -16,11 +16,11 @@
 (eload "core/external.el")
 (eload "core/autoinsert.el")
 (eload "core/late.el")
-
 (when (file-exists-p (emacsd "convention.el"))
   (eload "convention.el"))
 
 (unless server-mode (server-start))
+(setq tramp-default-method "ssh")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

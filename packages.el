@@ -72,7 +72,7 @@
 (use-package evil-org
   :after (org evil) 
   :custom
-  (evil-org-special-o/O '(table-row))
+  (evil-org-special-o/O '(table-row item))
   :config
   (require 'org-tempo)
   (require 'evil-org-agenda)
@@ -145,6 +145,7 @@
   (TeX-parse-self t)
   (TeX-view-program-selection '((output-pdf "PDF Tools")))
   (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+  (TeX-engine 'xetex)
   :config
   (add-hook 'LaTeX-mode-hook
    (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
@@ -158,7 +159,7 @@
 
 (use-package midnight
   :custom
-  (clean-buffer-list-delay-special 600)
+  (clean-buffer-list-delay-special 0)
   (clean-buffer-list-timer (run-at-time t 3600 'clean-buffer-list))
   (clean-buffer-list-kill-regexps '("^.*$"))
   (clean-buffer-list-kill-never-buffer-names

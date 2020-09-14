@@ -74,7 +74,8 @@
     "n c" (lambda () (interactive) (create-new-frame "*cpp-scratch*" 'c++-mode))
     "n p" (lambda () (interactive) (create-new-frame "*python-scratch*" 'python-mode))
     "n t" (lambda () (interactive) (create-new-frame "*text-scratch*" 'text-mode))
-    "n s" (lambda () (interactive) (create-new-frame "*script-scratch*" 'shell-script-mode))
+    "n s" (lambda () (interactive) (create-dired-frame (concat "/ssh:" (read-string "SSH: ") ":")))
+    "n h" (lambda () (interactive) (create-new-frame "*script-scratch*" 'shell-script-mode))
     "n l" (lambda () (interactive) (create-new-frame "*lisp-scratch*" 'lisp-interaction-mode))
     "s" 'evil-write
     "a" 'evil-quit
