@@ -34,6 +34,8 @@
   (evil-want-Y-yank-to-eol t)
   (evil-want-integration t)
   (evil-want-keybinding nil)
+  (evil-move-beyond-eol nil)
+  (evil-respect-visual-line-mode nil)
   :config
   (evil-mode 1))
 
@@ -91,9 +93,9 @@
   (add-hook 'text-mode-hook #'smartparens-mode)
   (smartparens-strict-mode))
 
-(use-package evil-smartparens
-  :config
-  (add-hook 'smartparens-enabled-hook 'evil-smartparens-mode))
+;; (use-package evil-smartparens
+;;   :config
+;;   (add-hook 'smartparens-enabled-hook 'evil-smartparens-mode))
 
 ;; (use-package monokai-pro-theme
 ;;   :config
@@ -121,6 +123,8 @@
 (use-package haskell-mode)
 (use-package markdown-mode)
 
+(use-package pandoc-mode)
+
 (use-package minimap
   :custom
   (minimap-window-location 'right)
@@ -145,7 +149,7 @@
   (TeX-parse-self t)
   (TeX-view-program-selection '((output-pdf "PDF Tools")))
   (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
-  (TeX-engine 'xetex)
+  ;; (TeX-engine 'xetex)
   :config
   (add-hook 'LaTeX-mode-hook
    (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
@@ -226,7 +230,8 @@
 
 (use-package company
   :custom
-  (company-idle-delay 0.2)
+  ;; (company-idle-delay 0.2)
+  (company-idle-delay nil)
   (company-minimum-prefix-length 2)
   (company-show-numbers t)
   (company-selection-wrap-around t)
@@ -257,6 +262,7 @@
    (text-mode-hook . lsp)
    (special-mode-hook . lsp))
   :commands lsp)
+
 ;; (use-package lsp-ivy)
 ;; (use-package ccls)
 ;; (use-package lsp-latex)

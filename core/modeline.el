@@ -14,24 +14,50 @@ Containing LEFT, and RIGHT aligned respectively."
             right)))
 
 
+(setq mode-line-whitespace "  ")
+;; (setq mode-line-whitespace '(:eval whitespace))
+
+(setq-default mode-line-position `(:eval ,(concat "(%l:%C)" mode-line-whitespace "%p")))
+
 (setq-default
  mode-line-format
  '((:eval
     (simple-mode-line-render
      ;; Left.
-     (quote (" "
-             mode-line-modified ; "%*"
-             " "
+     (quote (""
              evil-mode-line-tag
-             " "
+             ;; mode-line-modified ; "%*"
+             mode-line-whitespace
+             mode-line-client
+             mode-line-remote
+             mode-line-whitespace
+             "%*%+"
+             mode-line-whitespace
              "%b" ; mode-line-buffer-identification
-             " "
-             "[%m]"))
+             mode-line-whitespace
+             "[%m]"
+             ))
      ;; Right.
      (quote ("%e"
-             " "
-             "(%l %C)"
-             " "
-             "%p"
-             " "))))))
+             mode-line-whitespace
+             mode-line-position
+             mode-line-whitespace
+             ))))))
 
+;; (setq-default mode-line-format
+;;               (list
+;;                evil-mode-line-tag
+;;                mode-line-whitespace
+;;                mode-line-client
+;;                mode-line-remote
+;;                mode-line-whitespace
+;;                "%*%+"
+;;                mode-line-whitespace
+;;                "%b" ; mode-line-buffer-identification
+;;                mode-line-whitespace
+;;                "[%m]"
+;;                mode-line-whitespace
+;;                mode-line-position
+;;                mode-line-whitespace
+;;                "%e"
+;;                )))))

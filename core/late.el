@@ -27,6 +27,7 @@
 (add-to-list 'after-make-frame-functions 'change-highlight-face)
 (change-highlight-face)
 
+
 ;; (defun my-begin-backend (backends)
 ;;  (lambda ()
 ;;   (company-begin-backend backends)))

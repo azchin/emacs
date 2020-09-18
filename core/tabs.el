@@ -57,6 +57,8 @@
 (setq-default evil-shift-width custom-tab-width)
 (setq python-indent-offset 4)
 (setq sh-basic-offset custom-tab-width)
+(setq c-basic-offset custom-tab-width
+      c-default-style "linux")
 
 (add-hook 'prog-mode-hook 'enable-tabs)
 (add-hook 'special-mode-hook 'enable-tabs)

@@ -26,17 +26,25 @@
     "f h" (lambda () (interactive) (if (equal major-mode 'dired-mode)
                                   (counsel-find-file)
                                 (counsel-find-file (concat home-dir "^"))))
-    "f s" (lambda () (interactive) (switch-to-buffer "*scratch*"))
     "f c a" (lambda () (interactive) (find-file (emacsd "core/appearance.el")))
     "f c b" (lambda () (interactive) (find-file (emacsd "core/buffer.el")))
     "f c p" (lambda () (interactive) (find-file (emacsd "packages.el")))
     "f c i" (lambda () (interactive) (find-file (emacsd "init.el")))
     "f c k" (lambda () (interactive) (find-file (emacsd "leader.el")))
     "f c l" (lambda () (interactive) (find-file (emacsd "core/late.el")))
+    "f c m" (lambda () (interactive) (find-file (emacsd "core/modeline.el")))
     "f c t" (lambda () (interactive) (find-file (emacsd "core/tabs.el")))
     "f c o" (lambda () (interactive) (find-file (emacsd "core/org.el")))
     "f o a" (lambda () (interactive) (find-file (concat org-directory "agenda.org")))
     "f o i" (lambda () (interactive) (find-file (concat org-directory "index.org")))
+    "f s o" (lambda () (interactive) (create-new-frame "*org-scratch*" 'org-mode))
+    "f s c" (lambda () (interactive) (create-new-frame "*cpp-scratch*" 'c++-mode))
+    "f s p" (lambda () (interactive) (create-new-frame "*python-scratch*" 'python-mode))
+    "f s t" (lambda () (interactive) (create-new-frame "*text-scratch*" 'text-mode))
+    "f s h" (lambda () (interactive) (create-new-frame "*script-scratch*" 'shell-script-mode))
+    "f s l" (lambda () (interactive) (create-new-frame "*lisp-scratch*" 'lisp-interaction-mode))
+    "f s s" (lambda () (interactive) (switch-to-buffer "*scratch*"))
+    "f u" (lambda () (interactive) (find-file (concat "/sudo::" (read-file-name "File (sudo): " "/"))))
     "d d" 'dired-jump
     ;; dired-jump opens new window, dired uses current window
     "d h" (lambda () (interactive) (dired home-dir))
@@ -46,6 +54,8 @@
     "d p" (lambda () (interactive) (dired (concat home-dir "projects")))
     "d l" (lambda () (interactive) (dired (concat home-dir "clone")))
     "d o" (lambda () (interactive) (dired (concat home-dir "org")))
+    "d s" (lambda () (interactive) (dired (concat "/ssh:" (read-string "SSH: ") ":")))
+    "d u" (lambda () (interactive) (dired "/sudo::/"))
     "d g" 'dired
     ;; "d z h" (lambda () (interactive)
     ;;          (progn (setq dired-listing-switches
@@ -68,17 +78,12 @@
     "n n" 'make-frame-command
     "n b" 'list-buffers
     "n d" 'create-dired-frame
+    "n h" (lambda () (interactive) (create-dired-frame home-dir))
     "n e" (lambda () (interactive) (let ((default-directory home-dir)) (eshell)))
-    "n D" (lambda () (interactive) (create-dired-frame home-dir))
-    "n o" (lambda () (interactive) (create-new-frame "*org-scratch*" 'org-mode))
-    "n c" (lambda () (interactive) (create-new-frame "*cpp-scratch*" 'c++-mode))
-    "n p" (lambda () (interactive) (create-new-frame "*python-scratch*" 'python-mode))
-    "n t" (lambda () (interactive) (create-new-frame "*text-scratch*" 'text-mode))
     "n s" (lambda () (interactive) (create-dired-frame (concat "/ssh:" (read-string "SSH: ") ":")))
-    "n h" (lambda () (interactive) (create-new-frame "*script-scratch*" 'shell-script-mode))
-    "n l" (lambda () (interactive) (create-new-frame "*lisp-scratch*" 'lisp-interaction-mode))
-    "s" 'evil-write
-    "a" 'evil-quit
+    "n u" (lambda () (interactive) (create-dired-frame (concat "/sudo::" (read-directory-name "Dir (sudo): " "/"))))
+    "s" 'save-buffer
+    "a" 'delete-window
     ";" 'eval-expression
     "1" 'shell-command
     "t m" 'minimap-mode
@@ -101,6 +106,9 @@
                                 (save-buffers-kill-terminal)))
     "q e" 'server-shutdown
     )
+  (evil-leader/set-key-for-mode 'dired-mode
+    "s" 'dired-jump
+    )
   (evil-leader/set-key-for-mode 'latex-mode
     "m c" (lambda () (interactive)
           (save-buffer) (TeX-command-run-all nil))
@@ -112,6 +120,8 @@
     "o i" 'org-insert-structure-template
     "o s" 'org-schedule
     "o d" 'org-deadline
+    "o e l" 'org-latex-export-to-latex
+    "o e p" 'org-latex-export-to-pdf
     )
   )
 
