@@ -228,40 +228,45 @@
   :config
   (add-hook 'magit-mode-hook (lambda () (evil-snipe-local-mode 0))))
 
-(use-package company
-  :custom
-  ;; (company-idle-delay 0.2)
-  (company-idle-delay nil)
-  (company-minimum-prefix-length 2)
-  (company-show-numbers t)
-  (company-selection-wrap-around t)
-  (company-backends
-   '((company-semantic company-capf company-files company-etags company-keywords
-                      company-dabbrev company-dabbrev-code company-cmake)))
-  :config
-  (defun add-to-company-backends (list)
-    (setq company-backends `(,(append list (car company-backends)))))
-  (global-company-mode))
-(use-package company-c-headers
-  :after company
-  :config
-  (add-to-company-backends '(company-c-headers)))
-(use-package company-shell
-  :after company
-  :custom
-  (add-to-company-backends '(company-shell company-shell-env)))
-(use-package company-auctex
-  :after company
-  :config
-  (add-to-company-backends '(company-auctex))
-  (company-auctex-init))
+;; (use-package company
+;;   :custom
+;;   ;; (company-idle-delay 0.2)
+;;   (company-idle-delay nil)
+;;   (company-minimum-prefix-length 2)
+;;   (company-show-numbers t)
+;;   (company-selection-wrap-around t)
+;;   (company-backends
+;;    '((company-semantic company-capf company-files company-etags company-keywords
+;;                       company-dabbrev company-dabbrev-code company-cmake)))
+;;   :config
+;;   (defun add-to-company-backends (list)
+;;     (setq company-backends `(,(append list (car company-backends)))))
+;;   ;; (global-company-mode)
+;;   (add-hook 'c-mode-hook 'company-mode)
+;;   (add-hook 'c++-mode-hook 'company-mode)
+;;   (add-hook 'LaTeX-mode-hook 'company-mode)
+;;   (add-hook 'python-mode-hook 'company-mode)
+;;   )
+;; (use-package company-c-headers
+;;   :after company
+;;   :config
+;;   (add-to-company-backends '(company-c-headers)))
+;; (use-package company-shell
+;;   :after company
+;;   :custom
+;;   (add-to-company-backends '(company-shell company-shell-env)))
+;; (use-package company-auctex
+;;   :after company
+;;   :config
+;;   (add-to-company-backends '(company-auctex))
+;;   (company-auctex-init))
 
-(use-package lsp-mode
-  :hook
-  ((prog-mode-hook . lsp)
-   (text-mode-hook . lsp)
-   (special-mode-hook . lsp))
-  :commands lsp)
+;; (use-package lsp-mode
+;;   :hook
+;;   ((prog-mode-hook . lsp)
+;;    (text-mode-hook . lsp)
+;;    (special-mode-hook . lsp))
+;;   :commands lsp)
 
 ;; (use-package lsp-ivy)
 ;; (use-package ccls)

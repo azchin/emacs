@@ -29,11 +29,16 @@
           (call-interactively 'backward-delete-char))))))
 
 ;; TODO convert manual-tabs into a minor mode
-(defvar tab-control-auto t)
-(setq backward-delete-char-untabify-method 'hungry)
+(defvar tab-control-auto nil)
+(setq backward-delete-char-untabify-method nil)
 (evil-define-key 'insert 'global
-  (kbd "<backspace>") 'backward-delete-char-untabify
-  (kbd "TAB") 'indent-for-tab-command)
+  (kbd "<backspace>") 'backspace-whitespace-to-tab-stop
+  (kbd "TAB") 'tab-to-tab-stop)
+;; (defvar tab-control-auto t)
+;; (setq backward-delete-char-untabify-method 'hungry)
+;; (evil-define-key 'insert 'global
+;;   (kbd "<backspace>") 'backward-delete-char-untabify
+;;   (kbd "TAB") 'indent-for-tab-command)
 
 (defun auto-tabs ()
   (set (make-local-variable 'tab-control-auto) t)
@@ -66,11 +71,20 @@
 ;; (add-hook 'text-mode-hook 
 ;;  (lambda () (disable-tabs) (setq indent-line-function (quote insert-tab)))) 
 
-; Add hooks here to disable tabs as desired
+;; Add hooks here to disable tabs as desired
 (add-hook 'lisp-mode-hook 'disable-tabs)
 (add-hook 'emacs-lisp-mode-hook 'disable-tabs)
 (add-hook 'python-mode-hook (lambda () (disable-tabs python-indent-offset)))
 (add-hook 'org-mode-hook 'disable-tabs)
+
+;; Add hooks here to set manual vs automatic tabs
+(add-hook 'text-mode-hook 'manual-tabs)
+(add-hook 'prog-mode-hook 'manual-tabs)
+(add-hook 'special-mode-hook 'manual-tabs)
+
+(add-hook 'lisp-mode-hook 'auto-tabs)
+(add-hook 'emacs-lisp-mode-hook 'auto-tabs)
+(add-hook 'org-mode-hook 'auto-tabs)
 
 (global-whitespace-mode)
 (setq whitespace-style '(face tabs tab-mark))

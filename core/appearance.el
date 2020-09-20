@@ -35,7 +35,7 @@
 (add-hook 'dired-mode-hook 'enable-lines)
 (add-hook 'pdf-view-mode-hook 'disable-lines)
 (add-hook 'image-mode-hook 'disable-lines)
-(add-hook 'org-mode-hook 'absolute-lines)
+;; (add-hook 'org-mode-hook 'absolute-lines)
 ;; (add-hook 'minibuffer-inactive-mode-hook 'disable-lines)
 
 ;; (setq dired-listing-switches "-Ahlo --group-directories-first --time-style='+%b %d %R'")

@@ -83,7 +83,7 @@
     "n s" (lambda () (interactive) (create-dired-frame (concat "/ssh:" (read-string "SSH: ") ":")))
     "n u" (lambda () (interactive) (create-dired-frame (concat "/sudo::" (read-directory-name "Dir (sudo): " "/"))))
     "s" 'save-buffer
-    "a" 'delete-window
+    ;; "a" 'evil-quit
     ";" 'eval-expression
     "1" 'shell-command
     "t m" 'minimap-mode
@@ -125,40 +125,43 @@
     )
   )
 
-;; (global-unset-key (kbd "C-SPC")) ;; set-mark-command
 (evil-define-key 'normal dired-mode-map "f" 'find-file)
-(defun company-backspace ()
-  (interactive)
-  (if (equal company-selection-changed nil)
-      (if tab-control-auto (backward-delete-char-untabify 1)
-        (backspace-whitespace-to-tab-stop))
-    (company-abort)))
 
-(defun company-select-next-or-complete-selection (&optional arg)
-  "Insert selection if appropriate, or select the next candidate."
-  (interactive)
-  (if (not (company-tooltip-visible-p)) (company-manual-begin))
-  (cond ((> company-candidates-length 1) (company-select-next arg))
-        ((equal company-candidates-length 1) (company-finish (car company-candidates)))))
+;; Company start
+;; (defun company-backspace ()
+;;   (interactive)
+;;   (if (equal company-selection-changed nil)
+;;       (if tab-control-auto (backward-delete-char-untabify 1)
+;;         (backspace-whitespace-to-tab-stop))
+;;     (company-abort)))
 
-(defun company-select-previous-or-complete-selection ()
-  "Insert selection if appropriate, or select the previous candidate."
-  (interactive)
-  (company-select-next-or-complete-selection -1))
+;; (defun company-select-next-or-complete-selection (&optional arg)
+;;   "Insert selection if appropriate, or select the next candidate."
+;;   (interactive)
+;;   (if (not (company-tooltip-visible-p)) (company-manual-begin))
+;;   (cond ((> company-candidates-length 1) (company-select-next arg))
+;;         ((equal company-candidates-length 1) (company-finish (car company-candidates)))))
 
-(define-key company-active-map (kbd "<backspace>") 'company-backspace)
-(define-key company-active-map (kbd "C-h") nil)
+;; (defun company-select-previous-or-complete-selection ()
+;;   "Insert selection if appropriate, or select the previous candidate."
+;;   (interactive)
+;;   (company-select-next-or-complete-selection -1))
 
-(evil-define-key 'insert company-mode-map (kbd "C-n")
-  'company-select-next-or-complete-selection)
-(evil-define-key 'insert company-mode-map (kbd "C-p")
-  'company-select-previous-or-complete-selection)
-(evil-define-key 'insert company-active-map (kbd "C-n")
-  'company-select-next)
-(evil-define-key 'insert company-active-map (kbd "C-p")
-  'company-select-previous)
-(evil-define-key 'insert company-active-map (kbd "ESC")
-  (lambda () (interactive) (company-abort)(evil-normal-state)))
+;; (define-key company-active-map (kbd "<backspace>") 'company-backspace)
+;; (define-key company-active-map (kbd "C-h") nil)
+
+;; (evil-define-key 'insert company-mode-map (kbd "C-n")
+;;   'company-select-next-or-complete-selection)
+;; (evil-define-key 'insert company-mode-map (kbd "C-p")
+;;   'company-select-previous-or-complete-selection)
+;; (evil-define-key 'insert company-active-map (kbd "C-n")
+;;   'company-select-next)
+;; (evil-define-key 'insert company-active-map (kbd "C-p")
+;;   'company-select-previous)
+;; (evil-define-key 'insert company-active-map (kbd "ESC")
+;;   (lambda () (interactive) (company-abort)(evil-normal-state)))
+
+;; Company end
 
 (evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
 (evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
