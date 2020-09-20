@@ -1,5 +1,5 @@
 (use-package evil-leader
-  :after (evil evil-org tex minimap magit)
+  :after (evil evil-org)
   :config 
   (global-evil-leader-mode)
   (evil-leader/set-leader "<SPC>")
@@ -11,8 +11,8 @@
     ;; "o a" 'org-agent
     "o c" 'org-capture
     "o a" (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows))
-    "m i" 'magit-init
-    "m m" 'magit-status
+    ;; "m i" 'magit-init
+    ;; "m m" 'magit-status
     "c t" 'toggle-tabs
     "c y" 'conditional-tabify
     "c i" 'indent-whole-buffer
@@ -109,13 +109,13 @@
   (evil-leader/set-key-for-mode 'dired-mode
     "s" 'dired-jump
     )
-  (evil-leader/set-key-for-mode 'latex-mode
-    "m c" (lambda () (interactive)
-          (save-buffer) (TeX-command-run-all nil))
-    ;; "l l" (lambda () (interactive)
-    ;;         (progn (latex-preview-pane-mode 'toggle)
-    ;;                (latex-preview-pane-update)))
-    )
+  ;; (evil-leader/set-key-for-mode 'latex-mode
+  ;;   "m c" (lambda () (interactive)
+  ;;         (save-buffer) (TeX-command-run-all nil))
+  ;;   ;; "l l" (lambda () (interactive)
+  ;;   ;;         (progn (latex-preview-pane-mode 'toggle)
+  ;;   ;;                (latex-preview-pane-update)))
+  ;;   )
   (evil-leader/set-key-for-mode 'org-mode
     "o i" 'org-insert-structure-template
     "o s" 'org-schedule
@@ -166,8 +166,8 @@
 (evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
 (evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
 
-(evil-define-key 'normal pdf-view-mode-map (kbd "J") 'pdf-view-next-page)
-(evil-define-key 'normal pdf-view-mode-map (kbd "K") 'pdf-view-previous-page)
+;; (evil-define-key 'normal pdf-view-mode-map (kbd "J") 'pdf-view-next-page)
+;; (evil-define-key 'normal pdf-view-mode-map (kbd "K") 'pdf-view-previous-page)
 
 ;; (evil-define-key 'normal 'global "G"
 ;;   (lambda () (interactive) (evil-goto-line) (forward-line -1)))
