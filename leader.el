@@ -7,12 +7,6 @@
   ;; local: (m i)
   ;; convention: if global prefx exists then use same prefix for local; else use 'm' as prefix
   (evil-leader/set-key
-    "o l" 'org-store-link
-    ;; "o a" 'org-agent
-    "o c" 'org-capture
-    "o a" (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows))
-    "m i" 'magit-init
-    "m m" 'magit-status
     "c t" 'toggle-tabs
     "c y" 'conditional-tabify
     "c i" 'indent-whole-buffer
@@ -22,6 +16,12 @@
             (call-interactively 'eval-last-sexp)
             (evil-exit-visual-state))
     "c r" 'rename-uniquely
+    "o l" 'org-store-link
+    ;; "o a" 'org-agent
+    "o c" 'org-capture
+    "o a" (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows))
+    "m i" 'magit-init
+    "m m" 'magit-status
     "f f" 'find-file
     "f h" (lambda () (interactive) (if (equal major-mode 'dired-mode)
                                   (counsel-find-file)
@@ -82,9 +82,10 @@
     "n e" (lambda () (interactive) (let ((default-directory home-dir)) (eshell)))
     "n s" (lambda () (interactive) (create-dired-frame (concat "/ssh:" (read-string "SSH: ") ":")))
     "n u" (lambda () (interactive) (create-dired-frame (concat "/sudo::" (read-directory-name "Dir (sudo): " "/"))))
-    "s" 'save-buffer
+    "s" (lambda () (interactive) (indent-whole-buffer) (save-buffer))
     ;; "a" 'evil-quit
     ";" 'eval-expression
+    "/" 'evil-ex-nohighlight
     "1" 'shell-command
     "t m" 'minimap-mode
     "t u" 'undo-tree-visualize
@@ -117,7 +118,15 @@
     ;;                (latex-preview-pane-update)))
     )
   (evil-leader/set-key-for-mode 'org-mode
-    "o i" 'org-insert-structure-template
+    ;; "o i" 'org-insert-structure-template
+    "o i s" (lambda () (interactive) (org-insert-structure-template "src")
+              (insert (concat (read-string "Mode: ") " "))
+              (org-edit-special)
+              (evil-insert-state))
+    "o i c" (lambda () (interactive) (org-insert-structure-template "comment"))
+    "o i l" (lambda () (interactive) (org-insert-structure-template "export latex"))
+    "o i h" (lambda () (interactive) (org-insert-structure-template "export html"))
+    "o i q" (lambda () (interactive) (org-insert-structure-template "quote"))
     "o s" 'org-schedule
     "o d" 'org-deadline
     "o e l" 'org-latex-export-to-latex
@@ -128,43 +137,43 @@
 (evil-define-key 'normal dired-mode-map "f" 'find-file)
 
 ;; Company start
-;; (defun company-backspace ()
-;;   (interactive)
-;;   (if (equal company-selection-changed nil)
-;;       (if tab-control-auto (backward-delete-char-untabify 1)
-;;         (backspace-whitespace-to-tab-stop))
-;;     (company-abort)))
+(defun company-backspace ()
+  (interactive)
+  (if (equal company-selection-changed nil)
+      (if tab-control-auto (backward-delete-char-untabify 1)
+        (backspace-whitespace-to-tab-stop))
+    (company-abort)))
 
-;; (defun company-select-next-or-complete-selection (&optional arg)
-;;   "Insert selection if appropriate, or select the next candidate."
-;;   (interactive)
-;;   (if (not (company-tooltip-visible-p)) (company-manual-begin))
-;;   (cond ((> company-candidates-length 1) (company-select-next arg))
-;;         ((equal company-candidates-length 1) (company-finish (car company-candidates)))))
+(defun company-select-next-or-complete-selection (&optional arg)
+  "Insert selection if appropriate, or select the next candidate."
+  (interactive)
+  (if (not (company-tooltip-visible-p)) (company-manual-begin))
+  (cond ((> company-candidates-length 1) (company-select-next arg))
+        ((equal company-candidates-length 1) (company-finish (car company-candidates)))))
 
-;; (defun company-select-previous-or-complete-selection ()
-;;   "Insert selection if appropriate, or select the previous candidate."
-;;   (interactive)
-;;   (company-select-next-or-complete-selection -1))
+(defun company-select-previous-or-complete-selection ()
+  "Insert selection if appropriate, or select the previous candidate."
+  (interactive)
+  (company-select-next-or-complete-selection -1))
 
-;; (define-key company-active-map (kbd "<backspace>") 'company-backspace)
-;; (define-key company-active-map (kbd "C-h") nil)
+(define-key company-active-map (kbd "<backspace>") 'company-backspace)
+(define-key company-active-map (kbd "C-h") nil)
 
-;; (evil-define-key 'insert company-mode-map (kbd "C-n")
-;;   'company-select-next-or-complete-selection)
-;; (evil-define-key 'insert company-mode-map (kbd "C-p")
-;;   'company-select-previous-or-complete-selection)
-;; (evil-define-key 'insert company-active-map (kbd "C-n")
-;;   'company-select-next)
-;; (evil-define-key 'insert company-active-map (kbd "C-p")
-;;   'company-select-previous)
-;; (evil-define-key 'insert company-active-map (kbd "ESC")
-;;   (lambda () (interactive) (company-abort)(evil-normal-state)))
-
+(evil-define-key 'insert company-mode-map (kbd "C-n")
+  'company-select-next-or-complete-selection)
+(evil-define-key 'insert company-mode-map (kbd "C-p")
+  'company-select-previous-or-complete-selection)
+(evil-define-key 'insert company-active-map (kbd "C-n")
+  'company-select-next)
+(evil-define-key 'insert company-active-map (kbd "C-p")
+  'company-select-previous)
+(evil-define-key 'insert company-active-map (kbd "ESC")
+  (lambda () (interactive) (company-abort)(evil-normal-state)))
 ;; Company end
 
 (evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
 (evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
+;; (evil-define-key 'insert org-mode-map (kbd "RET") (lambda () (interactive) (org-return 'indent)))
 
 (evil-define-key 'normal pdf-view-mode-map (kbd "J") 'pdf-view-next-page)
 (evil-define-key 'normal pdf-view-mode-map (kbd "K") 'pdf-view-previous-page)

@@ -15,14 +15,13 @@ in a pop-up frame")
         (t (concat (car list) "\\|" (construct-regexp-from-list (cdr list))))))
 
 (defvar pop-up-frame-modes '(help-mode
-                             pdf-view-mode
                              messages-buffer-mode
                              magit-status-mode
                              )
   "List of major modes that denote the buffers to be displayed
 in a pop-up frame")
 
-(defun display-buffer-query-mode (name action)
+(defun display-buffer-mode-query (name action)
   "Function passed to `display-buffer-alist' that checks a buffer's major mode against
 `pop-up-frame-modes'"
   (member (buffer-local-value 'major-mode (get-buffer name)) pop-up-frame-modes))
@@ -30,16 +29,21 @@ in a pop-up frame")
 (defun display-buffer-pdf-from-dired (name action)
   "Special logic to display pdf files in pop-up frames unless the current buffer
 is dired"
-  (and (equal (buffer-local-value 'major-mode (get-buffer name) 'pdf-view-mode))
+  (and (equal (buffer-local-value 'major-mode (get-buffer name)) 'pdf-view-mode)
        (not (equal major-mode 'dired-mode))))
 
 (add-to-list 'display-buffer-alist
-             '(display-buffer-query-mode
+             '(display-buffer-mode-query
                (display-buffer-reuse-window display-buffer-pop-up-frame)
                (reusable-frames . 0)))
 
 (add-to-list 'display-buffer-alist
              `(,(construct-regexp-from-list pop-up-frame-regexp-list)
+               (display-buffer-reuse-window display-buffer-pop-up-frame)
+               (reusable-frames . 0)))
+
+(add-to-list 'display-buffer-alist
+             '(display-buffer-pdf-from-dired
                (display-buffer-reuse-window display-buffer-pop-up-frame)
                (reusable-frames . 0)))
 

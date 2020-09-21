@@ -1,6 +1,8 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
+(unless (require 'use-package nil 'noerror)
+  (package-install 'use-package))
 (eval-when-compile
  (require 'use-package))
 (setq use-package-always-ensure t)
@@ -27,7 +29,7 @@
 (use-package evil
   :custom
   (evil-want-C-u-scroll t)
-  (evil-want-C-u-delete t)
+  (evil-want-C-u-delete nil)
   (evil-want-C-w-scroll t)
   (evil-want-C-w-delete t)
   (evil-want-C-i-jump t)
@@ -36,6 +38,7 @@
   (evil-want-keybinding nil)
   (evil-move-beyond-eol nil)
   (evil-respect-visual-line-mode nil)
+  (evil-search-module 'evil-search)
   :config
   (evil-mode 1))
 
@@ -74,7 +77,7 @@
 (use-package evil-org
   :after (org evil) 
   :custom
-  (evil-org-special-o/O '(table-row item))
+  (evil-org-special-o/O '(table-row))
   :config
   (require 'org-tempo)
   (require 'evil-org-agenda)
@@ -169,7 +172,7 @@
   (clean-buffer-list-kill-never-buffer-names
    '("*scratch*" "*Messages*" "*cmd*" "*eshell*"))
   (clean-buffer-list-kill-never-regexps
-   '("\\*.*scratch\\*" "\\` \\*Minibuf-.*\\*\\'" "^\\*EMMS Playlist\\*.*$")))
+   '("^\\ .*$" "\\*.*scratch\\*" "\\` \\*Minibuf-.*\\*\\'" "^\\*EMMS Playlist\\*.*$")))
 
 (require 'dired-x)
 
@@ -228,33 +231,36 @@
   :config
   (add-hook 'magit-mode-hook (lambda () (evil-snipe-local-mode 0))))
 
-;; (use-package company
-;;   :custom
-;;   ;; (company-idle-delay 0.2)
-;;   (company-idle-delay nil)
-;;   (company-minimum-prefix-length 2)
-;;   (company-show-numbers t)
-;;   (company-selection-wrap-around t)
-;;   (company-backends
-;;    '((company-semantic company-capf company-files company-etags company-keywords
-;;                       company-dabbrev company-dabbrev-code company-cmake)))
-;;   :config
-;;   (defun add-to-company-backends (list)
-;;     (setq company-backends `(,(append list (car company-backends)))))
-;;   ;; (global-company-mode)
-;;   (add-hook 'c-mode-hook 'company-mode)
-;;   (add-hook 'c++-mode-hook 'company-mode)
-;;   (add-hook 'LaTeX-mode-hook 'company-mode)
-;;   (add-hook 'python-mode-hook 'company-mode)
-;;   )
-;; (use-package company-c-headers
-;;   :after company
-;;   :config
-;;   (add-to-company-backends '(company-c-headers)))
-;; (use-package company-shell
-;;   :after company
-;;   :custom
-;;   (add-to-company-backends '(company-shell company-shell-env)))
+(use-package company
+  :custom
+  ;; (company-idle-delay 0.2)
+  (company-idle-delay nil)
+  (company-minimum-prefix-length 2)
+  (company-show-numbers t)
+  (company-selection-wrap-around t)
+  (company-backends
+   '((company-semantic company-capf company-files company-etags company-keywords
+                      company-dabbrev company-dabbrev-code company-cmake)))
+  :config
+  (defun add-to-company-backends (list)
+    (setq company-backends `(,(append list (car company-backends)))))
+  ;; (global-company-mode)
+  (add-hook 'sh-mode-hook 'company-mode)
+  (add-hook 'conf-mode-hook 'company-mode)
+  (add-hook 'c-mode-hook 'company-mode)
+  (add-hook 'c++-mode-hook 'company-mode)
+  (add-hook 'emacs-lisp-mode-hook 'company-mode)
+  (add-hook 'LaTeX-mode-hook 'company-mode)
+  (add-hook 'python-mode-hook 'company-mode)
+  )
+(use-package company-c-headers
+  :after company
+  :config
+  (add-to-company-backends '(company-c-headers)))
+(use-package company-shell
+  :after company
+  :custom
+  (add-to-company-backends '(company-shell company-shell-env)))
 ;; (use-package company-auctex
 ;;   :after company
 ;;   :config
