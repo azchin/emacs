@@ -39,6 +39,7 @@
   (evil-move-beyond-eol nil)
   (evil-respect-visual-line-mode nil)
   (evil-search-module 'evil-search)
+  (evil-undo-system 'undo-tree)
   :config
   (evil-mode 1))
 
