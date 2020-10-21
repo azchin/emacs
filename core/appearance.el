@@ -6,6 +6,8 @@
 (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-9"))
 ;; (add-to-list 'default-frame-alist '(font . "FuraCode Nerd Font-9"))
 ;; (set-frame-parameter (selected-frame) 'alpha '(95 . 86))
+(defun make-frame-transparent() (interactive) (set-frame-parameter (selected-frame) 'alpha 80))
+(defun make-frame-opaque() (interactive) (set-frame-parameter (selected-frame) 'alpha 100))
 ;; (add-to-list 'default-frame-alist '(alpha . (95 . 86))) ;; first(?) frame flickers
 ;; (add-to-list 'default-frame-alist '(alpha . 95))
 (setq inhibit-startup-screen t)
