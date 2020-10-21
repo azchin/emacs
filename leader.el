@@ -82,7 +82,8 @@
     "n e" (lambda () (interactive) (let ((default-directory home-dir)) (eshell)))
     "n s" (lambda () (interactive) (create-dired-frame (concat "/ssh:" (read-string "SSH: ") ":")))
     "n u" (lambda () (interactive) (create-dired-frame (concat "/sudo::" (read-directory-name "Dir (sudo): " "/"))))
-    "s" (lambda () (interactive) (indent-whole-buffer) (save-buffer))
+    "s" 'save-buffer
+    "S" 'write-file
     ;; "a" 'evil-quit
     ";" 'eval-expression
     "/" 'evil-ex-nohighlight
@@ -112,12 +113,13 @@
     )
   (evil-leader/set-key-for-mode 'latex-mode
     "m c" (lambda () (interactive)
-          (save-buffer) (TeX-command-run-all nil))
+            (save-buffer) (TeX-command-run-all nil))
     ;; "l l" (lambda () (interactive)
     ;;         (progn (latex-preview-pane-mode 'toggle)
     ;;                (latex-preview-pane-update)))
     )
   (evil-leader/set-key-for-mode 'org-mode
+    ;; "s" (lambda () (interactive) (indent-whole-buffer) (save-buffer))
     ;; "o i" 'org-insert-structure-template
     "o i s" (lambda () (interactive) (org-insert-structure-template "src")
               (insert (concat (read-string "Mode: ") " "))
@@ -173,7 +175,7 @@
 
 (evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
 (evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
-;; (evil-define-key 'insert org-mode-map (kbd "RET") (lambda () (interactive) (org-return 'indent)))
+(evil-define-key 'insert org-mode-map (kbd "RET") (lambda () (interactive) (org-return nil)))
 
 (evil-define-key 'normal pdf-view-mode-map (kbd "J") 'pdf-view-next-page)
 (evil-define-key 'normal pdf-view-mode-map (kbd "K") 'pdf-view-previous-page)

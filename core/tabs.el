@@ -1,4 +1,4 @@
-(setq custom-tab-width 2)
+(setq custom-tab-width 4)
 (defun choose-tabs (tabs &optional arg-width)
   (setq tab-width (or arg-width custom-tab-width))
   (setq evil-shift-width tab-width)
@@ -57,15 +57,23 @@
       (funcall 'manual-tabs)
     (funcall 'auto-tabs)))
 
+(defun c-tabs()
+  (set (make-local-variable 'backward-delete-char-untabify-method) nil)
+  (evil-define-key 'insert 'local
+    (kbd "<backspace>") 'backspace-whitespace-to-tab-stop
+    (kbd "TAB") 'c-indent-command))
+
 (setq-default indent-tabs-mode t)
 (setq-default tab-width custom-tab-width)
 (setq-default evil-shift-width custom-tab-width)
 (setq python-indent-offset 4)
 (setq sh-basic-offset custom-tab-width)
 (setq c-basic-offset custom-tab-width
-      c-default-style "linux")
+      c-default-style "linux"
+      c-syntactic-indentation nil)
 
-(add-hook 'prog-mode-hook 'enable-tabs)
+
+(add-hook 'prog-mode-hook 'disable-tabs)
 (add-hook 'special-mode-hook 'enable-tabs)
 (add-hook 'text-mode-hook 'disable-tabs)
 ;; (add-hook 'text-mode-hook 
@@ -76,6 +84,10 @@
 (add-hook 'emacs-lisp-mode-hook 'disable-tabs)
 (add-hook 'python-mode-hook (lambda () (disable-tabs python-indent-offset)))
 (add-hook 'org-mode-hook 'disable-tabs)
+
+;; (add-hook 'c-mode-hook 'c-tabs)
+;; (add-hook 'c++-mode-hook 'c-tabs)
+
 
 ;; Add hooks here to set manual vs automatic tabs
 (add-hook 'text-mode-hook 'manual-tabs)

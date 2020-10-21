@@ -39,6 +39,8 @@
   (evil-move-beyond-eol nil)
   (evil-respect-visual-line-mode nil)
   (evil-search-module 'evil-search)
+  (evil-undo-system 'undo-tree)
+  (evil-want-change-word-to-end nil)
   :config
   (evil-mode 1))
 
@@ -123,10 +125,10 @@
 ;; (use-package modus-operandi-theme)
 ;; (load-theme 'gruvbox-dark-hard t)
 
-(use-package haskell-mode)
+;; (use-package haskell-mode)
 (use-package markdown-mode)
 
-(use-package pandoc-mode)
+;; (use-package pandoc-mode)
 
 (use-package minimap
   :custom
@@ -137,8 +139,8 @@
 
 (use-package pdf-tools
   :config 
-  ;; (add-hook 'pdf-view-mode 'auto-revert-mode)
-  (add-hook 'pdf-view-mode 'pdf-view-midnight-minor-mode)
+  ;; (add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode)
+  (add-hook 'pdf-view-mode-hook 'auto-revert-mode)
   (pdf-tools-install))
 
 ; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
@@ -152,13 +154,13 @@
   (TeX-parse-self t)
   (TeX-view-program-selection '((output-pdf "PDF Tools")))
   (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
-  ;; (TeX-engine 'xetex)
+  (TeX-engine 'xetex)
   :config
   (add-hook 'LaTeX-mode-hook
    (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
 
-  (add-hook 'TeX-after-compilation-finished-functions 
-            #'TeX-revert-document-buffer)
+  ;; (add-hook 'TeX-after-compilation-finished-functions 
+  ;;           #'TeX-revert-document-buffer)
   ; (add-hook 'LaTeX-mode-hook
   ;           (lambda () (reftex-mode t) (flyspell-mode t)))
   )
