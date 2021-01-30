@@ -1,5 +1,5 @@
 (use-package evil-leader
-  :after (evil evil-org)
+  :after (evil)
   :config 
   (global-evil-leader-mode)
   (evil-leader/set-leader "<SPC>")
@@ -116,13 +116,13 @@
   ;;   ;;         (progn (latex-preview-pane-mode 'toggle)
   ;;   ;;                (latex-preview-pane-update)))
   ;;   )
-  (evil-leader/set-key-for-mode 'org-mode
-    "o i" 'org-insert-structure-template
-    "o s" 'org-schedule
-    "o d" 'org-deadline
-    "o e l" 'org-latex-export-to-latex
-    "o e p" 'org-latex-export-to-pdf
-    )
+  ; (evil-leader/set-key-for-mode 'org-mode
+  ;   "o i" 'org-insert-structure-template
+  ;   "o s" 'org-schedule
+  ;   "o d" 'org-deadline
+  ;   "o e l" 'org-latex-export-to-latex
+  ;   "o e p" 'org-latex-export-to-pdf
+  ;   )
   )
 
 (evil-define-key 'normal dired-mode-map "f" 'find-file)
@@ -163,8 +163,8 @@
 
 ;; Company end
 
-(evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
-(evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
+; (evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
+; (evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
 
 ;; (evil-define-key 'normal pdf-view-mode-map (kbd "J") 'pdf-view-next-page)
 ;; (evil-define-key 'normal pdf-view-mode-map (kbd "K") 'pdf-view-previous-page)

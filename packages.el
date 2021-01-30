@@ -71,19 +71,19 @@
   :config
   (evil-collection-init))
 
-(use-package evil-org
-  :after (org evil) 
-  :custom
-  (evil-org-special-o/O '(table-row item))
-  :config
-  (require 'evil-org-agenda)
-  ;; (require 'org-tempo)
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (evil-org-mode)
-              ))
-  (add-hook 'evil-org-mode (lambda () (evil-org-set-key-theme)))
-  (evil-org-agenda-set-keys))
+; (use-package evil-org
+;   :after (org evil) 
+;   :custom
+;   (evil-org-special-o/O '(table-row item))
+;   :config
+;   (require 'evil-org-agenda)
+;   ;; (require 'org-tempo)
+;   (add-hook 'org-mode-hook
+;             (lambda ()
+;               (evil-org-mode)
+;               ))
+;   (add-hook 'evil-org-mode (lambda () (evil-org-set-key-theme)))
+;   (evil-org-agenda-set-keys))
 
 (use-package smartparens
   :config
