@@ -76,19 +76,19 @@
   :config
   (evil-collection-init))
 
-(use-package evil-org
-  :after (org evil) 
-  :custom
-  (evil-org-special-o/O '(table-row))
-  :config
-  (require 'org-tempo)
-  (require 'evil-org-agenda)
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (evil-org-mode)
-              ))
-  (add-hook 'evil-org-mode (lambda () (evil-org-set-key-theme)))
-  (evil-org-agenda-set-keys))
+; (use-package evil-org
+;   :after (org evil) 
+;   :custom
+;   (evil-org-special-o/O '(table-row item))
+;   :config
+;   (require 'evil-org-agenda)
+;   ;; (require 'org-tempo)
+;   (add-hook 'org-mode-hook
+;             (lambda ()
+;               (evil-org-mode)
+;               ))
+;   (add-hook 'evil-org-mode (lambda () (evil-org-set-key-theme)))
+;   (evil-org-agenda-set-keys))
 
 (use-package smartparens
   :config
@@ -126,44 +126,44 @@
 ;; (load-theme 'gruvbox-dark-hard t)
 
 ;; (use-package haskell-mode)
-(use-package markdown-mode)
+;; (use-package markdown-mode)
 
 ;; (use-package pandoc-mode)
 
-(use-package minimap
-  :custom
-  (minimap-window-location 'right)
-  (minimap-update-delay 0)
-  (minimap-width-fraction 0.08)
-  (minimap-minimum-width 15))
+;; (use-package minimap
+;;   :custom
+;;   (minimap-window-location 'right)
+;;   (minimap-update-delay 0)
+;;   (minimap-width-fraction 0.08)
+;;   (minimap-minimum-width 15))
 
-(use-package pdf-tools
-  :config 
-  ;; (add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode)
-  (add-hook 'pdf-view-mode-hook 'auto-revert-mode)
-  (pdf-tools-install))
+;; (use-package pdf-tools
+;;   :config 
+;;   ;; (add-hook 'pdf-view-mode 'auto-revert-mode)
+;;   (add-hook 'pdf-view-mode 'pdf-view-midnight-minor-mode)
+;;   (pdf-tools-install))
 
-; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
-(use-package tex
-  :ensure auctex
-  :after (evil pdf-tools)
-  :custom
-  (TeX-source-correlate-mode t)
-  (TeX-source-correlate-start-server t)
-  (TeX-auto-save t)
-  (TeX-parse-self t)
-  (TeX-view-program-selection '((output-pdf "PDF Tools")))
-  (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
-  (TeX-engine 'xetex)
-  :config
-  (add-hook 'LaTeX-mode-hook
-   (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
+;; ; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
+;; (use-package tex
+;;   :ensure auctex
+;;   :after (evil pdf-tools)
+;;   :custom
+;;   (TeX-source-correlate-mode t)
+;;   (TeX-source-correlate-start-server t)
+;;   (TeX-auto-save t)
+;;   (TeX-parse-self t)
+;;   (TeX-view-program-selection '((output-pdf "PDF Tools")))
+;;   (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+;;   ;; (TeX-engine 'xetex)
+;;   :config
+;;   (add-hook 'LaTeX-mode-hook
+;;    (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
 
-  ;; (add-hook 'TeX-after-compilation-finished-functions 
-  ;;           #'TeX-revert-document-buffer)
-  ; (add-hook 'LaTeX-mode-hook
-  ;           (lambda () (reftex-mode t) (flyspell-mode t)))
-  )
+;;   (add-hook 'TeX-after-compilation-finished-functions 
+;;             #'TeX-revert-document-buffer)
+;;   ; (add-hook 'LaTeX-mode-hook
+;;   ;           (lambda () (reftex-mode t) (flyspell-mode t)))
+;;   )
 
 
 (use-package midnight
@@ -225,13 +225,13 @@
   :config
   (counsel-mode 1))
 
-(use-package magit)
-(use-package evil-magit
-  :after (magit evil)
-  :custom
-  (evil-magit-use-y-for-yank t)
-  :config
-  (add-hook 'magit-mode-hook (lambda () (evil-snipe-local-mode 0))))
+;; (use-package magit)
+;; (use-package evil-magit
+;;   :after (magit evil)
+;;   :custom
+;;   (evil-magit-use-y-for-yank t)
+;;   :config
+;;   (add-hook 'magit-mode-hook (lambda () (evil-snipe-local-mode 0))))
 
 (use-package company
   :custom
