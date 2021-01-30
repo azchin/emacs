@@ -3,6 +3,17 @@
 (scroll-bar-mode 0)
 (blink-cursor-mode 0)
 (setq visible-cursor nil)
+
+(let ((win '(128 40 256 192)))
+    (add-to-list 'initial-frame-alist `(width . ,(nth 0 win)))
+    (add-to-list 'initial-frame-alist `(height . ,(nth 1 win)))
+    (add-to-list 'initial-frame-alist `(left . ,(nth 2 win)))
+    (add-to-list 'initial-frame-alist `(top . ,(nth 3 win)))
+    (add-to-list 'default-frame-alist `(width . ,(nth 0 win)))
+    (add-to-list 'default-frame-alist `(height . ,(nth 1 win)))
+    (add-to-list 'default-frame-alist `(left . ,(nth 2 win)))
+    (add-to-list 'default-frame-alist `(top . ,(nth 3 win))))
+
 (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-9"))
 ;; (add-to-list 'default-frame-alist '(font . "FuraCode Nerd Font-9"))
 ;; (set-frame-parameter (selected-frame) 'alpha '(95 . 86))
