@@ -76,6 +76,7 @@
 (add-hook 'emacs-lisp-mode-hook 'disable-tabs)
 (add-hook 'python-mode-hook (lambda () (disable-tabs python-indent-offset)))
 (add-hook 'org-mode-hook 'disable-tabs)
+(add-hook 'js-mode-hook 'disable-tabs)
 
 ;; Add hooks here to set manual vs automatic tabs
 (add-hook 'text-mode-hook 'manual-tabs)

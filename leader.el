@@ -82,7 +82,8 @@
     "n e" (lambda () (interactive) (let ((default-directory home-dir)) (eshell)))
     "n s" (lambda () (interactive) (create-dired-frame (concat "/ssh:" (read-string "SSH: ") ":")))
     "n u" (lambda () (interactive) (create-dired-frame (concat "/sudo::" (read-directory-name "Dir (sudo): " "/"))))
-    "s" (lambda () (interactive) (indent-whole-buffer) (save-buffer))
+    ;; "s" (lambda () (interactive) (indent-whole-buffer) (save-buffer))
+    "s" 'save-buffer
     ;; "a" 'evil-quit
     ";" 'eval-expression
     "/" 'evil-ex-nohighlight
@@ -127,6 +128,7 @@
     "o i l" (lambda () (interactive) (org-insert-structure-template "export latex"))
     "o i h" (lambda () (interactive) (org-insert-structure-template "export html"))
     "o i q" (lambda () (interactive) (org-insert-structure-template "quote"))
+    "o i t" 'org-insert-structure-template
     "o s" 'org-schedule
     "o d" 'org-deadline
     "o e l" 'org-latex-export-to-latex
