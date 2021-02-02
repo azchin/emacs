@@ -32,20 +32,20 @@ is dired"
   (and (equal (buffer-local-value 'major-mode (get-buffer name)) 'pdf-view-mode)
        (not (equal major-mode 'dired-mode))))
 
-(add-to-list 'display-buffer-alist
-             '(display-buffer-mode-query
-               (display-buffer-reuse-window display-buffer-pop-up-frame)
-               (reusable-frames . 0)))
+; (add-to-list 'display-buffer-alist
+;              '(display-buffer-mode-query
+;                (display-buffer-reuse-window display-buffer-pop-up-frame)
+;                (reusable-frames . 0)))
 
-(add-to-list 'display-buffer-alist
-             `(,(construct-regexp-from-list pop-up-frame-regexp-list)
-               (display-buffer-reuse-window display-buffer-pop-up-frame)
-               (reusable-frames . 0)))
+; (add-to-list 'display-buffer-alist
+;              `(,(construct-regexp-from-list pop-up-frame-regexp-list)
+;                (display-buffer-reuse-window display-buffer-pop-up-frame)
+;                (reusable-frames . 0)))
 
-(add-to-list 'display-buffer-alist
-             '(display-buffer-pdf-from-dired
-               (display-buffer-reuse-window display-buffer-pop-up-frame)
-               (reusable-frames . 0)))
+; (add-to-list 'display-buffer-alist
+;              '(display-buffer-pdf-from-dired
+;                (display-buffer-reuse-window display-buffer-pop-up-frame)
+;                (reusable-frames . 0)))
 
 (setq Man-notify-method 'aggressive)
 ;; (setq grep-command "grep --color -nH --null ")
