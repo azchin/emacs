@@ -14,7 +14,9 @@
     (add-to-list 'default-frame-alist `(left . ,(nth 2 win)))
     (add-to-list 'default-frame-alist `(top . ,(nth 3 win))))
 
-(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-9"))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10"))
+
 ;; (add-to-list 'default-frame-alist '(font . "FuraCode Nerd Font-9"))
 ;; (set-frame-parameter (selected-frame) 'alpha '(95 . 86))
 (defun make-frame-transparent() (interactive) (set-frame-parameter (selected-frame) 'alpha 80))
@@ -24,7 +26,8 @@
 (setq inhibit-startup-screen t)
 ;; (setq frame-title-format '("Emacs - %b [%m] %f"))
 ;; (setq frame-title-format `(,(user-login-name) "@" ,(system-name) "     " global-mode-string "     %f" ))
-(setq frame-title-format `(,(system-name) " - %b [%m] %f"  ))
+;; (setq frame-title-format `(,(system-name) " - %b [%m] %f"  ))
+(setq frame-title-format '("%b [%m] %f"))
 
 (setq scroll-conservatively 128)
 (setq initial-major-mode 'org-mode)
