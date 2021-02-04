@@ -3,6 +3,7 @@
 (scroll-bar-mode 0)
 (blink-cursor-mode 0)
 (setq visible-cursor nil)
+(setq ring-bell-function 'ignore)
 
 (let ((win '(128 40 256 192)))
     (add-to-list 'initial-frame-alist `(width . ,(nth 0 win)))
