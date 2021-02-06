@@ -1,6 +1,7 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(package-initialize)
+(when (< emacs-major-version 27)
+  (package-initialize))
 (unless (require 'use-package nil 'noerror)
   (package-install 'use-package))
 (eval-when-compile
@@ -25,6 +26,8 @@
   (undo-tree-history-directory-alist `(("." . ,(emacsd "cache/undotree"))))
   :config
   (global-undo-tree-mode 1))
+
+(use-package magit)
 
 (use-package evil
   :custom
@@ -72,8 +75,11 @@
   (global-evil-quickscope-mode 1))
 
 (use-package evil-collection
-  :requires evil
+  :after (magit evil)
+  :custom
+  (evil-magit-use-y-for-yank t)
   :config
+  (add-hook 'magit-mode-hook (lambda () (evil-snipe-local-mode 0)))
   (evil-collection-init))
 
 ; (use-package evil-org
@@ -224,14 +230,6 @@
 (use-package counsel
   :config
   (counsel-mode 1))
-
-;; (use-package magit)
-;; (use-package evil-magit
-;;   :after (magit evil)
-;;   :custom
-;;   (evil-magit-use-y-for-yank t)
-;;   :config
-;;   (add-hook 'magit-mode-hook (lambda () (evil-snipe-local-mode 0))))
 
 (use-package company
   :custom
