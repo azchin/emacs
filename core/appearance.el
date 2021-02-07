@@ -16,7 +16,7 @@
     (add-to-list 'default-frame-alist `(top . ,(nth 3 win))))
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
-(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10"))
+(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-9"))
 
 ;; (add-to-list 'default-frame-alist '(font . "FuraCode Nerd Font-9"))
 ;; (set-frame-parameter (selected-frame) 'alpha '(95 . 86))
