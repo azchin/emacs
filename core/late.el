@@ -7,8 +7,9 @@
 (show-paren-mode 1)
 (set-face-attribute 'show-paren-match nil
                     :weight 'bold
-                    :foreground "#ff5c57"
-                    :background (face-attribute 'hl-line :background))
+                    ;; :foreground "#ff5c57"
+                    ;; :background (face-attribute 'hl-line :background)
+                    )
 
 (set-face-italic 'font-lock-comment-face nil)
 

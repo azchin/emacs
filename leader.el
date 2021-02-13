@@ -11,8 +11,6 @@
     ;; "o a" 'org-agent
     "o c" 'org-capture
     "o a" (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows))
-    ;; "m i" 'magit-init
-    ;; "m m" 'magit-status
     "c t" 'toggle-tabs
     "c y" 'conditional-tabify
     "c i" 'indent-whole-buffer
@@ -91,13 +89,13 @@
     ;; "s" (lambda () (interactive) (indent-whole-buffer) (save-buffer))
     "s" 'save-buffer
     "S" 'write-file
-    ;; "a" 'evil-quit
     ";" 'eval-expression
     "/" 'evil-ex-nohighlight
     "1" 'shell-command
     "t m" 'minimap-mode
     "t u" 'undo-tree-visualize
-    "w q" 'evil-quit
+    "w q" 'evil-save-and-close
+    "q w" 'evil-quit
     "w s" 'evil-window-split
     "w v" 'evil-window-vsplit
     "w h" 'evil-window-left
@@ -107,9 +105,9 @@
     "w w" 'evil-window-next
     "q k" (lambda () (interactive) (kill-buffer-mod (current-buffer)))
     "q g" (lambda () (interactive) (kill-buffer-greedy (current-buffer)))
-    "q w" 'delete-other-windows
     "q f" 'delete-other-frames
-    "q q" 'delete-frame
+    "q q" (lambda () (interactive) (if (> (length (visible-frame-list)) 1) (delete-frame)
+                                (save-buffers-kill-terminal)))
     "q h" 'kill-regex-buffer-frame
     "q a" (lambda () (interactive) (if server-mode (mapc 'delete-frame (frame-list))
                                 (save-buffers-kill-terminal)))

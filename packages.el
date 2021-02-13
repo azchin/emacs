@@ -2,6 +2,8 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (when (< emacs-major-version 27)
   (package-initialize))
+(unless package-archive-contents
+  (package-refresh-contents))
 (unless (require 'use-package nil 'noerror)
   (package-install 'use-package))
 (eval-when-compile
@@ -112,16 +114,16 @@
 ;;   :config
 ;;   (load-theme 'monokai-pro t))
 
-(use-package gruvbox-theme
- :config
- (load-theme 'gruvbox-dark-hard t)
- ;; (load-theme 'gruvbox-dark-medium t)
- ;; (load-theme 'gruvbox-light-soft t)
- )
+;; (use-package gruvbox-theme
+;;  :config
+;;  (load-theme 'gruvbox-dark-hard t)
+;;  ;; (load-theme 'gruvbox-dark-medium t)
+;;  ;; (load-theme 'gruvbox-light-soft t)
+;;  )
 
-;; (use-package modus-operandi-theme
-;;   :config
-;;   (load-theme 'modus-operandi t))
+(use-package modus-operandi-theme
+  :config
+  (load-theme 'modus-operandi t))
 ;; (use-package modus-vivendi-theme
 ;;   :config
 ;;   (load-theme 'modus-vivendi t))
@@ -136,12 +138,16 @@
 
 ;; (use-package pandoc-mode)
 
-;; (use-package minimap
-;;   :custom
-;;   (minimap-window-location 'right)
-;;   (minimap-update-delay 0)
-;;   (minimap-width-fraction 0.08)
-;;   (minimap-minimum-width 15))
+(use-package minimap
+  :custom
+  (minimap-window-location 'right)
+  (minimap-update-delay 0)
+  (minimap-width-fraction 0.08)
+  (minimap-minimum-width 15)
+  ;; :config
+  ;; (add-hook 'prog-mode-hook 'minimap-mode)
+  ;; (add-hook 'text-mode-hook 'minimap-mode)
+  )
 
 ;; (use-package pdf-tools
 ;;   :config 
