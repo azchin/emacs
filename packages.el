@@ -71,9 +71,14 @@
   ;; (set-face-foreground 'evil-quickscope-second-face "#AE57FF")
   (global-evil-quickscope-mode 1))
 
+(use-package magit)
+
 (use-package evil-collection
-  :requires evil
+  :after (magit evil)
+  :custom
+  (evil-magit-use-y-for-yank t)
   :config
+  (add-hook 'magit-mode-hook (lambda () (evil-snipe-local-mode 0)))
   (evil-collection-init))
 
 (use-package evil-org
@@ -83,10 +88,7 @@
   :config
   (require 'org-tempo)
   (require 'evil-org-agenda)
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (evil-org-mode)
-              ))
+  (add-hook 'org-mode-hook (lambda () (evil-org-mode)))
   (add-hook 'evil-org-mode (lambda () (evil-org-set-key-theme)))
   (evil-org-agenda-set-keys))
 
@@ -94,8 +96,9 @@
   :config
   (require 'smartparens-config)
   (add-hook 'prog-mode-hook #'smartparens-mode)
-  (add-hook 'special-mode-hook #'smartparens-mode)
-  (add-hook 'text-mode-hook #'smartparens-mode)
+  ;; (add-hook 'special-mode-hook #'smartparens-mode)
+  ;; (add-hook 'text-mode-hook #'smartparens-mode)
+  ;; (sp-local-pair 'org-mode "_" nil :actions :rem)
   (smartparens-strict-mode))
 
 ;; (use-package evil-smartparens
@@ -106,16 +109,16 @@
 ;;   :config
 ;;   (load-theme 'monokai-pro t))
 
-(use-package gruvbox-theme
- :config
- (load-theme 'gruvbox-dark-hard t)
- ;; (load-theme 'gruvbox-dark-medium t)
- ;; (load-theme 'gruvbox-light-soft t)
- )
+;; (use-package gruvbox-theme
+;;  :config
+;;  ;; (load-theme 'gruvbox-dark-hard t)
+;;  ;; (load-theme 'gruvbox-dark-medium t)
+;;  (load-theme 'gruvbox-light-hard t)
+;;  )
 
-;; (use-package modus-operandi-theme
-;;   :config
-;;   (load-theme 'modus-operandi t))
+(use-package modus-operandi-theme
+  :config
+  (load-theme 'modus-operandi t))
 ;; (use-package modus-vivendi-theme
 ;;   :config
 ;;   (load-theme 'modus-vivendi t))
@@ -156,8 +159,8 @@
   (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
   (TeX-engine 'xetex)
   :config
-  (add-hook 'LaTeX-mode-hook
-   (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
+  ;; (add-hook 'LaTeX-mode-hook
+  ;;  (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
 
   ;; (add-hook 'TeX-after-compilation-finished-functions 
   ;;           #'TeX-revert-document-buffer)
@@ -224,14 +227,6 @@
 (use-package counsel
   :config
   (counsel-mode 1))
-
-(use-package magit)
-(use-package evil-magit
-  :after (magit evil)
-  :custom
-  (evil-magit-use-y-for-yank t)
-  :config
-  (add-hook 'magit-mode-hook (lambda () (evil-snipe-local-mode 0))))
 
 (use-package company
   :custom
