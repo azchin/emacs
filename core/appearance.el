@@ -3,7 +3,21 @@
 (scroll-bar-mode 0)
 (blink-cursor-mode 0)
 (setq visible-cursor nil)
-(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-9"))
+(setq ring-bell-function 'ignore)
+
+(let ((win '(128 40 256 192)))
+    (add-to-list 'initial-frame-alist `(width . ,(nth 0 win)))
+    (add-to-list 'initial-frame-alist `(height . ,(nth 1 win)))
+    (add-to-list 'initial-frame-alist `(left . ,(nth 2 win)))
+    (add-to-list 'initial-frame-alist `(top . ,(nth 3 win)))
+    (add-to-list 'default-frame-alist `(width . ,(nth 0 win)))
+    (add-to-list 'default-frame-alist `(height . ,(nth 1 win)))
+    (add-to-list 'default-frame-alist `(left . ,(nth 2 win)))
+    (add-to-list 'default-frame-alist `(top . ,(nth 3 win))))
+
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10"))
+
 ;; (add-to-list 'default-frame-alist '(font . "FuraCode Nerd Font-9"))
 ;; (set-frame-parameter (selected-frame) 'alpha '(95 . 86))
 (defun make-frame-transparent() (interactive) (set-frame-parameter (selected-frame) 'alpha 80))
@@ -13,7 +27,8 @@
 (setq inhibit-startup-screen t)
 ;; (setq frame-title-format '("Emacs - %b [%m] %f"))
 ;; (setq frame-title-format `(,(user-login-name) "@" ,(system-name) "     " global-mode-string "     %f" ))
-(setq frame-title-format `(,(system-name) " - %b [%m] %f"  ))
+;; (setq frame-title-format `(,(system-name) " - %b [%m] %f"  ))
+(setq frame-title-format '("%b [%m] [%f]"))
 
 (setq scroll-conservatively 128)
 (setq initial-major-mode 'org-mode)
@@ -29,6 +44,7 @@
 
 ;; Line numbers
 (global-display-line-numbers-mode)
+(setq display-line-numbers-width-start 3)
 (defun enable-lines() (setq display-line-numbers-type 'relative))
 (defun disable-lines() (setq display-line-numbers-type nil))
 (defun absolute-lines() (setq display-line-numbers-type t))

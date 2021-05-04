@@ -1,5 +1,5 @@
 (use-package evil-leader
-  :after (evil evil-org tex minimap magit)
+  :after (evil)
   :config 
   (global-evil-leader-mode)
   (evil-leader/set-leader "<SPC>")
@@ -7,6 +7,10 @@
   ;; local: (m i)
   ;; convention: if global prefx exists then use same prefix for local; else use 'm' as prefix
   (evil-leader/set-key
+    "o l" 'org-store-link
+    ;; "o a" 'org-agent
+    "o c" 'org-capture
+    "o a" (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows))
     "c t" 'toggle-tabs
     "c y" 'conditional-tabify
     "c i" 'indent-whole-buffer
@@ -85,13 +89,13 @@
     ;; "s" (lambda () (interactive) (indent-whole-buffer) (save-buffer))
     "s" 'save-buffer
     "S" 'write-file
-    ;; "a" 'evil-quit
     ";" 'eval-expression
     "/" 'evil-ex-nohighlight
     "1" 'shell-command
     "t m" 'minimap-mode
     "t u" 'undo-tree-visualize
-    "w q" 'evil-quit
+    "w q" 'evil-save-and-close
+    "q w" 'evil-quit
     "w s" 'evil-window-split
     "w v" 'evil-window-vsplit
     "w h" 'evil-window-left
@@ -101,9 +105,9 @@
     "w w" 'evil-window-next
     "q k" (lambda () (interactive) (kill-buffer-mod (current-buffer)))
     "q g" (lambda () (interactive) (kill-buffer-greedy (current-buffer)))
-    "q w" 'delete-other-windows
     "q f" 'delete-other-frames
-    "q q" 'delete-frame
+    "q q" (lambda () (interactive) (if (> (length (visible-frame-list)) 1) (delete-frame)
+                                (save-buffers-kill-terminal)))
     "q h" 'kill-regex-buffer-frame
     "q a" (lambda () (interactive) (if server-mode (mapc 'delete-frame (frame-list))
                                 (save-buffers-kill-terminal)))
@@ -112,30 +116,20 @@
   (evil-leader/set-key-for-mode 'dired-mode
     "s" 'dired-jump
     )
-  (evil-leader/set-key-for-mode 'latex-mode
-    "m c" (lambda () (interactive)
-            (save-buffer) (TeX-command-run-all nil))
-    ;; "l l" (lambda () (interactive)
-    ;;         (progn (latex-preview-pane-mode 'toggle)
-    ;;                (latex-preview-pane-update)))
-    )
-  (evil-leader/set-key-for-mode 'org-mode
-    ;; "s" (lambda () (interactive) (indent-whole-buffer) (save-buffer))
-    ;; "o i" 'org-insert-structure-template
-    "o i s" (lambda () (interactive) (org-insert-structure-template "src")
-              (insert (concat (read-string "Mode: ") " "))
-              (org-edit-special)
-              (evil-insert-state))
-    "o i c" (lambda () (interactive) (org-insert-structure-template "comment"))
-    "o i l" (lambda () (interactive) (org-insert-structure-template "export latex"))
-    "o i h" (lambda () (interactive) (org-insert-structure-template "export html"))
-    "o i q" (lambda () (interactive) (org-insert-structure-template "quote"))
-    "o i t" 'org-insert-structure-template
-    "o s" 'org-schedule
-    "o d" 'org-deadline
-    "o e l" 'org-latex-export-to-latex
-    "o e p" 'org-latex-export-to-pdf
-    )
+  ;; (evil-leader/set-key-for-mode 'latex-mode
+  ;;   "m c" (lambda () (interactive)
+  ;;         (save-buffer) (TeX-command-run-all nil))
+  ;;   ;; "l l" (lambda () (interactive)
+  ;;   ;;         (progn (latex-preview-pane-mode 'toggle)
+  ;;   ;;                (latex-preview-pane-update)))
+  ;;   )
+  ; (evil-leader/set-key-for-mode 'org-mode
+  ;   "o i" 'org-insert-structure-template
+  ;   "o s" 'org-schedule
+  ;   "o d" 'org-deadline
+  ;   "o e l" 'org-latex-export-to-latex
+  ;   "o e p" 'org-latex-export-to-pdf
+  ;   )
   )
 
 (evil-define-key 'normal dired-mode-map "f" 'find-file)
@@ -175,12 +169,12 @@
   (lambda () (interactive) (company-abort)(evil-normal-state)))
 ;; Company end
 
-(evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
-(evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
-(evil-define-key 'insert org-mode-map (kbd "RET") (lambda () (interactive) (org-return nil)))
+; (evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
+; (evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
+; (evil-define-key 'insert org-mode-map (kbd "RET") (lambda () (interactive) (org-return nil)))
 
-(evil-define-key 'normal pdf-view-mode-map (kbd "J") 'pdf-view-next-page)
-(evil-define-key 'normal pdf-view-mode-map (kbd "K") 'pdf-view-previous-page)
+;; (evil-define-key 'normal pdf-view-mode-map (kbd "J") 'pdf-view-next-page)
+;; (evil-define-key 'normal pdf-view-mode-map (kbd "K") 'pdf-view-previous-page)
 
 ;; (evil-define-key 'normal 'global "G"
 ;;   (lambda () (interactive) (evil-goto-line) (forward-line -1)))

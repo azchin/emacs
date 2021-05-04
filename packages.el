@@ -1,6 +1,9 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(package-initialize)
+(when (< emacs-major-version 27)
+  (package-initialize))
+(unless package-archive-contents
+  (package-refresh-contents))
 (unless (require 'use-package nil 'noerror)
   (package-install 'use-package))
 (eval-when-compile
@@ -25,6 +28,8 @@
   (undo-tree-history-directory-alist `(("." . ,(emacsd "cache/undotree"))))
   :config
   (global-undo-tree-mode 1))
+
+(use-package magit)
 
 (use-package evil
   :custom
@@ -129,7 +134,7 @@
 ;; (load-theme 'gruvbox-dark-hard t)
 
 ;; (use-package haskell-mode)
-(use-package markdown-mode)
+;; (use-package markdown-mode)
 
 ;; (use-package pandoc-mode)
 
@@ -167,6 +172,34 @@
   ; (add-hook 'LaTeX-mode-hook
   ;           (lambda () (reftex-mode t) (flyspell-mode t)))
   )
+
+;; (use-package pdf-tools
+;;   :config 
+;;   ;; (add-hook 'pdf-view-mode 'auto-revert-mode)
+;;   (add-hook 'pdf-view-mode 'pdf-view-midnight-minor-mode)
+;;   (pdf-tools-install))
+
+;; ; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
+;; (use-package tex
+;;   :ensure auctex
+;;   :after (evil pdf-tools)
+;;   :custom
+;;   (TeX-source-correlate-mode t)
+;;   (TeX-source-correlate-start-server t)
+;;   (TeX-auto-save t)
+;;   (TeX-parse-self t)
+;;   (TeX-view-program-selection '((output-pdf "PDF Tools")))
+;;   (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+;;   ;; (TeX-engine 'xetex)
+;;   :config
+;;   (add-hook 'LaTeX-mode-hook
+;;    (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
+
+;;   (add-hook 'TeX-after-compilation-finished-functions 
+;;             #'TeX-revert-document-buffer)
+;;   ; (add-hook 'LaTeX-mode-hook
+;;   ;           (lambda () (reftex-mode t) (flyspell-mode t)))
+;;   )
 
 
 (use-package midnight

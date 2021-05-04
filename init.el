@@ -1,3 +1,4 @@
+(cd "~")
 (defun emacsd (file)
   (concat user-emacs-directory file))
 (defun eload (file)
