@@ -28,7 +28,7 @@
 ;; (setq frame-title-format '("Emacs - %b [%m] %f"))
 ;; (setq frame-title-format `(,(user-login-name) "@" ,(system-name) "     " global-mode-string "     %f" ))
 ;; (setq frame-title-format `(,(system-name) " - %b [%m] %f"  ))
-(setq frame-title-format '("%b [%m] %f"))
+(setq frame-title-format '("%b [%m] [%f]"))
 
 (setq scroll-conservatively 128)
 (setq initial-major-mode 'org-mode)
@@ -44,6 +44,7 @@
 
 ;; Line numbers
 (global-display-line-numbers-mode)
+(setq display-line-numbers-width-start 3)
 (defun enable-lines() (setq display-line-numbers-type 'relative))
 (defun disable-lines() (setq display-line-numbers-type nil))
 (defun absolute-lines() (setq display-line-numbers-type t))

@@ -17,7 +17,7 @@ Containing LEFT, and RIGHT aligned respectively."
 (setq mode-line-whitespace "  ")
 ;; (setq mode-line-whitespace '(:eval whitespace))
 
-(setq-default mode-line-position `(:eval ,(concat "(%l:%C)" mode-line-whitespace "%p")))
+(setq-default mode-line-position `(:eval ,(concat "(%l %C)" mode-line-whitespace "%p")))
 
 (setq-default
  mode-line-format

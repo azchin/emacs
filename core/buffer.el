@@ -92,7 +92,7 @@ BUFFER may be either a buffer or its name (a string)."
       (error "Cannot kill buffer.  Not a live buffer: `%s'" buffer))))
 
 (defun kill-buffer-mod (buffer)
-  "Kill the current buffer - even if modified."
+  "Kill the current buffer and all its windows - even if modified."
   (interactive)
   (let ((cur (current-buffer)))
     (switch-to-buffer buffer)
@@ -101,7 +101,7 @@ BUFFER may be either a buffer or its name (a string)."
     (kill-buffer-and-its-windows buffer)))
 
 (defun kill-buffer-greedy (buffer)
-  "Kill the current buffer - even if modified."
+  "Kill the current buffer and all its frames - even if modified."
   (interactive)
   (let ((cur (current-buffer)))
     (switch-to-buffer buffer)
