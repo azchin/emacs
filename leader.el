@@ -20,6 +20,7 @@
             (call-interactively 'eval-last-sexp)
             (evil-exit-visual-state))
     "c r" 'rename-uniquely
+    "c f" 'text-scale-adjust
     "o l" 'org-store-link
     ;; "o a" 'org-agent
     "o c" 'org-capture
@@ -49,6 +50,13 @@
     "f s l" (lambda () (interactive) (create-new-frame "*lisp-scratch*" 'lisp-interaction-mode))
     "f s s" (lambda () (interactive) (switch-to-buffer "*scratch*"))
     "f u" (lambda () (interactive) (find-file (concat "/sudo::" (read-file-name "File (sudo): " "/"))))
+    "t t" 'tab-new
+    "t b" 'switch-to-buffer-other-tab
+    "t f" 'find-file-other-tab
+    "t d" (lambda () (interactive) (dired-other-tab default-directory))
+    "t q" 'tab-close
+    "t o" 'tab-close-other
+    "t m" 'tab-move
     "d d" 'dired-jump
     ;; dired-jump opens new window, dired uses current window
     "d h" (lambda () (interactive) (dired home-dir))
@@ -88,14 +96,10 @@
     "n u" (lambda () (interactive) (create-dired-frame (concat "/sudo::" (read-directory-name "Dir (sudo): " "/"))))
     ;; "s" (lambda () (interactive) (indent-whole-buffer) (save-buffer))
     "s" 'save-buffer
-    "S" 'write-file
     ";" 'eval-expression
     "/" 'evil-ex-nohighlight
     "1" 'shell-command
-    "t m" 'minimap-mode
-    "t u" 'undo-tree-visualize
-    "w q" 'evil-save-and-close
-    "q w" 'evil-quit
+    "w q" 'delete-window
     "w s" 'evil-window-split
     "w v" 'evil-window-vsplit
     "w h" 'evil-window-left
@@ -103,11 +107,15 @@
     "w k" 'evil-window-up
     "w l" 'evil-window-right
     "w w" 'evil-window-next
+    "w o" 'delete-other-windows
     "q k" (lambda () (interactive) (kill-buffer-mod (current-buffer)))
     "q g" (lambda () (interactive) (kill-buffer-greedy (current-buffer)))
-    "q f" 'delete-other-frames
-    "q q" (lambda () (interactive) (if (> (length (visible-frame-list)) 1) (delete-frame)
-                                (save-buffers-kill-terminal)))
+    "q o" 'delete-other-frames
+    "q f" (lambda () (interactive) (cond ((> (length (visible-frame-list)) 1) (delete-frame))
+                                    (t (save-buffers-kill-terminal))))
+    "q q" (lambda () (interactive) (cond ((> (length (tab-bar-tabs)) 1) (tab-close))
+                                    ((> (length (visible-frame-list)) 1) (delete-frame))
+                                    (t (save-buffers-kill-terminal))))
     "q h" 'kill-regex-buffer-frame
     "q a" (lambda () (interactive) (if server-mode (mapc 'delete-frame (frame-list))
                                 (save-buffers-kill-terminal)))
@@ -123,13 +131,13 @@
   ;;   ;;         (progn (latex-preview-pane-mode 'toggle)
   ;;   ;;                (latex-preview-pane-update)))
   ;;   )
-  ; (evil-leader/set-key-for-mode 'org-mode
-  ;   "o i" 'org-insert-structure-template
-  ;   "o s" 'org-schedule
-  ;   "o d" 'org-deadline
-  ;   "o e l" 'org-latex-export-to-latex
-  ;   "o e p" 'org-latex-export-to-pdf
-  ;   )
+  (evil-leader/set-key-for-mode 'org-mode
+    "o i" 'org-insert-structure-template
+    "o s" 'org-schedule
+    "o d" 'org-deadline
+    "o e l" 'org-latex-export-to-latex
+    "o e p" 'org-latex-export-to-pdf
+    )
   )
 
 (evil-define-key 'normal dired-mode-map "f" 'find-file)
@@ -181,3 +189,8 @@
 
 ;; (define-key global-map (kbd "C-SPC") nil)
 ;; (define-key global-map (kbd "C-S-SPC") nil)
+
+(evil-global-set-key 'normal (kbd "C-_") nil)
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C-_") 'text-scale-decrease)
+(global-set-key (kbd "C-)") (lambda () (interactive) (text-scale-set 0)))

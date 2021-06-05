@@ -20,3 +20,6 @@
   (when (string-match ".*\\.sh" (buffer-name))
     (shell-command (concat "[ $(stat -c '%a' " buffer-file-name ") = 755 ] || chmod 755 " buffer-file-name))))
 (add-hook 'after-save-hook 'executable-autocmd)
+
+;; Major modes
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))

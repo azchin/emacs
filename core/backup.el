@@ -1,6 +1,6 @@
 (setq 
   backup-by-copying t
-  ; my-backup-dir (emacsd "cache/backups")
+  ;; my-backup-dir (emacsd "cache/backups")
   backup-directory-alist `(("." . ,(emacsd "cache/backups")))
   auto-save-file-name-transforms `((".*" ,(emacsd "cache/saves/") t))
   auto-save-default t

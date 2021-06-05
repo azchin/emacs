@@ -6,6 +6,7 @@
 (setq org-export-with-section-numbers nil)
 (setq org-src-window-setup 'other-frame)
 (setq org-list-allow-alphabetical t)
-;; (add-hook 'org-mode-hook 'org-indent-mode)
+(add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
+(add-hook 'org-mode-hook (lambda () (org-indent-mode -1)))
 ;; (setq org-agenda-files '(org-directory))
 ;; (setq org-agenda-file-regexp "agenda.org")

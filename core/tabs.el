@@ -84,7 +84,8 @@
 (add-hook 'emacs-lisp-mode-hook 'disable-tabs)
 (add-hook 'python-mode-hook (lambda () (disable-tabs python-indent-offset)))
 (add-hook 'org-mode-hook 'disable-tabs)
-(add-hook 'js-mode-hook 'disable-tabs)
+(add-hook 'js2-mode-hook (lambda () (disable-tabs 2)))
+(add-hook 'json-mode-hook (lambda () (disable-tabs 2)))
 
 ;; (add-hook 'c-mode-hook 'c-tabs)
 ;; (add-hook 'c++-mode-hook 'c-tabs)
@@ -92,12 +93,14 @@
 
 ;; Add hooks here to set manual vs automatic tabs
 (add-hook 'text-mode-hook 'manual-tabs)
-(add-hook 'prog-mode-hook 'manual-tabs)
+(add-hook 'prog-mode-hook 'auto-tabs)
 (add-hook 'special-mode-hook 'manual-tabs)
 
 (add-hook 'lisp-mode-hook 'auto-tabs)
 (add-hook 'emacs-lisp-mode-hook 'auto-tabs)
 (add-hook 'org-mode-hook 'auto-tabs)
+
+;; (setq-default electric-indent-inhibit t)
 
 (global-whitespace-mode)
 (setq whitespace-style '(face tabs tab-mark))

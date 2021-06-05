@@ -1,5 +1,16 @@
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+
+(defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
+(defvar melpa '("melpa" . "https://melpa.org/packages/"))
+; (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
+; (defvar org-elpa '("org" . "http://orgmode.org/elpa/"))
+;; Add marmalade to package repos
+(setq package-archives nil)
+(add-to-list 'package-archives melpa t)
+; (add-to-list 'package-archives melpa-stable t)
+(add-to-list 'package-archives gnu t)
+; (add-to-list 'package-archives org-elpa t)
+
 (when (< emacs-major-version 27)
   (package-initialize))
 (unless package-archive-contents
@@ -19,23 +30,28 @@
   (add-hook 'auto-package-update-before-hook (lambda () (message "Updating packages...")))
   (auto-package-update-maybe))
 
-(use-package undo-tree
-  :custom
-  (undo-tree-visualizer-diff t)
-  (undo-tree-visualizer-timestamps t)
-  (undo-tree-visualizer-relative-timestamps t)
-  (undo-tree-auto-save-history t)
-  (undo-tree-history-directory-alist `(("." . ,(emacsd "cache/undotree"))))
-  :config
-  (global-undo-tree-mode 1))
-
 (use-package magit)
 
+;; (use-package undo-tree
+;;   :custom
+;;   ; (undo-tree-visualizer-diff t)
+;;   ; (undo-tree-visualizer-timestamps t)
+;;   ; (undo-tree-visualizer-relative-timestamps t)
+;;   (undo-tree-auto-save-history t)
+;;   (undo-tree-history-directory-alist `(("." . ,(emacsd "cache/undotree"))))
+;;   :config
+;;   (global-undo-tree-mode 1))
+
+(use-package undo-fu
+  :custom
+  (undo-fu-ignore-keyboard-quit t))
+
 (use-package evil
+  :after (undo-fu)
   :custom
   (evil-want-C-u-scroll t)
   (evil-want-C-u-delete nil)
-  (evil-want-C-w-scroll t)
+  (evil-want-C-d-scroll t)
   (evil-want-C-w-delete t)
   (evil-want-C-i-jump t)
   (evil-want-Y-yank-to-eol t)
@@ -44,9 +60,11 @@
   (evil-move-beyond-eol nil)
   (evil-respect-visual-line-mode nil)
   (evil-search-module 'evil-search)
-  (evil-undo-system 'undo-tree)
+  ;; (evil-undo-system 'undo-tree)
+  (evil-undo-system 'undo-fu)
   (evil-want-change-word-to-end nil)
   :config
+  ;; (global-undo-tree-mode)
   (evil-mode 1))
 
 (use-package evil-surround
@@ -84,19 +102,19 @@
   (add-hook 'magit-mode-hook (lambda () (evil-snipe-local-mode 0)))
   (evil-collection-init))
 
-; (use-package evil-org
-;   :after (org evil) 
-;   :custom
-;   (evil-org-special-o/O '(table-row item))
-;   :config
-;   (require 'evil-org-agenda)
-;   ;; (require 'org-tempo)
-;   (add-hook 'org-mode-hook
-;             (lambda ()
-;               (evil-org-mode)
-;               ))
-;   (add-hook 'evil-org-mode (lambda () (evil-org-set-key-theme)))
-;   (evil-org-agenda-set-keys))
+(use-package evil-org
+  :after (org evil) 
+  :custom
+  (evil-org-special-o/O '(table-row item))
+  :config
+  (require 'evil-org-agenda)
+  ;; (require 'org-tempo)
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (evil-org-mode)
+              ))
+  (add-hook 'evil-org-mode (lambda () (evil-org-set-key-theme)))
+  (evil-org-agenda-set-keys))
 
 (use-package smartparens
   :config
@@ -114,46 +132,26 @@
 ;;   :config
 ;;   (load-theme 'monokai-pro t))
 
-;; (use-package gruvbox-theme
-;;  :config
-;;  (load-theme 'gruvbox-dark-hard t)
-;;  ;; (load-theme 'gruvbox-dark-medium t)
-;;  ;; (load-theme 'gruvbox-light-soft t)
-;;  )
-
-(use-package modus-operandi-theme
-  :config
-  (load-theme 'modus-operandi t))
-;; (use-package modus-vivendi-theme
-;;   :config
-;;   (load-theme 'modus-vivendi t))
-
-;; (use-package monokai-pro-theme)
-;; (use-package gruvbox-theme)
-;; (use-package modus-operandi-theme)
-;; (load-theme 'gruvbox-dark-hard t)
+(use-package gruvbox-theme
+ :config
+ (load-theme 'gruvbox-dark-hard t)
+ ;; (load-theme 'gruvbox-dark-medium t)
+ ;; (load-theme 'gruvbox-light-hard t)
+ )
 
 ;; (use-package haskell-mode)
-;; (use-package markdown-mode)
+(use-package markdown-mode)
 
 ;; (use-package pandoc-mode)
+(use-package rust-mode)
+(use-package js2-mode)
+(use-package json-mode)
 
-(use-package minimap
-  :custom
-  (minimap-window-location 'right)
-  (minimap-update-delay 0)
-  (minimap-width-fraction 0.08)
-  (minimap-minimum-width 15)
-  ;; :config
-  ;; (add-hook 'prog-mode-hook 'minimap-mode)
-  ;; (add-hook 'text-mode-hook 'minimap-mode)
-  )
-
-;; (use-package pdf-tools
-;;   :config 
-;;   ;; (add-hook 'pdf-view-mode 'auto-revert-mode)
-;;   (add-hook 'pdf-view-mode 'pdf-view-midnight-minor-mode)
-;;   (pdf-tools-install))
+(use-package pdf-tools
+  :config 
+  ;; (add-hook 'pdf-view-mode 'auto-revert-mode)
+  (add-hook 'pdf-view-mode 'pdf-view-midnight-minor-mode)
+  (pdf-tools-install))
 
 ;; ; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
 ;; (use-package tex
@@ -196,15 +194,6 @@
   (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map)
   (bind-key "<backtab>" #'dired-subtree-cycle dired-mode-map))
 
-;; (use-package fcitx
-;;   :custom
-;;   (fcitx-use-dbus t)
-;;   :config
-;;   (fcitx-default-setup)
-;;   (fcitx-prefix-keys-add "C-x" "C-c" "C-h" "M-s" "M-o")
-;;   (fcitx-prefix-keys-turn-on))
-
-
 (use-package ivy
   :custom
   (ivy-count-format "")
@@ -239,9 +228,9 @@
 
 (use-package company
   :custom
-  ;; (company-idle-delay 0.2)
-  (company-idle-delay nil)
-  (company-minimum-prefix-length 2)
+  (company-idle-delay 0.0)
+  ;; (company-idle-delay nil)
+  (company-minimum-prefix-length 1)
   (company-show-numbers t)
   (company-selection-wrap-around t)
   (company-backends
@@ -255,30 +244,36 @@
   (add-hook 'conf-mode-hook 'company-mode)
   (add-hook 'c-mode-hook 'company-mode)
   (add-hook 'c++-mode-hook 'company-mode)
+  (add-hook 'rust-mode-hook 'company-mode)
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
   (add-hook 'LaTeX-mode-hook 'company-mode)
   (add-hook 'python-mode-hook 'company-mode)
   )
-(use-package company-c-headers
-  :after company
-  :config
-  (add-to-company-backends '(company-c-headers)))
-(use-package company-shell
-  :after company
-  :custom
-  (add-to-company-backends '(company-shell company-shell-env)))
+
+;; (use-package company-c-headers
+;;   :after company
+;;   :config
+;;   (add-to-company-backends '(company-c-headers)))
+
+;; (use-package company-shell
+;;   :after company
+;;   :custom
+;;   (add-to-company-backends '(company-shell company-shell-env)))
+
 ;; (use-package company-auctex
 ;;   :after company
 ;;   :config
 ;;   (add-to-company-backends '(company-auctex))
 ;;   (company-auctex-init))
 
-;; (use-package lsp-mode
-;;   :hook
-;;   ((prog-mode-hook . lsp)
-;;    (text-mode-hook . lsp)
-;;    (special-mode-hook . lsp))
-;;   :commands lsp)
+(use-package lsp-mode
+  :config
+  (add-hook 'rust-mode-hook 'lsp)
+  ;; :hook
+  ;; ((rust-mode-hook . lsp)
+  ;;  )
+  ;; :commands lsp
+  )
 
 ;; (use-package lsp-ivy)
 ;; (use-package ccls)
