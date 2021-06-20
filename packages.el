@@ -1,6 +1,6 @@
 (require 'package)
 
-(defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
+;; (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
 ; (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
 ; (defvar org-elpa '("org" . "http://orgmode.org/elpa/"))
@@ -8,7 +8,7 @@
 (setq package-archives nil)
 (add-to-list 'package-archives melpa t)
 ; (add-to-list 'package-archives melpa-stable t)
-(add-to-list 'package-archives gnu t)
+; (add-to-list 'package-archives gnu t)
 ; (add-to-list 'package-archives org-elpa t)
 
 (when (< emacs-major-version 27)
@@ -46,6 +46,13 @@
   :custom
   (undo-fu-ignore-keyboard-quit t))
 
+(use-package undo-fu-session
+  :after (undo-fu)
+  :custom
+  (undo-fu-session-directory (emacsd "cache/backups"))
+  :config
+  (global-undo-fu-session-mode))
+
 (use-package evil
   :after (undo-fu)
   :custom
@@ -59,13 +66,15 @@
   (evil-want-keybinding nil)
   (evil-move-beyond-eol nil)
   (evil-respect-visual-line-mode nil)
-  (evil-search-module 'evil-search)
   ;; (evil-undo-system 'undo-tree)
   (evil-undo-system 'undo-fu)
   (evil-want-change-word-to-end nil)
-  :config
+  ;; (evil-search-module 'isearch)
+  (evil-search-module 'evil-search)
+  ;; :config
   ;; (global-undo-tree-mode)
-  (evil-mode 1))
+  ;; (evil-mode 1))
+  )
 
 (use-package evil-surround
   :requires evil
@@ -108,7 +117,7 @@
   (evil-org-special-o/O '(table-row item))
   :config
   (require 'evil-org-agenda)
-  ;; (require 'org-tempo)
+  (require 'org-tempo)
   (add-hook 'org-mode-hook
             (lambda ()
               (evil-org-mode)
@@ -123,6 +132,10 @@
   (add-hook 'special-mode-hook #'smartparens-mode)
   (add-hook 'text-mode-hook #'smartparens-mode)
   (smartparens-strict-mode))
+
+;; (use-package anzu
+;;   :config
+;;   (global-anzu-mode +1))
 
 ;; (use-package evil-smartparens
 ;;   :config
@@ -179,12 +192,15 @@
 (use-package midnight
   :custom
   (clean-buffer-list-delay-special 0)
-  (clean-buffer-list-timer (run-at-time t 3600 'clean-buffer-list))
+  (clean-buffer-list-delay-general 1)
+  ;; (clean-buffer-list-timer (run-at-time t 3600 'clean-buffer-list))
   (clean-buffer-list-kill-regexps '("^.*$"))
   (clean-buffer-list-kill-never-buffer-names
-   '("*scratch*" "*Messages*" "*cmd*" "*eshell*"))
+   '("*scratch*" "*Messages*" "*cmd*"))
   (clean-buffer-list-kill-never-regexps
-   '("^\\ .*$" "\\*.*scratch\\*" "\\` \\*Minibuf-.*\\*\\'" "^\\*EMMS Playlist\\*.*$")))
+   '("^\\ .*$" "\\*.*scratch\\*" "\\` \\*Minibuf-.*\\*\\'" "^\\*EMMS Playlist\\*.*$" "^[A-Za-z].*[A-Za-z]$"))
+  :config
+  (run-at-time t 1800 'clean-buffer-list))
 
 (require 'dired-x)
 
@@ -193,6 +209,8 @@
   :config
   (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map)
   (bind-key "<backtab>" #'dired-subtree-cycle dired-mode-map))
+
+(use-package yasnippet)
 
 (use-package ivy
   :custom
@@ -221,7 +239,9 @@
   (ivy-mode 1))
 
 (use-package ivy-hydra)
-(use-package swiper)
+(use-package swiper
+  :config
+  (global-set-key (kbd "C-s") 'swiper))
 (use-package counsel
   :config
   (counsel-mode 1))

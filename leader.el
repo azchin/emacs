@@ -2,6 +2,7 @@
   :after (evil)
   :config 
   (global-evil-leader-mode)
+  (evil-mode 1)
   (evil-leader/set-leader "<SPC>")
   ;; global: (o m c f d h b n w q t s a ; 1)
   ;; local: (m i)
@@ -83,7 +84,9 @@
     "h a" 'apropos-command
     "h o" 'describe-symbol
     "b b" 'switch-to-buffer
-    "b c" 'clean-buffer-list
+    "b c" (lambda () (interactive) (let ((clean-buffer-list-kill-never-regexps
+                                     (remove "^[A-Za-z].*[A-Za-z]$" clean-buffer-list-kill-never-regexps)))
+                                (clean-buffer-list)))
     "b n" 'next-buffer
     "b p" 'previous-buffer
     "b s" 'write-file
@@ -91,7 +94,8 @@
     "n b" 'list-buffers
     "n d" 'create-dired-frame
     "n h" (lambda () (interactive) (create-dired-frame home-dir))
-    "n e" (lambda () (interactive) (let ((default-directory home-dir)) (eshell)))
+    ;; "n e" (lambda () (interactive) (let ((default-directory home-dir)) (eshell)))
+    "n e" 'create-eshell-window
     "n s" (lambda () (interactive) (create-dired-frame (concat "/ssh:" (read-string "SSH: ") ":")))
     "n u" (lambda () (interactive) (create-dired-frame (concat "/sudo::" (read-directory-name "Dir (sudo): " "/"))))
     ;; "s" (lambda () (interactive) (indent-whole-buffer) (save-buffer))
@@ -139,6 +143,9 @@
     "o e p" 'org-latex-export-to-pdf
     )
   )
+
+;; (evil-set-leader '(normal visual replace emacs motion operator) (kbd "<SPC>"))
+;; (evil-define-key 'normal 'global (kbd "<leader> o l") 'org-store-link)
 
 (evil-define-key 'normal dired-mode-map "f" 'find-file)
 

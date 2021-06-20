@@ -3,6 +3,12 @@
 (scroll-bar-mode 0)
 (blink-cursor-mode 0)
 
+(setq lazy-highlight-buffer-max-at-a-time nil)
+(setq lazy-highlight-initial-delay 0)
+(setq lazy-highlight-interval 0)
+(setq lazy-highlight-cleanup nil)
+(setq isearch-lazy-count t)
+
 (setq visible-cursor nil)
 (setq ring-bell-function 'ignore)
 
@@ -11,13 +17,13 @@
 (setq tab-bar-close-last-tab-choice 'delete-frame)
 (setq tab-bar-new-button-show nil)
 (setq tab-bar-new-tab-to 'right)
-(setq-default tab-bar-tab-name-function 
-              (lambda () (concat 
-                     " "
-                     (when (buffer-modified-p) "+ ")
-                     (tab-bar-tab-name-current)
-                     " ")))
-;; (setq tab-bar-button-margin '(16 . 4))
+(setq-default tab-bar-tab-name-function (lambda () (concat 
+                                               " "
+                                               (when (buffer-modified-p) "+ ")
+                                               (tab-bar-tab-name-current)
+                                               " ")))
+(setq tab-bar-button-margin '(4 . 8))
+;; (setq tab-bar-button-relief 32)
 
 ;; (let ((win '(128 40 256 192)))
 ;;     (add-to-list 'initial-frame-alist `(width . ,(nth 0 win)))
@@ -42,7 +48,7 @@
 ;; (setq frame-title-format '("Emacs - %b [%m] %f"))
 ;; (setq frame-title-format `(,(user-login-name) "@" ,(system-name) "     " global-mode-string "     %f" ))
 ;; (setq frame-title-format `(,(system-name) " - %b [%m] %f"  ))
-(setq frame-title-format '("%b [%m] [%f]"))
+(setq frame-title-format '("%b [%m]"))
 
 (setq scroll-conservatively 128)
 (setq initial-major-mode 'org-mode)

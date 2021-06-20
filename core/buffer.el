@@ -117,6 +117,12 @@ BUFFER may be either a buffer or its name (a string)."
   (mapc 'kill-buffer-mod (buffer-list))
   (kill-emacs))
 
+(defun create-eshell-window ()
+  "Create an eshell terminal window"
+  (interactive)
+  (let ((new-window (split-window-below -16)))
+    (select-window new-window)
+    (eshell 't)))
 
 (defun create-scratch-frame (name mode)
   "Create a scratch frame"
