@@ -22,6 +22,9 @@
             (evil-exit-visual-state))
     "c r" 'rename-uniquely
     "c f" 'text-scale-adjust
+    "c w" 'count-words-region
+    "e e" (lambda () (interactive) (desktop-save (emacsd "cache/custom-desktop")))
+    "e r" (lambda () (interactive) (desktop-read (emacsd "cache/custom-desktop")))
     "o l" 'org-store-link
     ;; "o a" 'org-agent
     "o c" 'org-capture
@@ -121,7 +124,7 @@
                                     ((> (length (visible-frame-list)) 1) (delete-frame))
                                     (t (save-buffers-kill-terminal))))
     "q h" 'kill-regex-buffer-frame
-    "q a" (lambda () (interactive) (if server-mode (mapc 'delete-frame (frame-list))
+    "q a" (lambda () (interactive) (if daemon-mode-snapshot (mapc 'delete-frame (frame-list))
                                 (save-buffers-kill-terminal)))
     "q e" 'server-shutdown
     )

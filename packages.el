@@ -1,14 +1,13 @@
 (require 'package)
 
-;; (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
+(defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
 ; (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
 ; (defvar org-elpa '("org" . "http://orgmode.org/elpa/"))
-;; Add marmalade to package repos
 (setq package-archives nil)
 (add-to-list 'package-archives melpa t)
+(add-to-list 'package-archives gnu t)
 ; (add-to-list 'package-archives melpa-stable t)
-; (add-to-list 'package-archives gnu t)
 ; (add-to-list 'package-archives org-elpa t)
 
 (when (< emacs-major-version 27)
@@ -71,23 +70,25 @@
   (evil-want-change-word-to-end nil)
   ;; (evil-search-module 'isearch)
   (evil-search-module 'evil-search)
+  (evil-split-window-below t)
+  (evil-vsplit-window-right t)
   ;; :config
   ;; (global-undo-tree-mode)
-  ;; (evil-mode 1))
+  ;; (evil-mode 1)) ;; enable evil-mode in evil-leader
   )
 
 (use-package evil-surround
-  :requires evil
+  :after evil
   :config
   (global-evil-surround-mode 1))
 
 (use-package evil-commentary
-  :requires evil
+  :after evil
   :config
   (evil-commentary-mode))
 
 (use-package evil-snipe
-  :requires evil
+  :after evil
   :custom
   (evil-snipe-scope 'buffer)
   (evil-snipe-use-vim-sneak-bindings t)
@@ -97,7 +98,7 @@
   ; (evil-snipe-override-mode 1) ; this overrides f F t T
 
 (use-package evil-quickscope
-  :requires evil
+  :after evil
   :config
   ;; (set-face-foreground 'evil-quickscope-first-face "#FBFF00")
   ;; (set-face-foreground 'evil-quickscope-second-face "#AE57FF")
@@ -167,27 +168,28 @@
   (pdf-tools-install))
 
 ;; ; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
-;; (use-package tex
-;;   :ensure auctex
-;;   :after (evil pdf-tools)
-;;   :custom
-;;   (TeX-source-correlate-mode t)
-;;   (TeX-source-correlate-start-server t)
-;;   (TeX-auto-save t)
-;;   (TeX-parse-self t)
-;;   (TeX-view-program-selection '((output-pdf "PDF Tools")))
-;;   (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
-;;   ;; (TeX-engine 'xetex)
-;;   :config
-;;   (add-hook 'LaTeX-mode-hook
-;;    (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
+(use-package tex
+  :ensure auctex
+  :after (evil pdf-tools)
+  :custom
+  (TeX-source-correlate-mode t)
+  (TeX-source-correlate-start-server t)
+  (TeX-auto-save t)
+  (TeX-parse-self t)
+  (TeX-view-program-selection '((output-pdf "PDF Tools")))
+  (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+  ;; (TeX-engine 'xetex)
+  :config
+  (add-hook 'LaTeX-mode-hook
+   (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
 
-;;   (add-hook 'TeX-after-compilation-finished-functions 
-;;             #'TeX-revert-document-buffer)
-;;   ; (add-hook 'LaTeX-mode-hook
-;;   ;           (lambda () (reftex-mode t) (flyspell-mode t)))
-;;   )
+  (add-hook 'TeX-after-compilation-finished-functions 
+            #'TeX-revert-document-buffer)
+  ; (add-hook 'LaTeX-mode-hook
+  ;           (lambda () (reftex-mode t) (flyspell-mode t)))
+  )
 
+;; TODO evil-tex
 
 (use-package midnight
   :custom
@@ -286,7 +288,15 @@
 ;;   (add-to-company-backends '(company-auctex))
 ;;   (company-auctex-init))
 
+(use-package spinner
+  :pin gnu)
+
+;; TODO install flycheck
+
 (use-package lsp-mode
+  :after (spinner)
+  :custom
+  (lsp-restart 'ignore)
   :config
   (add-hook 'rust-mode-hook 'lsp)
   ;; :hook

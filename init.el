@@ -3,7 +3,9 @@
   (concat user-emacs-directory file))
 (defun eload (file)
   (load (emacsd file)))
-(defvar home-dir default-directory)
+
+(setq home-dir default-directory)
+(setq daemon-mode-snapshot (or server-mode (daemonp)))
 
 (eload "core/appearance.el")
 (eload "core/backup.el")
@@ -17,10 +19,11 @@
 (eload "core/external.el")
 (eload "core/autoinsert.el")
 (eload "core/late.el")
+(eload "core/desktop.el")
 (when (file-exists-p (emacsd "convention.el"))
   (eload "convention.el"))
 
-(unless server-mode (server-start))
+(unless daemon-mode-snapshot (server-start))
 (setq tramp-default-method "ssh")
 
 (custom-set-variables

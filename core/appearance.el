@@ -2,6 +2,7 @@
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
 (blink-cursor-mode 0)
+(setq frame-resize-pixelwise t)
 
 (setq lazy-highlight-buffer-max-at-a-time nil)
 (setq lazy-highlight-initial-delay 0)
