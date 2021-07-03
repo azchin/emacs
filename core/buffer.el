@@ -113,10 +113,10 @@ BUFFER may be either a buffer or its name (a string)."
 (defun server-shutdown ()
   "Save buffers, Quit, and Shutdown (kill) server"
   (interactive)
-  (unless daemon-mode-snapshot (save-buffers-kill-terminal))
   (save-some-buffers)
   (desktop-save-mode 0)
   (desktop-save (emacsd "cache/default-desktop"))
+  (unless daemon-mode-snapshot (save-buffers-kill-terminal))
   (mapc 'kill-buffer-mod (buffer-list))
   ;; (mapc 'delete-frame (frame-list))
   (kill-emacs))

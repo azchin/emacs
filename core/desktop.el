@@ -10,9 +10,11 @@
   (desktop-read (emacsd "cache/default-desktop"))
   (remove-hook 'server-after-make-frame-hook 'server-frame-desktop))
 ;; (when daemon-mode-snapshot (add-hook 'server-after-make-frame-hook 'server-frame-desktop))
-(if daemon-mode-snapshot
-    (add-hook 'server-after-make-frame-hook 'server-frame-desktop)
-  (desktop-save-mode 1))
+
+;; Restore desktop on startup 
+;; (if daemon-mode-snapshot
+;;     (add-hook 'server-after-make-frame-hook 'server-frame-desktop)
+;;   (desktop-save-mode 1))
 
 ;; (if daemon-mode-snapshot
 ;;     (add-hook 'server-after-make-frame-hook (lambda () (desktop-read (emacsd "cache/default-desktop"))))

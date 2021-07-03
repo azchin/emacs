@@ -313,6 +313,24 @@
 ;;   :custom
 ;;   (lsp-python-ms-auto-install-server t))
 
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
+
+;; (use-package centaur-tabs
+;;   :demand
+;;   :config
+;;   (centaur-tabs-mode t)
+;;   (centaur-tabs-set-icons t)
+;;   (centaur-tabs-set-bar 'over)
+;;   :custom
+;;   (centaur-tabs-change-fonts "Fira Code" 100)
+;;   (define-key evil-normal-state-map (kbd "g t") 'centaur-tabs-forward)
+;;   (define-key evil-normal-state-map (kbd "g T") 'centaur-tabs-backward)
+;;   :bind
+;;   ("C-<prior>" . centaur-tabs-backward)
+;;   ("C-<next>" . centaur-tabs-forward))
+
 (eload "leader.el")
 
 ;; Manually cloned

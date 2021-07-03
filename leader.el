@@ -23,7 +23,8 @@
     "c r" 'rename-uniquely
     "c f" 'text-scale-adjust
     "c w" 'count-words-region
-    "e e" (lambda () (interactive) (desktop-save (emacsd "cache/custom-desktop")))
+    "e e" (lambda () (interactive) (desktop-read (emacsd "cache/default-desktop")))
+    "e s" (lambda () (interactive) (desktop-save (emacsd "cache/custom-desktop"))) ;; TODO prompt user for new dir
     "e r" (lambda () (interactive) (desktop-read (emacsd "cache/custom-desktop")))
     "o l" 'org-store-link
     ;; "o a" 'org-agent
@@ -104,7 +105,7 @@
     ;; "s" (lambda () (interactive) (indent-whole-buffer) (save-buffer))
     "s" 'save-buffer
     ";" 'eval-expression
-    "/" 'evil-ex-nohighlight
+    "/" (lambda () (interactive) (evil-ex-nohighlight) (lazy-highlight-cleanup))
     "1" 'shell-command
     "w q" 'delete-window
     "w s" 'evil-window-split
@@ -187,9 +188,9 @@
   (lambda () (interactive) (company-abort)(evil-normal-state)))
 ;; Company end
 
-; (evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
-; (evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
-; (evil-define-key 'insert org-mode-map (kbd "RET") (lambda () (interactive) (org-return nil)))
+(evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
+(evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
+(evil-define-key 'insert org-mode-map (kbd "RET") (lambda () (interactive) (org-return nil)))
 
 ;; (evil-define-key 'normal pdf-view-mode-map (kbd "J") 'pdf-view-next-page)
 ;; (evil-define-key 'normal pdf-view-mode-map (kbd "K") 'pdf-view-previous-page)

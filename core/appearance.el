@@ -13,7 +13,8 @@
 (setq visible-cursor nil)
 (setq ring-bell-function 'ignore)
 
-(setq tab-bar-show '1)
+(tab-bar-mode)
+(setq tab-bar-show t)
 (setq tab-bar-close-button-show nil)
 (setq tab-bar-close-last-tab-choice 'delete-frame)
 (setq tab-bar-new-button-show nil)
@@ -38,7 +39,6 @@
 
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 ;; (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10"))
-
 (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-10"))
 ;; (set-frame-parameter (selected-frame) 'alpha '(95 . 86))
 (defun make-frame-transparent() (interactive) (set-frame-parameter (selected-frame) 'alpha 80))
@@ -49,7 +49,7 @@
 ;; (setq frame-title-format '("Emacs - %b [%m] %f"))
 ;; (setq frame-title-format `(,(user-login-name) "@" ,(system-name) "     " global-mode-string "     %f" ))
 ;; (setq frame-title-format `(,(system-name) " - %b [%m] %f"  ))
-(setq frame-title-format '("%b [%m]"))
+(setq frame-title-format '("%b | %f"))
 
 (setq scroll-conservatively 128)
 (setq initial-major-mode 'org-mode)
@@ -66,14 +66,14 @@
 ;; Line numbers
 (global-display-line-numbers-mode)
 (setq display-line-numbers-width-start 3)
-(defun enable-lines() (setq display-line-numbers-type 'relative))
-(defun disable-lines() (setq display-line-numbers-type nil))
-(defun absolute-lines() (setq display-line-numbers-type t))
+(defun relative-lines() (interactive) (setq display-line-numbers 'relative))
+(defun disable-lines() (interactive) (setq display-line-numbers nil))
+(defun absolute-lines() (interactive) (setq display-line-numbers t))
 
-(add-hook 'prog-mode-hook 'enable-lines)
-(add-hook 'text-mode-hook 'enable-lines)
-(add-hook 'special-mode-hook 'enable-lines)
-(add-hook 'dired-mode-hook 'enable-lines)
+(add-hook 'prog-mode-hook 'relative-lines)
+(add-hook 'text-mode-hook 'relative-lines)
+(add-hook 'special-mode-hook 'relative-lines)
+(add-hook 'dired-mode-hook 'relative-lines)
 (add-hook 'pdf-view-mode-hook 'disable-lines)
 (add-hook 'image-mode-hook 'disable-lines)
 ;; (add-hook 'org-mode-hook 'absolute-lines)

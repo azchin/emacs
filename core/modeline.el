@@ -40,6 +40,7 @@ Containing LEFT, and RIGHT aligned respectively."
      ;; Right.
      (quote ("%e"
              mode-line-whitespace
+             mode-line-whitespace
              mode-line-position
              mode-line-whitespace
              ))))))

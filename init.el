@@ -15,7 +15,7 @@
 (eload "packages.el")
 
 (eload "core/tabs.el")
-(eload "core/modeline.el")
+;; (eload "core/modeline.el")
 (eload "core/external.el")
 (eload "core/autoinsert.el")
 (eload "core/late.el")
