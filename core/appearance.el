@@ -49,7 +49,7 @@
 ;; (setq frame-title-format '("Emacs - %b [%m] %f"))
 ;; (setq frame-title-format `(,(user-login-name) "@" ,(system-name) "     " global-mode-string "     %f" ))
 ;; (setq frame-title-format `(,(system-name) " - %b [%m] %f"  ))
-(setq frame-title-format '("%b | %f"))
+(setq frame-title-format '("%b :: %f"))
 
 (setq scroll-conservatively 128)
 (setq initial-major-mode 'org-mode)
@@ -66,9 +66,9 @@
 ;; Line numbers
 (global-display-line-numbers-mode)
 (setq display-line-numbers-width-start 3)
-(defun relative-lines() (interactive) (setq display-line-numbers 'relative))
-(defun disable-lines() (interactive) (setq display-line-numbers nil))
-(defun absolute-lines() (interactive) (setq display-line-numbers t))
+(defun relative-lines() (setq display-line-numbers-type 'relative))
+(defun disable-lines() (setq display-line-numbers-type nil))
+(defun absolute-lines() (setq display-line-numbers-type t))
 
 (add-hook 'prog-mode-hook 'relative-lines)
 (add-hook 'text-mode-hook 'relative-lines)
@@ -76,7 +76,7 @@
 (add-hook 'dired-mode-hook 'relative-lines)
 (add-hook 'pdf-view-mode-hook 'disable-lines)
 (add-hook 'image-mode-hook 'disable-lines)
-;; (add-hook 'org-mode-hook 'absolute-lines)
+(add-hook 'org-mode-hook 'absolute-lines)
 ;; (add-hook 'minibuffer-inactive-mode-hook 'disable-lines)
 
 ;; (setq dired-listing-switches "-Ahlo --group-directories-first --time-style='+%b %d %R'")
@@ -87,3 +87,6 @@
 
 (global-prettify-symbols-mode 1)
 (setq font-latex-fontify-script nil)
+
+(defadvice load-theme (before theme-dont-propagate activate)
+ (mapc #'disable-theme custom-enabled-themes))

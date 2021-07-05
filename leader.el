@@ -23,9 +23,13 @@
     "c r" 'rename-uniquely
     "c f" 'text-scale-adjust
     "c w" 'count-words-region
-    "e e" (lambda () (interactive) (desktop-read (emacsd "cache/default-desktop")))
-    "e s" (lambda () (interactive) (desktop-save (emacsd "cache/custom-desktop"))) ;; TODO prompt user for new dir
-    "e r" (lambda () (interactive) (desktop-read (emacsd "cache/custom-desktop")))
+    "e e" (lambda () (interactive) (if desktop-save-mode
+                                  (progn (desktop-save (emacsd "cache/default-desktop"))
+                                         (desktop-save-mode 0))
+                                (progn (desktop-save-mode 1)
+                                       (desktop-read (emacsd "cache/default-desktop")))))
+    "e s" (lambda () (interactive) (desktop-save (emacsd "cache/default-desktop"))) ;; TODO prompt user for new dir
+    "e r" (lambda () (interactive) (desktop-read (emacsd "cache/default-desktop")))
     "o l" 'org-store-link
     ;; "o a" 'org-agent
     "o c" 'org-capture
@@ -129,9 +133,9 @@
                                 (save-buffers-kill-terminal)))
     "q e" 'server-shutdown
     )
-  (evil-leader/set-key-for-mode 'dired-mode
-    "s" 'dired-jump
-    )
+  ;; (evil-leader/set-key-for-mode 'dired-mode
+  ;;   "s" 'dired-jump
+  ;;   )
   ;; (evil-leader/set-key-for-mode 'latex-mode
   ;;   "m c" (lambda () (interactive)
   ;;         (save-buffer) (TeX-command-run-all nil))
@@ -152,6 +156,8 @@
 ;; (evil-define-key 'normal 'global (kbd "<leader> o l") 'org-store-link)
 
 (evil-define-key 'normal dired-mode-map "f" 'find-file)
+(evil-define-key 'normal dired-mode-map "h" 'dired-up-directory)
+(evil-define-key 'normal dired-mode-map "l" 'dired-find-file)
 
 ;; Company start
 (defun company-backspace ()
@@ -191,6 +197,10 @@
 (evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
 (evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
 (evil-define-key 'insert org-mode-map (kbd "RET") (lambda () (interactive) (org-return nil)))
+
+(evil-global-set-key 'insert (kbd "C-d") 'delete-char)
+(evil-global-set-key 'insert (kbd "C-a") 'beginning-of-line)
+(evil-global-set-key 'insert (kbd "C-e") 'end-of-line)
 
 ;; (evil-define-key 'normal pdf-view-mode-map (kbd "J") 'pdf-view-next-page)
 ;; (evil-define-key 'normal pdf-view-mode-map (kbd "K") 'pdf-view-previous-page)

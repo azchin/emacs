@@ -1,12 +1,16 @@
-(defvar pop-up-frame-regexp-list '("\\*Buffer List\\*"
-                                   "\\*eshell\\*"
-                                   "\\*.*-scratch\\*"
-                                   "\\*Org Select\\*"
-                                   "\\*Org Agenda\\*"
-                                   "\\*Agenda Commands\\*"
-                                   )
-  "List of regular expressions that denote the buffers to be displayed
-in a pop-up frame")
+;; (defvar pop-up-frame-regexp-list '("\\*Buffer List\\*"
+;;                                    "\\*eshell\\*"
+;;                                    "\\*.*-scratch\\*"
+;;                                    "\\*Org Select\\*"
+;;                                    "\\*Org Agenda\\*"
+;;                                    "\\*Agenda Commands\\*"
+;;                                    )
+;;   "List of regular expressions that denote the buffers to be displayed
+;; in a pop-up frame")
+;; (defvar pop-up-frame-regexp-list '("\\*Flycheck errors\\*"
+;;                                    )
+;;   "List of regular expressions that denote the buffers to be displayed
+;; in a pop-up frame")
 
 (defun construct-regexp-from-list (list)
   "Constructs a regular expression that matches one of the elements in `list'"
@@ -15,7 +19,7 @@ in a pop-up frame")
         (t (concat (car list) "\\|" (construct-regexp-from-list (cdr list))))))
 
 (defvar pop-up-frame-modes '(help-mode
-                             messages-buffer-mode
+                             ;; messages-buffer-mode
                              magit-status-mode
                              )
   "List of major modes that denote the buffers to be displayed
@@ -32,15 +36,15 @@ is dired"
   (and (equal (buffer-local-value 'major-mode (get-buffer name)) 'pdf-view-mode)
        (not (equal major-mode 'dired-mode))))
 
-; (add-to-list 'display-buffer-alist
-;              '(display-buffer-mode-query
-;                (display-buffer-reuse-window display-buffer-pop-up-frame)
-;                (reusable-frames . 0)))
+;; (add-to-list 'display-buffer-alist
+;;              '(display-buffer-mode-query
+;;                (display-buffer-reuse-window display-buffer-pop-up-frame)
+;;                (reusable-frames . 0)))
 
-; (add-to-list 'display-buffer-alist
-;              `(,(construct-regexp-from-list pop-up-frame-regexp-list)
-;                (display-buffer-reuse-window display-buffer-pop-up-frame)
-;                (reusable-frames . 0)))
+;; (add-to-list 'display-buffer-alist
+;;              `(,(construct-regexp-from-list pop-up-frame-regexp-list)
+;;                (display-buffer-reuse-window display-buffer-pop-up-frame)
+;;                (reusable-frames . 0)))
 
 ; (add-to-list 'display-buffer-alist
 ;              '(display-buffer-pdf-from-dired
@@ -114,8 +118,9 @@ BUFFER may be either a buffer or its name (a string)."
   "Save buffers, Quit, and Shutdown (kill) server"
   (interactive)
   (save-some-buffers)
-  (desktop-save-mode 0)
-  (desktop-save (emacsd "cache/default-desktop"))
+  (when desktop-save-mode
+    (progn (desktop-save-mode 0)
+           (desktop-save (emacsd "cache/default-desktop"))))
   (unless daemon-mode-snapshot (save-buffers-kill-terminal))
   (mapc 'kill-buffer-mod (buffer-list))
   ;; (mapc 'delete-frame (frame-list))

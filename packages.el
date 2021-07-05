@@ -12,7 +12,7 @@
 
 (when (< emacs-major-version 27)
   (package-initialize))
-(unless package-archive-contents
+(unless (or package-archive-contents (not daemon-mode-snapshot))
   (package-refresh-contents))
 (unless (require 'use-package nil 'noerror)
   (package-install 'use-package))
@@ -116,6 +116,10 @@
   :after (org evil) 
   :custom
   (evil-org-special-o/O '(table-row item))
+  (org-edit-src-content-indentation 2)
+  (org-src-tab-acts-natively t)
+  (org-src-preserve-indentation t)
+  (org-todo-keywords '((sequence "TODO" "PROG" "|" "DONE" "AXED")))
   :config
   (require 'evil-org-agenda)
   (require 'org-tempo)
@@ -132,6 +136,16 @@
   (add-hook 'prog-mode-hook #'smartparens-mode)
   (add-hook 'special-mode-hook #'smartparens-mode)
   (add-hook 'text-mode-hook #'smartparens-mode)
+  (sp-pair "\\\\(" nil :actions :rem)
+  (sp-pair "\\{" nil :actions :rem)
+  (sp-pair "\\(" nil :actions :rem)
+  (sp-pair "\\\"" nil :actions :rem)
+  (sp-pair "[" nil :actions :rem)
+  ;; (sp-pair "(" nil :actions :rem)
+  (sp-pair "'" nil :actions :rem)
+  (sp-pair "`" nil :actions :rem)
+  ;; (sp-pair "\"" nil :actions :rem)
+  ;; (sp-local-pair 'emacs-lisp-mode "(" ")")
   (smartparens-strict-mode))
 
 ;; (use-package anzu
@@ -148,20 +162,36 @@
 
 (use-package gruvbox-theme
  :config
- (load-theme 'gruvbox-dark-hard t)
+ ;; (load-theme 'gruvbox-dark-hard t)
  ;; (load-theme 'gruvbox-dark-medium t)
  ;; (load-theme 'gruvbox-light-hard t)
  )
+
+(use-package modus-themes
+  :config
+  (load-theme 'modus-operandi t)
+  )
 
 ;; (use-package haskell-mode)
 (use-package markdown-mode)
 
 ;; (use-package pandoc-mode)
-(use-package rust-mode)
+;; (use-package flycheck)
+(use-package rust-mode
+  :after smartparens
+  :config
+  (sp-local-pair 'rust-mode "'" nil :actions :rem)
+  (sp-local-pair 'rust-mode "<" nil :actions :rem))
+;; (use-package rustic
+;;   :after flycheck smartparens
+;;   :config
+;;   (sp-local-pair 'rustic-mode "'" nil :actions :rem)
+;;   (sp-local-pair 'rustic-mode "<" nil :actions :rem))
 (use-package js2-mode)
 (use-package json-mode)
 
 (use-package pdf-tools
+  :defer t
   :config 
   ;; (add-hook 'pdf-view-mode 'auto-revert-mode)
   (add-hook 'pdf-view-mode 'pdf-view-midnight-minor-mode)
@@ -169,6 +199,7 @@
 
 ;; ; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
 (use-package tex
+  :defer t
   :ensure auctex
   :after (evil pdf-tools)
   :custom
@@ -212,9 +243,11 @@
   (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map)
   (bind-key "<backtab>" #'dired-subtree-cycle dired-mode-map))
 
-(use-package yasnippet)
+(use-package yasnippet
+  :defer t)
 
 (use-package ivy
+  :defer t
   :custom
   (ivy-count-format "")
   (ivy-height 16)
@@ -240,8 +273,10 @@
   ;;              '(ebuild-mode-insert-skeleton . completing-read-default))
   (ivy-mode 1))
 
-(use-package ivy-hydra)
+(use-package ivy-hydra
+  :defer t)
 (use-package swiper
+  :defer t
   :config
   (global-set-key (kbd "C-s") 'swiper))
 (use-package counsel
@@ -291,12 +326,11 @@
 (use-package spinner
   :pin gnu)
 
-;; TODO install flycheck
-
 (use-package lsp-mode
   :after (spinner)
   :custom
   (lsp-restart 'ignore)
+  (lsp-completion-show-detail nil)
   :config
   (add-hook 'rust-mode-hook 'lsp)
   ;; :hook
@@ -314,8 +348,15 @@
 ;;   (lsp-python-ms-auto-install-server t))
 
 (use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode 1))
+  :init (doom-modeline-mode 1)
+  :custom
+  (doom-modeline-icon t)
+  (doom-modeline-modal-icon nil)
+  (doom-modeline-buffer-state-icon t)
+  (doom-modeline-buffer-modification-icon t)
+  (doom-modeline-enable-word-count nil)
+  (doom-modeline-irc nil)
+  (doom-modeline-buffer-encoding nil))
 
 ;; (use-package centaur-tabs
 ;;   :demand
