@@ -1,0 +1,9 @@
+* Linux dependencies
+- git
+- latex
+- /pdf-tools/
+  - libpng-dev
+  - zlib1g-dev
+  - libpoppler-glib-dev
+  - libpoppler-private-dev
+- hunspell

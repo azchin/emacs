@@ -75,6 +75,7 @@
 (add-hook 'special-mode-hook 'relative-lines)
 (add-hook 'dired-mode-hook 'relative-lines)
 (add-hook 'pdf-view-mode-hook 'disable-lines)
+(add-hook 'doc-view-mode-hook 'disable-lines)
 (add-hook 'image-mode-hook 'disable-lines)
 (add-hook 'org-mode-hook 'absolute-lines)
 ;; (add-hook 'minibuffer-inactive-mode-hook 'disable-lines)

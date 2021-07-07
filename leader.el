@@ -15,6 +15,7 @@
     "c t" 'toggle-tabs
     "c y" 'conditional-tabify
     "c i" 'indent-whole-buffer
+    "c m" (lambda () (interactive) (menu-bar-mode 'toggle))
     ;; "c t u" (lambda () (interactive) (untabify (window-start) (window-end)))
     "c e" (lambda () (interactive)
             (unless visual-line-mode (evil-visual-line))
@@ -66,6 +67,7 @@
     "t q" 'tab-close
     "t o" 'tab-close-other
     "t m" 'tab-move
+    "t M" (lambda () (interactive) (tab-move -1))
     "d d" 'dired-jump
     ;; dired-jump opens new window, dired uses current window
     "d h" (lambda () (interactive) (dired home-dir))

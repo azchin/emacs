@@ -87,15 +87,15 @@
   :config
   (evil-commentary-mode))
 
-(use-package evil-snipe
-  :after evil
-  :custom
-  (evil-snipe-scope 'buffer)
-  (evil-snipe-use-vim-sneak-bindings t)
-  :config
-  (add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode)
-  (evil-snipe-mode 1))
-  ; (evil-snipe-override-mode 1) ; this overrides f F t T
+;; (use-package evil-snipe
+;;   :after evil
+;;   :custom
+;;   (evil-snipe-scope 'buffer)
+;;   (evil-snipe-use-vim-sneak-bindings t)
+;;   :config
+;;   (add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode)
+;;   (evil-snipe-mode 1))
+;;   ; (evil-snipe-override-mode 1) ; this overrides f F t T
 
 (use-package evil-quickscope
   :after evil
@@ -191,7 +191,6 @@
 (use-package json-mode)
 
 (use-package pdf-tools
-  :defer t
   :config 
   ;; (add-hook 'pdf-view-mode 'auto-revert-mode)
   (add-hook 'pdf-view-mode 'pdf-view-midnight-minor-mode)
@@ -199,7 +198,6 @@
 
 ;; ; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
 (use-package tex
-  :defer t
   :ensure auctex
   :after (evil pdf-tools)
   :custom
@@ -243,11 +241,9 @@
   (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map)
   (bind-key "<backtab>" #'dired-subtree-cycle dired-mode-map))
 
-(use-package yasnippet
-  :defer t)
+(use-package yasnippet)
 
 (use-package ivy
-  :defer t
   :custom
   (ivy-count-format "")
   (ivy-height 16)
@@ -273,11 +269,12 @@
   ;;              '(ebuild-mode-insert-skeleton . completing-read-default))
   (ivy-mode 1))
 
-(use-package ivy-hydra
-  :defer t)
+(use-package ivy-hydra)
 (use-package swiper
-  :defer t
+  :after (evil)
   :config
+  (evil-global-set-key 'normal (kbd "s") 'swiper)
+  (evil-global-set-key 'normal (kbd "S") 'swiper-backward)
   (global-set-key (kbd "C-s") 'swiper))
 (use-package counsel
   :config
@@ -302,10 +299,10 @@
   (add-hook 'c-mode-hook 'company-mode)
   (add-hook 'c++-mode-hook 'company-mode)
   (add-hook 'rust-mode-hook 'company-mode)
+  (add-hook 'rustic-mode-hook 'company-mode)
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
   (add-hook 'LaTeX-mode-hook 'company-mode)
-  (add-hook 'python-mode-hook 'company-mode)
-  )
+  (add-hook 'python-mode-hook 'company-mode))
 
 ;; (use-package company-c-headers
 ;;   :after company
@@ -332,12 +329,7 @@
   (lsp-restart 'ignore)
   (lsp-completion-show-detail nil)
   :config
-  (add-hook 'rust-mode-hook 'lsp)
-  ;; :hook
-  ;; ((rust-mode-hook . lsp)
-  ;;  )
-  ;; :commands lsp
-  )
+  (add-hook 'rust-mode-hook 'lsp))
 
 ;; (use-package lsp-ivy)
 ;; (use-package ccls)
@@ -347,8 +339,15 @@
 ;;   :custom
 ;;   (lsp-python-ms-auto-install-server t))
 
+(use-package which-key)
+
+(use-package all-the-icons
+  :config
+  (unless (member "all-the-icons" (font-family-list))))
+
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
+  :after (all-the-icons)
   :custom
   (doom-modeline-icon t)
   (doom-modeline-modal-icon nil)
