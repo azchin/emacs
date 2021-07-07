@@ -115,4 +115,4 @@
 
 (defun indent-whole-buffer ()
   (interactive)
-  (indent-region (window-start) (window-end)))
+  (indent-region (point-min) (point-max)))
