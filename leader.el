@@ -122,8 +122,9 @@
     "w l" 'evil-window-right
     "w w" 'evil-window-next
     "w o" 'delete-other-windows
-    "q k" (lambda () (interactive) (kill-buffer-mod (current-buffer)))
-    "q g" (lambda () (interactive) (kill-buffer-greedy (current-buffer)))
+    "q b" (lambda () (interactive) (kill-buffer-and-its-windows (current-buffer)))
+    ;; "q k" (lambda () (interactive) (kill-buffer-mod (current-buffer)))
+    ;; "q g" (lambda () (interactive) (kill-buffer-greedy (current-buffer)))
     "q o" 'delete-other-frames
     "q f" (lambda () (interactive) (cond ((> (length (visible-frame-list)) 1) (delete-frame))
                                     (t (save-buffers-kill-terminal))))
