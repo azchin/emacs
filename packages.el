@@ -176,7 +176,11 @@
 (use-package markdown-mode)
 
 ;; (use-package pandoc-mode)
-;; (use-package flycheck)
+
+(use-package flycheck
+  :config
+  (add-hook 'org-mode-hook 'flyspell-mode))
+
 (use-package rust-mode
   :after smartparens
   :config

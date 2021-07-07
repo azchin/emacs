@@ -10,3 +10,9 @@
 (add-hook 'org-mode-hook (lambda () (org-indent-mode -1)))
 ;; (setq org-agenda-files '(org-directory))
 ;; (setq org-agenda-file-regexp "agenda.org")
+
+(setq ispell-program-name "hunspell")
+(setq ispell-local-dictionary "en_CA")
+(setq ispell-local-dictionary-alist
+      '(("en_CA" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
+
