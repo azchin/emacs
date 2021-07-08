@@ -17,7 +17,7 @@
             (> (point) (progn (back-to-indentation)
                               (point)))))
       (call-interactively 'backward-delete-char-untabify)
-      ; (call-interactively 'backward-delete-char)
+    ;; (call-interactively 'backward-delete-char)
     (let ((movement (% (current-column) tab-width))
           (p (point)))
       (when (= movement 0) (setq movement tab-width))
@@ -53,9 +53,9 @@
     (kbd "<backspace>") 'backspace-whitespace-to-tab-stop
     (kbd "TAB") 'tab-to-tab-stop))
 (defun toggle-tabs () (interactive)
-  (if tab-control-auto
-      (funcall 'manual-tabs)
-    (funcall 'auto-tabs)))
+       (if tab-control-auto
+           (funcall 'manual-tabs)
+         (funcall 'auto-tabs)))
 
 (defun c-tabs()
   (set (make-local-variable 'backward-delete-char-untabify-method) nil)
@@ -105,7 +105,7 @@
 (global-whitespace-mode)
 (setq whitespace-style '(face tabs tab-mark))
 (setq whitespace-display-mappings
-  '((tab-mark 9 [183 9] [124 9] [92 9]))) ;; 187 183 8594 9655 8677 8614
+      '((tab-mark 9 [183 9] [124 9] [92 9]))) ;; 187 183 8594 9655 8677 8614
 
 (defun conditional-tabify ()
   (interactive)

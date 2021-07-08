@@ -46,10 +46,10 @@ is dired"
 ;;                (display-buffer-reuse-window display-buffer-pop-up-frame)
 ;;                (reusable-frames . 0)))
 
-; (add-to-list 'display-buffer-alist
-;              '(display-buffer-pdf-from-dired
-;                (display-buffer-reuse-window display-buffer-pop-up-frame)
-;                (reusable-frames . 0)))
+                                        ; (add-to-list 'display-buffer-alist
+                                        ;              '(display-buffer-pdf-from-dired
+                                        ;                (display-buffer-reuse-window display-buffer-pop-up-frame)
+                                        ;                (reusable-frames . 0)))
 
 (setq Man-notify-method 'aggressive)
 ;; (setq grep-command "grep --color -nH --null ")
@@ -155,11 +155,11 @@ BUFFER may be either a buffer or its name (a string)."
     (funcall (or mode 'text-mode))
     (whitespace-mode)
     (auto-insert)))
-  ;; (let ((new-f (buffer-live-p (get-buffer name)))
-  ;;       (new-window (display-buffer (get-buffer-create name))))
-  ;;   (select-window new-window)
-  ;;   (unless live
-  ;;     (funcall (or mode 'text-mode)))))
+;; (let ((new-f (buffer-live-p (get-buffer name)))
+;;       (new-window (display-buffer (get-buffer-create name))))
+;;   (select-window new-window)
+;;   (unless live
+;;     (funcall (or mode 'text-mode)))))
 
 (defun create-new-frame-command (command)
   "Create a new frame and evaluate command"
@@ -177,7 +177,7 @@ BUFFER may be either a buffer or its name (a string)."
 
 (defvar buffer-regexp-name
   "\\*Help\\*\\|\\*Buffer List\\*\\|\\*Messages\\*")
-  ; (regexp-opt '("*Help*" "*Buffer List*" "*Messages*")))
+                                        ; (regexp-opt '("*Help*" "*Buffer List*" "*Messages*")))
 
 (defun kill-regex-buffer-frame (&optional regexp)
   "Kill all buffers and its frames matching the pattern regexp"

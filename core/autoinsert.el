@@ -8,7 +8,7 @@
 ;; Autocmd
 (defun suckless-autocmd ()
   (when (and buffer-file-name (string-match "config.h" (buffer-name)))
-     (shell-command "sudo make clean install")))
+    (shell-command "sudo make clean install")))
 (add-hook 'after-save-hook 'suckless-autocmd)
 
 (defun environment-autocmd ()

@@ -1,6 +1,6 @@
-; https://oremacs.com/2015/01/04/dired-nohup/
-; https://www.emacswiki.org/emacs/OpenWith
-; https://stackoverflow.com/questions/25109968/in-emacs-how-to-open-file-in-external-program-without-errors
+;; https://oremacs.com/2015/01/04/dired-nohup/
+;; https://www.emacswiki.org/emacs/OpenWith
+;; https://stackoverflow.com/questions/25109968/in-emacs-how-to-open-file-in-external-program-without-errors
 
 
 (defun xah-open-in-external-app (&optional file)

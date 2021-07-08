@@ -64,7 +64,7 @@
 (setq scroll-conservatively 128)
 (setq initial-major-mode 'org-mode)
 (setq initial-scratch-message
-"# This buffer is for text that is not saved.
+      "# This buffer is for text that is not saved.
 # To create a file, visit it with \\[find-file] and enter text in its buffer.\n\n")
 ;; (fringe-mode 0)
 (fringe-mode '(0 . 1))
@@ -100,7 +100,7 @@
 (setq font-latex-fontify-script nil)
 
 (defadvice load-theme (before theme-dont-propagate activate)
- (mapc 'disable-theme custom-enabled-themes))
+  (mapc 'disable-theme custom-enabled-themes))
 
 (defadvice load-theme (after theme-dont-propagate activate)
- (eload "core/late.el"))
+  (eload "core/late.el"))

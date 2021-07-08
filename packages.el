@@ -2,13 +2,13 @@
 
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
-                                        ; (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
-                                        ; (defvar org-elpa '("org" . "http://orgmode.org/elpa/"))
+;; (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
+;; (defvar org-elpa '("org" . "http://orgmode.org/elpa/"))
 (setq package-archives nil)
 (add-to-list 'package-archives melpa t)
 (add-to-list 'package-archives gnu t)
-                                        ; (add-to-list 'package-archives melpa-stable t)
-                                        ; (add-to-list 'package-archives org-elpa t)
+;; (add-to-list 'package-archives melpa-stable t)
+;; (add-to-list 'package-archives org-elpa t)
 
 (when (< emacs-major-version 27)
   (package-initialize))
@@ -32,8 +32,8 @@
 (use-package magit)
 
 (use-package org
- :config
- (eload "core/org.el"))
+  :config
+  (eload "core/org.el"))
 
 ;; (use-package undo-tree
 ;;   :custom
@@ -230,8 +230,8 @@
 
   (add-hook 'TeX-after-compilation-finished-functions 
             #'TeX-revert-document-buffer)
-                                        ; (add-hook 'LaTeX-mode-hook
-                                        ;           (lambda () (reftex-mode t) (flyspell-mode t)))
+  ;; (add-hook 'LaTeX-mode-hook
+  ;;           (lambda () (reftex-mode t) (flyspell-mode t)))
   )
 
 ;; TODO evil-tex
