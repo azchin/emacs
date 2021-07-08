@@ -407,6 +407,7 @@
   (doom-modeline-buffer-modification-icon t)
   (doom-modeline-enable-word-count nil)
   (doom-modeline-irc nil)
+  (doom-modeline-height 22)
   (doom-modeline-buffer-encoding nil))
 
 ;; (use-package centaur-tabs
