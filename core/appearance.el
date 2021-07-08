@@ -36,10 +36,16 @@
 ;;     (add-to-list 'default-frame-alist `(height . ,(nth 1 win)))
 ;;     (add-to-list 'default-frame-alist `(left . ,(nth 2 win)))
 ;;     (add-to-list 'default-frame-alist `(top . ,(nth 3 win))))
-
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-;; (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10"))
-(add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-10"))
+
+(setq default-font-family "DejaVu Sans Mono")
+(setq default-font-height 113) ;; 10: 98, 11: 113, 12: 120
+(setq serif-font-family "DejaVu Serif")
+(setq serif-font-height 113)
+(add-to-list 'default-frame-alist `(font . ,(concat default-font-family "-" (number-to-string (round default-font-height 10)))))
+(add-hook 'org-mode-hook (lambda () (buffer-face-set :family serif-font-family :height serif-font-height)))
+;; (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-10"))
+
 ;; (set-frame-parameter (selected-frame) 'alpha '(95 . 86))
 (defun make-frame-transparent() (interactive) (set-frame-parameter (selected-frame) 'alpha 80))
 (defun make-frame-opaque() (interactive) (set-frame-parameter (selected-frame) 'alpha 100))

@@ -2,13 +2,13 @@
 
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
-; (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
-; (defvar org-elpa '("org" . "http://orgmode.org/elpa/"))
+                                        ; (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
+                                        ; (defvar org-elpa '("org" . "http://orgmode.org/elpa/"))
 (setq package-archives nil)
 (add-to-list 'package-archives melpa t)
 (add-to-list 'package-archives gnu t)
-; (add-to-list 'package-archives melpa-stable t)
-; (add-to-list 'package-archives org-elpa t)
+                                        ; (add-to-list 'package-archives melpa-stable t)
+                                        ; (add-to-list 'package-archives org-elpa t)
 
 (when (< emacs-major-version 27)
   (package-initialize))
@@ -17,7 +17,7 @@
 (unless (require 'use-package nil 'noerror)
   (package-install 'use-package))
 (eval-when-compile
- (require 'use-package))
+  (require 'use-package))
 (setq use-package-always-ensure t)
 
 ;; MELPA use-package
@@ -74,8 +74,9 @@
   (evil-vsplit-window-right t)
   ;; :config
   ;; (global-undo-tree-mode)
-  ;; (evil-mode 1)) ;; enable evil-mode in evil-leader
-  )
+  :config
+  (eload "leader.el")
+  (evil-mode 1)) ;; enable evil-mode in evil-leader
 
 (use-package evil-surround
   :after evil
@@ -161,11 +162,11 @@
 ;;   (load-theme 'monokai-pro t))
 
 (use-package gruvbox-theme
- :config
- ;; (load-theme 'gruvbox-dark-hard t)
- ;; (load-theme 'gruvbox-dark-medium t)
- ;; (load-theme 'gruvbox-light-hard t)
- )
+  :config
+  ;; (load-theme 'gruvbox-dark-hard t)
+  ;; (load-theme 'gruvbox-dark-medium t)
+  ;; (load-theme 'gruvbox-light-hard t)
+  )
 
 (use-package modus-themes
   :config
@@ -214,12 +215,12 @@
   ;; (TeX-engine 'xetex)
   :config
   (add-hook 'LaTeX-mode-hook
-   (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
+            (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
 
   (add-hook 'TeX-after-compilation-finished-functions 
             #'TeX-revert-document-buffer)
-  ; (add-hook 'LaTeX-mode-hook
-  ;           (lambda () (reftex-mode t) (flyspell-mode t)))
+                                        ; (add-hook 'LaTeX-mode-hook
+                                        ;           (lambda () (reftex-mode t) (flyspell-mode t)))
   )
 
 ;; TODO evil-tex
@@ -285,6 +286,7 @@
   (counsel-mode 1))
 
 (use-package company
+  :after (evil)
   :custom
   (company-idle-delay 0.0)
   ;; (company-idle-delay nil)
@@ -293,8 +295,43 @@
   (company-selection-wrap-around t)
   (company-backends
    '((company-semantic company-capf company-files company-etags company-keywords
-                      company-dabbrev company-dabbrev-code company-cmake)))
+                       company-dabbrev company-dabbrev-code company-cmake)))
   :config
+  ;; Company start
+  (defun company-backspace ()
+    (interactive)
+    (if (equal company-selection-changed nil)
+        (if tab-control-auto (backward-delete-char-untabify 1)
+          (backspace-whitespace-to-tab-stop))
+      (company-abort)))
+
+  (defun company-select-next-or-complete-selection (&optional arg)
+    "Insert selection if appropriate, or select the next candidate."
+    (interactive)
+    (if (not (company-tooltip-visible-p)) (company-manual-begin))
+    (cond ((> company-candidates-length 1) (company-select-next arg))
+          ((equal company-candidates-length 1) (company-finish (car company-candidates)))))
+
+  (defun company-select-previous-or-complete-selection ()
+    "Insert selection if appropriate, or select the previous candidate."
+    (interactive)
+    (company-select-next-or-complete-selection -1))
+
+  (define-key company-active-map (kbd "<backspace>") 'company-backspace)
+  (define-key company-active-map (kbd "C-h") nil)
+
+  (evil-define-key 'insert company-mode-map (kbd "C-n")
+    'company-select-next-or-complete-selection)
+  (evil-define-key 'insert company-mode-map (kbd "C-p")
+    'company-select-previous-or-complete-selection)
+  (evil-define-key 'insert company-active-map (kbd "C-n")
+    'company-select-next)
+  (evil-define-key 'insert company-active-map (kbd "C-p")
+    'company-select-previous)
+  (evil-define-key 'insert company-active-map (kbd "ESC")
+    (lambda () (interactive) (company-abort)(evil-normal-state)))
+  ;; Company end
+
   (defun add-to-company-backends (list)
     (setq company-backends `(,(append list (car company-backends)))))
   ;; (global-company-mode)
@@ -374,8 +411,6 @@
 ;;   :bind
 ;;   ("C-<prior>" . centaur-tabs-backward)
 ;;   ("C-<next>" . centaur-tabs-forward))
-
-(eload "leader.el")
 
 ;; Manually cloned
 ;; TODO periodically run "git pull" using midnight (or a cron)

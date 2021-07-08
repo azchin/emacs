@@ -18,6 +18,13 @@
 ;;                     :foreground "#636363")
 (set-face-background 'whitespace-tab nil)
 
+(set-face-attribute 'line-number nil
+                    :family default-font-family
+                    :height default-font-height)
+(set-face-attribute 'line-number-current-line nil
+                    :family default-font-family
+                    :height default-font-height)
+
 ;; TODO when new frames are made, highlight gets overridden
 (defun change-highlight-face (&optional frame)
   (set-face-attribute 'highlight frame
