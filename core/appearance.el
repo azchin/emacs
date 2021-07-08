@@ -38,12 +38,16 @@
 ;;     (add-to-list 'default-frame-alist `(top . ,(nth 3 win))))
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-(setq default-font-family "DejaVu Sans Mono")
-(setq default-font-height 113) ;; 10: 98, 11: 113, 12: 120
-(setq serif-font-family "DejaVu Serif")
-(setq serif-font-height 113)
+(defvar default-font-family "DejaVu Sans Mono"
+  "Default face font family")
+(defvar default-font-height 113
+  "Default face font height") ;; 10: 98, 11: 113, 12: 120
+(defvar markup-font-family "DejaVu Serif"
+  "Serif font family")
+(defvar markup-font-height 113
+  "Serif font height")
 (add-to-list 'default-frame-alist `(font . ,(concat default-font-family "-" (number-to-string (round default-font-height 10)))))
-(add-hook 'org-mode-hook (lambda () (buffer-face-set :family serif-font-family :height serif-font-height)))
+(add-hook 'org-mode-hook (lambda () (buffer-face-set :family markup-font-family :height markup-font-height)))
 ;; (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-10"))
 
 ;; (set-frame-parameter (selected-frame) 'alpha '(95 . 86))
@@ -96,4 +100,7 @@
 (setq font-latex-fontify-script nil)
 
 (defadvice load-theme (before theme-dont-propagate activate)
- (mapc #'disable-theme custom-enabled-themes))
+ (mapc 'disable-theme custom-enabled-themes))
+
+(defadvice load-theme (after theme-dont-propagate activate)
+ (eload "core/late.el"))

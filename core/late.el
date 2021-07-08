@@ -16,7 +16,7 @@
 ;; (set-face-attribute 'whitespace-tab nil
 ;;                     :background nil
 ;;                     :foreground "#636363")
-(set-face-background 'whitespace-tab nil)
+;; (set-face-background 'whitespace-tab nil)
 
 (set-face-attribute 'line-number nil
                     :family default-font-family
@@ -24,6 +24,18 @@
 (set-face-attribute 'line-number-current-line nil
                     :family default-font-family
                     :height default-font-height)
+
+
+(set-face-attribute 'org-document-title nil :family markup-font-family :weight 'bold :height 1.5)
+(dolist (face '((org-level-1 . 1.4)
+                (org-level-2 . 1.2)
+                (org-level-3 . 1.1)
+                (org-level-4 . 1.1)
+                (org-level-5 . 1.0)
+                (org-level-6 . 1.0)
+                (org-level-7 . 1.0)
+                (org-level-8 . 1.0)))
+  (set-face-attribute (car face) nil :family markup-font-family :weight 'medium :height (cdr face)))
 
 ;; TODO when new frames are made, highlight gets overridden
 (defun change-highlight-face (&optional frame)

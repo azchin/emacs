@@ -6,8 +6,9 @@
 (setq org-src-window-setup 'other-frame)
 (setq org-list-allow-alphabetical t)
 (setq org-startup-folded 'nofold)
+(setq org-hide-emphasis-markers t)
 (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
-(add-hook 'org-mode-hook (lambda () (org-indent-mode -1)))
+(add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
 ;; (setq org-agenda-files '(org-directory))
 ;; (setq org-agenda-file-regexp "agenda.org")
 

@@ -20,6 +20,8 @@
    (evil-get-auxiliary-keymap leader-intercept-mode-map state t t)
    state))
 
+;; TODO test which-key integration
+;; TODO put in one evil-define-key statement
 (evil-define-key leader-states leader-intercept-mode-map (kbd "SPC") 'evil-send-leader)
 (evil-define-key leader-states 'global (kbd "<leader> o l") 'org-store-link)
     ;; "o a" 'org-agent

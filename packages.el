@@ -31,6 +31,10 @@
 
 (use-package magit)
 
+(use-package org
+ :config
+ (eload "core/org.el"))
+
 ;; (use-package undo-tree
 ;;   :custom
 ;;   ; (undo-tree-visualizer-diff t)
@@ -40,6 +44,13 @@
 ;;   (undo-tree-history-directory-alist `(("." . ,(emacsd "cache/undotree"))))
 ;;   :config
 ;;   (global-undo-tree-mode 1))
+
+(use-package org-superstar
+  :after org
+  :hook (org-mode . org-superstar-mode)
+  :custom
+  (org-superstar-remove-leading-stars t)
+  (org-superstar-headline-bullets-list '("◉" "●" "○" "●" "○" "●" "○")))
 
 (use-package undo-fu
   :custom

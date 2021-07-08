@@ -10,7 +10,7 @@
 (eload "core/appearance.el")
 (eload "core/backup.el")
 (eload "core/buffer.el")
-(eload "core/org.el")
+;; (eload "core/org.el")
 
 (eload "packages.el")
 
