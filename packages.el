@@ -143,6 +143,7 @@
   (evil-org-agenda-set-keys))
 
 (use-package smartparens
+  :after (org)
   :config
   (require 'smartparens-config)
   (add-hook 'prog-mode-hook #'smartparens-mode)
@@ -152,12 +153,16 @@
   (sp-pair "\\{" nil :actions :rem)
   (sp-pair "\\(" nil :actions :rem)
   (sp-pair "\\\"" nil :actions :rem)
-  (sp-pair "[" nil :actions :rem)
+  ;; (sp-pair "[" nil :actions :rem)
   ;; (sp-pair "(" nil :actions :rem)
   (sp-pair "'" nil :actions :rem)
   (sp-pair "`" nil :actions :rem)
   ;; (sp-pair "\"" nil :actions :rem)
   ;; (sp-local-pair 'emacs-lisp-mode "(" ")")
+  (sp-local-pair 'org-mode "/" nil :actions :rem)
+  (sp-local-pair 'org-mode "~" nil :actions :rem)
+  (sp-local-pair 'org-mode "=" nil :actions :rem)
+  (sp-local-pair 'org-mode "*" nil :actions :rem)
   (smartparens-strict-mode))
 
 ;; (use-package anzu
@@ -395,7 +400,7 @@
 
 (use-package all-the-icons
   :config
-  (unless (member "all-the-icons" (font-family-list))))
+  (unless (member "all-the-icons" (font-family-list)) (all-the-icons-install-fonts)))
 
 (use-package doom-modeline
   :init (doom-modeline-mode 1)

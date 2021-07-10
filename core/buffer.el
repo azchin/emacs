@@ -168,6 +168,22 @@ BUFFER may be either a buffer or its name (a string)."
     (switch-to-buffer (get-buffer-create "*Untitled*"))
     (funcall command)))
 
+(defun create-new-frame-file () 
+  "Create a new frame and choose file"
+  (interactive)
+  (let ((new-file (read-file-name "Choose file: " home-dir))
+        (new-frame (make-frame-command)))
+    (select-frame new-frame)
+    (find-file new-file)))
+
+(defun create-new-frame-buffer () 
+  "Create a new frame and choose buffer"
+  (interactive)
+  (let ((new-buffer (read-buffer "Choose buffer: "))
+        (new-frame (make-frame-command)))
+    (select-frame new-frame)
+    (switch-to-buffer new-buffer)))
+
 (defun create-dired-frame (&optional dir)
   "Create a dired frame"
   (interactive)
