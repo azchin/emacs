@@ -11,6 +11,7 @@
 (add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
 ;; (setq org-agenda-files '(org-directory))
 ;; (setq org-agenda-file-regexp "agenda.org")
+(setq org-export-backends '(ascii html latex md odt man))
 
 (setq ispell-program-name "hunspell")
 (setq ispell-local-dictionary "en_CA")
