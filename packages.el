@@ -149,6 +149,7 @@
   (add-hook 'prog-mode-hook #'smartparens-mode)
   (add-hook 'special-mode-hook #'smartparens-mode)
   (add-hook 'text-mode-hook #'smartparens-mode)
+  (add-hook 'conf-mode-hook #'smartparens-mode)
   (sp-pair "\\\\(" nil :actions :rem)
   (sp-pair "\\{" nil :actions :rem)
   (sp-pair "\\(" nil :actions :rem)
@@ -196,13 +197,13 @@
 
 (use-package flycheck
   :config
+  (add-hook 'rust-mode 'flycheck-mode)
   (add-hook 'org-mode-hook 'flyspell-mode))
 
 (use-package rust-mode
   :after smartparens
   :config
-  (sp-local-pair 'rust-mode "'" nil :actions :rem)
-  (sp-local-pair 'rust-mode "<" nil :actions :rem))
+  (sp-local-pair 'rust-mode "'" nil :actions :rem))
 ;; (use-package rustic
 ;;   :after flycheck smartparens
 ;;   :config
@@ -351,15 +352,15 @@
   (defun add-to-company-backends (list)
     (setq company-backends `(,(append list (car company-backends)))))
   ;; (global-company-mode)
-  (add-hook 'sh-mode-hook 'company-mode)
-  (add-hook 'conf-mode-hook 'company-mode)
-  (add-hook 'c-mode-hook 'company-mode)
-  (add-hook 'c++-mode-hook 'company-mode)
-  (add-hook 'rust-mode-hook 'company-mode)
-  (add-hook 'rustic-mode-hook 'company-mode)
-  (add-hook 'emacs-lisp-mode-hook 'company-mode)
-  (add-hook 'LaTeX-mode-hook 'company-mode)
-  (add-hook 'python-mode-hook 'company-mode))
+  (add-hook 'sh-mode-hook 'company-tng-mode)
+  (add-hook 'conf-mode-hook 'company-tng-mode)
+  (add-hook 'c-mode-hook 'company-tng-mode)
+  (add-hook 'c++-mode-hook 'company-tng-mode)
+  (add-hook 'rust-mode-hook 'company-tng-mode)
+  (add-hook 'rustic-mode-hook 'company-tng-mode)
+  (add-hook 'emacs-lisp-mode-hook 'company-tng-mode)
+  (add-hook 'LaTeX-mode-hook 'company-tng-mode)
+  (add-hook 'python-mode-hook 'company-tng-mode))
 
 ;; (use-package company-c-headers
 ;;   :after company
