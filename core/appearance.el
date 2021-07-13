@@ -82,6 +82,7 @@
 
 (add-hook 'prog-mode-hook 'relative-lines)
 (add-hook 'text-mode-hook 'relative-lines)
+(add-hook 'conf-mode-hook 'relative-lines)
 (add-hook 'special-mode-hook 'relative-lines)
 (add-hook 'dired-mode-hook 'relative-lines)
 (add-hook 'pdf-view-mode-hook 'disable-lines)

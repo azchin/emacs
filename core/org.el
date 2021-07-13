@@ -17,5 +17,5 @@
 (setq ispell-local-dictionary-alist
       '(("en_CA" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
 
-(add-hook 'text-mode-hook 'auto-fill-mode)
+(add-hook 'org-mode-hook 'auto-fill-mode)
 (setq-default fill-column 80)

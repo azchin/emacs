@@ -23,10 +23,6 @@
 ;; TODO test which-key integration
 ;; TODO put in one evil-define-key statement
 (evil-define-key leader-states leader-intercept-mode-map (kbd "SPC") 'evil-send-leader)
-(evil-define-key leader-states 'global (kbd "<leader> o l") 'org-store-link)
-;; "o a" 'org-agent
-(evil-define-key leader-states 'global (kbd "<leader> o c") 'org-capture)
-(evil-define-key leader-states 'global (kbd "<leader> o a") (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows)))
 (evil-define-key leader-states 'global (kbd "<leader> c t") 'toggle-tabs)
 (evil-define-key leader-states 'global (kbd "<leader> c y") 'conditional-tabify)
 (evil-define-key leader-states 'global (kbd "<leader> c i") 'indent-whole-buffer)
@@ -46,7 +42,7 @@
                                                                                          (desktop-read (emacsd "cache/default-desktop"))))))
 (evil-define-key leader-states 'global (kbd "<leader> e s") (lambda () (interactive) (desktop-save (emacsd "cache/default-desktop")))) ;; TODO prompt user for new dir
 (evil-define-key leader-states 'global (kbd "<leader> e r") (lambda () (interactive) (desktop-read (emacsd "cache/default-desktop"))))
-(evil-define-key leader-states 'global (kbd "<leader> o l") 'org-store-link)
+;; (evil-define-key leader-states 'global (kbd "<leader> o l") 'org-store-link)
 ;; "o a" 'org-agent
 (evil-define-key leader-states 'global (kbd "<leader> o c") 'org-capture)
 (evil-define-key leader-states 'global (kbd "<leader> o a") (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows)))
@@ -69,7 +65,7 @@
 (evil-define-key leader-states 'global (kbd "<leader> f o a") (lambda () (interactive) (find-file (concat org-directory "agenda.org"))))
 (evil-define-key leader-states 'global (kbd "<leader> f o i") (lambda () (interactive) (find-file (concat org-directory "index.org"))))
 (evil-define-key leader-states 'global (kbd "<leader> f s o") (lambda () (interactive) (create-new-frame "*org-scratch*" 'org-mode)))
-(evil-define-key leader-states 'global (kbd "<leader> f s c") (lambda () (interactive) (create-new-frame "*cpp-scratch*" 'c++-mode)))
+(evil-define-key leader-states 'global (kbd "<leader> f s c") (lambda () (interactive) (create-new-frame "*c-scratch*" 'c-mode)))
 (evil-define-key leader-states 'global (kbd "<leader> f s p") (lambda () (interactive) (create-new-frame "*python-scratch*" 'python-mode)))
 (evil-define-key leader-states 'global (kbd "<leader> f s t") (lambda () (interactive) (create-new-frame "*text-scratch*" 'text-mode)))
 (evil-define-key leader-states 'global (kbd "<leader> f s h") (lambda () (interactive) (create-new-frame "*script-scratch*" 'shell-script-mode)))
@@ -80,7 +76,7 @@
 (evil-define-key leader-states 'global (kbd "<leader> t b") 'switch-to-buffer-other-tab)
 (evil-define-key leader-states 'global (kbd "<leader> t f") 'find-file-other-tab)
 (evil-define-key leader-states 'global (kbd "<leader> t d") (lambda () (interactive) (dired-other-tab default-directory)))
-(evil-define-key leader-states 'global (kbd "<leader> t h") (lambda () (interactive) (dired-other-tab home-dir)))
+(evil-define-key leader-states 'global (kbd "<leader> t h") (lambda () (interactive) (let ((new-file (read-file-name "Choose file: ")) (tab-new) (find-file new-file)))))
 (evil-define-key leader-states 'global (kbd "<leader> t z") (lambda () (interactive) (switch-to-buffer-other-tab (current-buffer))))
 (evil-define-key leader-states 'global (kbd "<leader> t q") 'tab-close)
 (evil-define-key leader-states 'global (kbd "<leader> t o") 'tab-close-other)
@@ -128,6 +124,7 @@
 ;; (evil-define-key leader-states 'global (kbd "<leader> n s") (lambda () (interactive) (create-dired-frame (concat "/ssh:" (read-string "SSH: ") ":"))))
 ;; (evil-define-key leader-states 'global (kbd "<leader> n u") (lambda () (interactive) (create-dired-frame (concat "/sudo::" (read-directory-name "Dir (sudo): " "/")))))
 ;; "s" (lambda () (interactive) (indent-whole-buffer) (save-buffer))
+(evil-define-key leader-states 'global (kbd "<leader> x d") 'open-in-external-explorer)
 (evil-define-key leader-states 'global (kbd "<leader> s") 'save-buffer)
 (evil-define-key leader-states 'global (kbd "<leader> ;") 'eval-expression)
 (evil-define-key leader-states 'global (kbd "<leader> /") (lambda () (interactive) (evil-ex-nohighlight) (lazy-highlight-cleanup)))
@@ -143,6 +140,8 @@
                                                                                     (evil-window-split) (switch-to-buffer new-buffer))))
 (evil-define-key leader-states 'global (kbd "<leader> w b v") (lambda () (interactive) (let ((new-buffer (read-buffer "Choose buffer: ")))
                                                                                     (evil-window-vsplit) (switch-to-buffer new-buffer))))
+(evil-define-key leader-states 'global (kbd "<leader> w d s") (lambda () (interactive) (evil-window-split) (dired default-directory)))
+(evil-define-key leader-states 'global (kbd "<leader> w d v") (lambda () (interactive) (evil-window-vsplit) (dired default-directory)))
 (evil-define-key leader-states 'global (kbd "<leader> w v") 'evil-window-vsplit)
 (evil-define-key leader-states 'global (kbd "<leader> w h") 'evil-window-left)
 (evil-define-key leader-states 'global (kbd "<leader> w j") 'evil-window-down)
@@ -177,6 +176,7 @@
 (evil-define-key leader-states 'org-mode-map (kbd "<leader> o i") 'org-insert-structure-template)
 (evil-define-key leader-states 'org-mode-map (kbd "<leader> o s") 'org-schedule)
 (evil-define-key leader-states 'org-mode-map (kbd "<leader> o d") 'org-deadline)
+(evil-define-key leader-states 'org-mode-map (kbd "<leader> o l") 'org-insert-link)
 (evil-define-key leader-states 'org-mode-map (kbd "<leader> o e l") 'org-latex-export-to-latex)
 (evil-define-key leader-states 'org-mode-map (kbd "<leader> o e p") 'org-latex-export-to-pdf)
 

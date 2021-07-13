@@ -2,6 +2,11 @@
 ;; https://www.emacswiki.org/emacs/OpenWith
 ;; https://stackoverflow.com/questions/25109968/in-emacs-how-to-open-file-in-external-program-without-errors
 
+(defun open-in-external-explorer ()
+  "Open the current directory in an external explorer (Linux only atm)"
+  (interactive)
+  (let ((external-explorer "xdg-open"))
+    (start-process "" nil external-explorer default-directory)))
 
 (defun xah-open-in-external-app (&optional file)
   "Open the current file or dired marked files in external app.

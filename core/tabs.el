@@ -76,6 +76,7 @@
 (add-hook 'prog-mode-hook 'disable-tabs)
 (add-hook 'special-mode-hook 'enable-tabs)
 (add-hook 'text-mode-hook 'disable-tabs)
+(add-hook 'conf-mode-hook 'disable-tabs)
 ;; (add-hook 'text-mode-hook 
 ;;  (lambda () (disable-tabs) (setq indent-line-function (quote insert-tab)))) 
 
@@ -93,6 +94,7 @@
 
 ;; Add hooks here to set manual vs automatic tabs
 (add-hook 'text-mode-hook 'manual-tabs)
+(add-hook 'conf-mode-hook 'manual-tabs)
 (add-hook 'prog-mode-hook 'auto-tabs)
 (add-hook 'special-mode-hook 'manual-tabs)
 
