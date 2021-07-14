@@ -76,7 +76,7 @@
 (evil-define-key leader-states 'global (kbd "<leader> t b") 'switch-to-buffer-other-tab)
 (evil-define-key leader-states 'global (kbd "<leader> t f") 'find-file-other-tab)
 (evil-define-key leader-states 'global (kbd "<leader> t d") (lambda () (interactive) (dired-other-tab default-directory)))
-(evil-define-key leader-states 'global (kbd "<leader> t h") (lambda () (interactive) (let ((new-file (read-file-name "Choose file: ")) (tab-new) (find-file new-file)))))
+(evil-define-key leader-states 'global (kbd "<leader> t h") (lambda () (interactive) (let ((new-file (read-file-name "Choose file: " home-dir)) (tab-new) (find-file new-file)))))
 (evil-define-key leader-states 'global (kbd "<leader> t z") (lambda () (interactive) (switch-to-buffer-other-tab (current-buffer))))
 (evil-define-key leader-states 'global (kbd "<leader> t q") 'tab-close)
 (evil-define-key leader-states 'global (kbd "<leader> t o") 'tab-close-other)
