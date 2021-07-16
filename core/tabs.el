@@ -87,6 +87,7 @@
 (add-hook 'org-mode-hook 'disable-tabs)
 (add-hook 'js2-mode-hook (lambda () (disable-tabs 2)))
 (add-hook 'json-mode-hook (lambda () (disable-tabs 2)))
+(add-hook 'web-mode-hook (lambda () (disable-tabs 2)))
 
 ;; (add-hook 'c-mode-hook 'c-tabs)
 ;; (add-hook 'c++-mode-hook 'c-tabs)

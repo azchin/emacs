@@ -33,6 +33,7 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#ebdbb2" "#cc241d" "#98971a" "#d79921" "#458588" "#b16286" "#689d6a" "#3c3836"])
+ '(company-show-quick-access t nil nil "Customized with use-package company")
  '(package-selected-packages
    '(modus-themes yasnippet pandoc-mode modus-vivendi-theme markdown-mode ivy-hydra ivy magit auctex use-package smartparens pdf-tools monokai-pro-theme minimap latex-preview-pane haskell-mode gruvbox-theme evil-surround evil-snipe evil-quickscope evil-leader evil-commentary evil-collection doom-themes dired-subtree auto-package-update))
  '(pdf-view-midnight-colors '("#282828" . "#f9f5d7")))

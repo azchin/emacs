@@ -35,6 +35,7 @@
 (evil-define-key leader-states 'global (kbd "<leader> c r") 'rename-uniquely)
 (evil-define-key leader-states 'global (kbd "<leader> c f") 'fill-region)
 (evil-define-key leader-states 'global (kbd "<leader> c w") 'count-words-region)
+(evil-define-key leader-states 'global (kbd "<leader> v t") 'treemacs)
 (evil-define-key leader-states 'global (kbd "<leader> e e") (lambda () (interactive) (if desktop-save-mode
                                                                                     (progn (desktop-save (emacsd "cache/default-desktop"))
                                                                                            (desktop-save-mode 0))
@@ -86,8 +87,9 @@
 (evil-define-key leader-states 'global (kbd "<leader> t q") 'tab-close)
 (evil-define-key leader-states 'global (kbd "<leader> t o") 'tab-close-other)
 (evil-define-key leader-states 'global (kbd "<leader> t m") 'tab-move)
-(evil-define-key leader-states 'global (kbd "<leader> t M") (lambda () (interactive) (tab-move -1)))
-(evil-define-key leader-states 'global (kbd "<leader> t g") (lambda () (interactive) (tab-bar-move-tab-to (read-number "Tab index: "))))
+;; (evil-define-key leader-states 'global (kbd "<leader> t M") (lambda () (interactive) (tab-move -1)))
+(evil-define-key leader-states 'global (kbd "<leader> t M") (lambda () (interactive) (tab-bar-move-tab-to (read-number "Tab index: "))))
+(evil-define-key leader-states 'global (kbd "g t") (lambda (x) (interactive "P") (if x (tab-bar-select-tab x) (tab-bar-switch-to-next-tab))))
 (evil-define-key leader-states 'global (kbd "<leader> d d") 'dired-jump)
 ;; dired-jump opens new window, dired uses current window
 (evil-define-key leader-states 'global (kbd "<leader> d h") (lambda () (interactive) (dired home-dir)))

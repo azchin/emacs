@@ -21,11 +21,11 @@
 (setq tab-bar-new-tab-to 'right)
 (setq tab-bar-tab-hints t)
 (setq-default tab-bar-tab-name-function (lambda () (concat 
-                                               " "
-                                               (when (buffer-modified-p) "+ ")
+                                               (when (buffer-modified-p) "+")
                                                (tab-bar-tab-name-current)
                                                " ")))
 (setq tab-bar-button-margin '(4 . 8))
+(setq tab-bar-select-tab-modifiers '(meta alt))
 ;; (setq tab-bar-button-relief 32)
 
 ;; (let ((win '(128 40 256 192)))

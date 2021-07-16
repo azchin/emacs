@@ -213,6 +213,9 @@
 ;;   (sp-local-pair 'rustic-mode "<" nil :actions :rem))
 (use-package js2-mode)
 (use-package json-mode)
+(use-package typescript-mode
+  :custom
+  (typescript-indent-level 2))
 
 (use-package pdf-tools
   :config 
@@ -383,6 +386,26 @@
 (use-package spinner
   :pin gnu)
 
+(use-package web-mode
+  :custom
+  (web-mode-code-indent-offset 2)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  :config
+  (add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.tsx$" . web-mode))
+  (setq web-mode-content-types-alist '(("jsx" . "\\.jsx")))
+  (setq web-mode-content-types-alist '(("jsx" . "\\.tsx"))))
+
+(use-package treemacs)
+(use-package treemacs-evil
+  :after (treemacs))
+(use-package treemacs-icons-dired
+  :after (treemacs dired)
+  :config (treemacs-icons-dired-mode))
+(use-package treemacs-magit
+  :after (treemacs))
+
 (use-package lsp-mode
   :after (spinner)
   :custom
@@ -393,14 +416,14 @@
   (delete '(".*\\.js$" . "javascript") lsp-language-id-configuration)
   (delete '(".*\\.ts$" . "typescript") lsp-language-id-configuration)
   (delete '(js-mode . "javascript") lsp-language-id-configuration)
-  (delete '(ts-mode . "typescript") lsp-language-id-configuration)
   (add-to-list 'lsp-language-id-configuration '(js-mode . "deno"))
-  (add-to-list 'lsp-language-id-configuration '(ts-mode . "deno"))
+  (add-to-list 'lsp-language-id-configuration '(typescript-mode . "deno"))
   (lsp-register-client
    (make-lsp-client :new-connection (lsp-stdio-connection '("deno" "lsp"))
                     :activation-fn (lsp-activate-on "deno")
                     :server-id 'deno))
   (add-hook 'js-mode-hook 'lsp)
+  (add-hook 'typescript-mode-hook 'lsp)
   (add-hook 'rust-mode-hook 'lsp))
 
 ;; (use-package lsp-ivy)
