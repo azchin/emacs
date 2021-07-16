@@ -122,7 +122,8 @@
   (evil-magit-use-y-for-yank t)
   :config
   (add-hook 'magit-mode-hook (lambda () (evil-snipe-local-mode 0)))
-  (evil-collection-init))
+  (evil-collection-init)
+  (evil-collection-define-key 'normal 'dired-mode-map [mouse-2] 'dired-mouse-find-file))
 
 (use-package evil-org
   :after (org evil) 

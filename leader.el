@@ -199,6 +199,8 @@
 (evil-define-key 'normal dired-mode-map "f" 'find-file)
 (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory)
 (evil-define-key 'normal dired-mode-map "l" 'dired-find-file)
+(define-key dired-mode-map [mouse-2] 'dired-mouse-find-file)
+(setq mouse-wheel-progressive-speed nil)
 
 (evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
 (evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
