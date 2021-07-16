@@ -19,6 +19,7 @@
 (setq tab-bar-close-last-tab-choice 'delete-frame)
 (setq tab-bar-new-button-show nil)
 (setq tab-bar-new-tab-to 'right)
+(setq tab-bar-tab-hints t)
 (setq-default tab-bar-tab-name-function (lambda () (concat 
                                                " "
                                                (when (buffer-modified-p) "+ ")

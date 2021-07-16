@@ -180,14 +180,14 @@
 
 (use-package gruvbox-theme
   :config
-  ;; (load-theme 'gruvbox-dark-hard t)
+  (load-theme 'gruvbox-dark-hard t)
   ;; (load-theme 'gruvbox-dark-medium t)
   ;; (load-theme 'gruvbox-light-hard t)
   )
 
 (use-package modus-themes
   :config
-  (load-theme 'modus-operandi t)
+  ;; (load-theme 'modus-operandi t)
   )
 
 ;; (use-package haskell-mode)
@@ -206,6 +206,8 @@
   (sp-local-pair 'rust-mode "'" nil :actions :rem))
 ;; (use-package rustic
 ;;   :after flycheck smartparens
+;;   :custom
+;;   (rustic-lsp-server 'rust-analyzer)
 ;;   :config
 ;;   (sp-local-pair 'rustic-mode "'" nil :actions :rem)
 ;;   (sp-local-pair 'rustic-mode "<" nil :actions :rem))
@@ -386,7 +388,19 @@
   :custom
   (lsp-restart 'ignore)
   (lsp-completion-show-detail nil)
+  (lsp-rust-server 'rust-analyzer)
   :config
+  (delete '(".*\\.js$" . "javascript") lsp-language-id-configuration)
+  (delete '(".*\\.ts$" . "typescript") lsp-language-id-configuration)
+  (delete '(js-mode . "javascript") lsp-language-id-configuration)
+  (delete '(ts-mode . "typescript") lsp-language-id-configuration)
+  (add-to-list 'lsp-language-id-configuration '(js-mode . "deno"))
+  (add-to-list 'lsp-language-id-configuration '(ts-mode . "deno"))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("deno" "lsp"))
+                    :activation-fn (lsp-activate-on "deno")
+                    :server-id 'deno))
+  (add-hook 'js-mode-hook 'lsp)
   (add-hook 'rust-mode-hook 'lsp))
 
 ;; (use-package lsp-ivy)
