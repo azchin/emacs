@@ -181,14 +181,14 @@
 
 (use-package gruvbox-theme
   :config
-  (load-theme 'gruvbox-dark-hard t)
+  ;; (load-theme 'gruvbox-dark-hard t)
   ;; (load-theme 'gruvbox-dark-medium t)
   ;; (load-theme 'gruvbox-light-hard t)
   )
 
 (use-package modus-themes
   :config
-  ;; (load-theme 'modus-operandi t)
+  (load-theme 'modus-operandi t)
   )
 
 ;; (use-package haskell-mode)
@@ -208,15 +208,17 @@
 ;; (use-package rustic
 ;;   :after flycheck smartparens
 ;;   :custom
-;;   (rustic-lsp-server 'rust-analyzer)
+;; ;; (rustic-lsp-server 'rust-analyzer)
 ;;   :config
 ;;   (sp-local-pair 'rustic-mode "'" nil :actions :rem)
 ;;   (sp-local-pair 'rustic-mode "<" nil :actions :rem))
-(use-package js2-mode)
-(use-package json-mode)
+(use-package js2-mode
+  :config
+  (setq js-indent-level 2))
 (use-package typescript-mode
   :custom
   (typescript-indent-level 2))
+(use-package json-mode)
 
 (use-package pdf-tools
   :config 
@@ -301,9 +303,12 @@
 (use-package swiper
   :after (evil)
   :config
-  (evil-global-set-key 'normal (kbd "s") 'swiper)
-  (evil-global-set-key 'normal (kbd "S") 'swiper-backward)
-  (global-set-key (kbd "C-s") 'swiper))
+  (defvaralias 'swiper-history 'regexp-search-ring)
+  (evil-global-set-key 'normal (kbd "s") 'swiper-isearch)
+  ;; (evil-global-set-key 'normal (kbd "S") 'swiper-backward)
+  ;; (evil-global-set-key 'normal (kbd "C-n") 'isearch-repeat-forward)
+  ;; (evil-global-set-key 'normal (kbd "C-p") 'isearch-repeat-backward)
+  (evil-global-set-key 'normal (kbd "C-s") 'swiper-isearch))
 (use-package counsel
   :config
   (counsel-mode 1))
@@ -403,7 +408,13 @@
   :after (treemacs))
 (use-package treemacs-icons-dired
   :after (treemacs dired)
-  :config (treemacs-icons-dired-mode))
+  :config
+  (defun treemacs-icons-frame-enable ()
+    (treemacs-icons-dired-mode)
+    (remove-hook 'server-after-make-frame-hook 'treemacs-icons-frame-enable))
+  (if daemon-mode-snapshot
+      (add-hook 'server-after-make-frame-hook 'treemacs-icons-frame-enable)
+    (treemacs-icons-dired-mode)))
 (use-package treemacs-magit
   :after (treemacs))
 
@@ -412,7 +423,14 @@
   :custom
   (lsp-restart 'ignore)
   (lsp-completion-show-detail nil)
-  (lsp-rust-server 'rust-analyzer)
+  (lsp-rust-server 'rust-analyzer) ;; rust-analyzer vs rls
+  ;; (lsp-completion-enable-additional-text-edit nil)
+  (lsp-enable-snippet nil)
+  (lsp-rust-analyzer-completion-auto-self-enable nil)
+  (lsp-rust-analyzer-completion-add-call-argument-snippets nil)
+  (lsp-rust-analyzer-completion-add-call-parenthesis nil)
+  ;; (lsp-rust-analyzer-completion-auto-import-enable nil)
+  ;; (lsp-rust-analyzer-completion-postfix-enable nil)
   :config
   (delete '(".*\\.js$" . "javascript") lsp-language-id-configuration)
   (delete '(".*\\.ts$" . "typescript") lsp-language-id-configuration)
