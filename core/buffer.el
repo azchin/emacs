@@ -161,6 +161,13 @@ BUFFER may be either a buffer or its name (a string)."
 ;;   (unless live
 ;;     (funcall (or mode 'text-mode)))))
 
+(defun create-new-buffer (name &optional mode)
+  "Create a new buffer in the current window"
+  (interactive (list (read-buffer "Buffer name:" (current-buffer) nil)))
+  (switch-to-buffer (get-buffer-create name))
+  (funcall (or mode 'fundamental-mode))
+  (auto-insert))
+
 (defun create-new-frame-command (command)
   "Create a new frame and evaluate command"
   (let ((new-frame (make-frame-command)))
@@ -204,3 +211,12 @@ BUFFER may be either a buffer or its name (a string)."
          (buffer-list))))
 
 (setq frame-auto-hide-function 'delete-frame)
+
+(defun filter-dired-buffer-list ()
+  "Bury all the dired buffers from the buffer list"
+  (interactive)
+  (dolist (buff (buffer-list))
+    (with-current-buffer buff
+      (when (eq 'dired-mode major-mode) (bury-buffer buff)))))
+
+(add-hook 'after-change-major-mode-hook 'filter-dired-buffer-list)
