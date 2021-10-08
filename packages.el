@@ -151,14 +151,14 @@
   (add-hook 'special-mode-hook #'smartparens-mode)
   (add-hook 'text-mode-hook #'smartparens-mode)
   (add-hook 'conf-mode-hook #'smartparens-mode)
-  (sp-pair "\\\\(" nil :actions :rem)
-  (sp-pair "\\{" nil :actions :rem)
-  (sp-pair "\\(" nil :actions :rem)
-  (sp-pair "\\\"" nil :actions :rem)
+  ;; (sp-pair "\\\\(" nil :actions :rem)
+  ;; (sp-pair "\\{" nil :actions :rem)
+  ;; (sp-pair "\\(" nil :actions :rem)
+  ;; (sp-pair "\\\"" nil :actions :rem)
   ;; (sp-pair "[" nil :actions :rem)
   ;; (sp-pair "(" nil :actions :rem)
-  (sp-pair "'" nil :actions :rem)
-  (sp-pair "`" nil :actions :rem)
+  ;; (sp-pair "'" nil :actions :rem)
+  ;; (sp-pair "`" nil :actions :rem)
   ;; (sp-pair "\"" nil :actions :rem)
   ;; (sp-local-pair 'emacs-lisp-mode "(" ")")
   (sp-local-pair 'org-mode "/" nil :actions :rem)
@@ -189,6 +189,7 @@
 (use-package modus-themes
   :config
   (load-theme 'modus-operandi t)
+  ;; (load-theme 'modus-vivendi t)
   )
 
 ;; (use-package haskell-mode)

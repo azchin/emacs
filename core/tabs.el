@@ -71,6 +71,9 @@
 (setq c-basic-offset custom-tab-width
       c-default-style "linux"
       c-syntactic-indentation nil)
+(c-set-offset 'case-label '+)
+(c-set-offset 'label '*)
+(setq css-indent-offset 2)
 
 
 (add-hook 'prog-mode-hook 'disable-tabs)
@@ -88,6 +91,7 @@
 (add-hook 'js2-mode-hook (lambda () (disable-tabs 2)))
 (add-hook 'json-mode-hook (lambda () (disable-tabs 2)))
 (add-hook 'web-mode-hook (lambda () (disable-tabs 2)))
+(add-hook 'css-mode-hook (lambda () (disable-tabs 2)))
 
 ;; (add-hook 'c-mode-hook 'c-tabs)
 ;; (add-hook 'c++-mode-hook 'c-tabs)
@@ -119,3 +123,9 @@
 (defun indent-whole-buffer ()
   (interactive)
   (indent-region (point-min) (point-max)))
+
+(defun fill-whole-buffer ()
+  (interactive)
+  (fill-region (point-min) (point-max)))
+  ;; (if evil-visual-state-local-minor-mode (fill-region)
+  ;;   (fill-region (point-min) (point-max))))

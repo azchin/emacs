@@ -36,6 +36,7 @@
                 (org-level-7 . 1.0)
                 (org-level-8 . 1.0)))
   (set-face-attribute (car face) nil :family markup-font-family :weight 'medium :height (cdr face)))
+(set-face-attribute 'org-table nil :family default-font-family :height default-font-height)
 
 ;; TODO when new frames are made, highlight gets overridden
 (defun change-highlight-face (&optional frame)
