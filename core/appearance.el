@@ -1,6 +1,8 @@
 (menu-bar-mode 0)
 (tool-bar-mode 0)
-(scroll-bar-mode 0)
+;; (scroll-bar-mode 0)
+(scroll-bar-mode)
+(setq scroll-bar-adjust-thumb-portion nil)
 (blink-cursor-mode 0)
 (setq frame-resize-pixelwise t)
 
@@ -41,6 +43,7 @@
 
 (defvar default-font-family "DejaVu Sans Mono"
   "Default face font family")
+;; b4 font bug, we had 113 and 120, after 72, 80
 (defvar default-font-height 113
   "Default face font height") ;; 10: 98, 11: 113, 12: 120
 (defvar markup-font-family "DejaVu Serif"
@@ -68,8 +71,10 @@
       "# This buffer is for text that is not saved.
 # To create a file, visit it with \\[find-file] and enter text in its buffer.\n\n")
 ;; (fringe-mode 0)
-(fringe-mode '(0 . 1))
-(setq-default truncate-partial-width-windows nil)
+;; (fringe-mode '(0 . 1))
+(fringe-mode 0)
+(setq-default fringes-outside-margins t)
+(setq-default truncate-partial-width-windows 100)
 (setq-default truncate-lines nil)
 (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
 (setq echo-keystrokes 0.2)
@@ -93,7 +98,11 @@
 ;; (add-hook 'minibuffer-inactive-mode-hook 'disable-lines)
 
 ;; (setq dired-listing-switches "-Ahlo --group-directories-first --time-style='+%b %d %R'")
-(setq dired-listing-switches "-Ahlo --group-directories-first --time-style=iso")
+;; (setq dired-listing-switches "-Ahlo --group-directories-first --time-style=iso")
+(require 'ls-lisp)
+(setq ls-lisp-dirs-first t)
+(setq ls-lisp-use-insert-directory-program nil)
+(setq dired-listing-switches "-Ahl")
 (setq dired-hide-details-hide-symlink-targets nil)
 (setq dired-hide-details-hide-information-lines t)
 (add-hook 'dired-mode-hook 'dired-hide-details-mode)

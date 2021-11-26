@@ -81,8 +81,8 @@
   (evil-want-change-word-to-end nil)
   ;; (evil-search-module 'isearch)
   (evil-search-module 'evil-search)
-  (evil-split-window-below t)
-  (evil-vsplit-window-right t)
+  (evil-split-window-below nil)
+  (evil-vsplit-window-right nil)
   ;; :config
   ;; (global-undo-tree-mode)
   :config
@@ -305,7 +305,7 @@
   :after (evil)
   :config
   (defvaralias 'swiper-history 'regexp-search-ring)
-  (evil-global-set-key 'normal (kbd "s") 'swiper-isearch)
+  (evil-global-set-key 'normal (kbd "s") 'swiper)
   ;; (evil-global-set-key 'normal (kbd "S") 'swiper-backward)
   ;; (evil-global-set-key 'normal (kbd "C-n") 'isearch-repeat-forward)
   ;; (evil-global-set-key 'normal (kbd "C-p") 'isearch-repeat-backward)

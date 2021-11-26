@@ -68,9 +68,10 @@
 (setq-default evil-shift-width custom-tab-width)
 (setq python-indent-offset 4)
 (setq sh-basic-offset custom-tab-width)
-(setq c-basic-offset custom-tab-width
-      c-default-style "linux"
-      c-syntactic-indentation nil)
+;; (setq c-basic-offset custom-tab-width
+;;       c-default-style "linux"
+;;       c-syntactic-indentation nil)
+(setq c-basic-offset custom-tab-width)
 (c-set-offset 'case-label '+)
 (c-set-offset 'label '*)
 (setq css-indent-offset 2)
