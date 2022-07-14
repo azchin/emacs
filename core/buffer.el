@@ -46,10 +46,24 @@ is dired"
 ;;                (display-buffer-reuse-window display-buffer-pop-up-frame)
 ;;                (reusable-frames . 0)))
 
-                                        ; (add-to-list 'display-buffer-alist
-                                        ;              '(display-buffer-pdf-from-dired
-                                        ;                (display-buffer-reuse-window display-buffer-pop-up-frame)
-                                        ;                (reusable-frames . 0)))
+;; (add-to-list 'display-buffer-alist
+;;              '(display-buffer-pdf-from-dired
+;;                (display-buffer-reuse-window display-buffer-pop-up-frame)
+;;                (reusable-frames . 0)))
+
+(add-to-list 'display-buffer-alist
+             '("*grep*"
+               (display-buffer-reuse-window display-buffer-same-window)))
+
+(add-to-list 'display-buffer-alist
+             '((lambda (name action)
+                 (equal (buffer-local-value 'major-mode (get-buffer name)) 'help-mode))
+               (display-buffer-reuse-mode-window display-buffer-pop-up-window)))
+(setq display-buffer-base-action
+      '((display-buffer-reuse-mode-window
+         display-buffer-same-window
+         display-buffer-pop-up-window)
+        (inhibit-switch-frame . t)))
 
 (setq Man-notify-method 'aggressive)
 ;; (setq grep-command "grep --color -nH --null ")
@@ -129,7 +143,7 @@ BUFFER may be either a buffer or its name (a string)."
 (defun create-eshell-window ()
   "Create an eshell terminal window"
   (interactive)
-  (let ((new-window (split-window-below -16)))
+  (let ((new-window (split-window (frame-root-window) -16 'below)))
     (select-window new-window)
     (eshell 't)))
 
@@ -174,6 +188,13 @@ BUFFER may be either a buffer or its name (a string)."
     (select-frame new-frame)
     (switch-to-buffer (get-buffer-create "*Untitled*"))
     (funcall command)))
+
+(defun create-new-frame-scratch ()
+  "Create a new frame go to scratch"
+  (interactive)
+  (let ((new-frame (make-frame-command)))
+    (select-frame new-frame)
+    (switch-to-buffer "*scratch*")))
 
 (defun create-new-frame-file () 
   "Create a new frame and choose file"

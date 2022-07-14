@@ -14,10 +14,6 @@ alias ga git add
 alias gs git status
 alias xclip xclip -selection clipboard
 alias psg ps ax | grep
-alias onesr onedrive --synchronize --resync
-alias ones onedrive --synchronize
-alias de doasedit
-alias sudo doas --
 alias qd cat $XDG_CACHE_HOME/currentdirectory
 alias pd cd $(cat $XDG_CACHE_HOME/currentdirectory)
 alias yd pwd > $XDG_CACHE_HOME/currentdirectory

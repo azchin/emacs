@@ -66,6 +66,7 @@
 (use-package evil
   :after (undo-fu)
   :custom
+  (evil-want-keybinding nil)
   (evil-want-C-u-scroll t)
   (evil-want-C-u-delete nil)
   (evil-want-C-d-scroll t)
@@ -73,7 +74,6 @@
   (evil-want-C-i-jump t)
   (evil-want-Y-yank-to-eol t)
   (evil-want-integration t)
-  (evil-want-keybinding nil)
   (evil-move-beyond-eol nil)
   (evil-respect-visual-line-mode nil)
   ;; (evil-undo-system 'undo-tree)
@@ -83,8 +83,6 @@
   (evil-search-module 'evil-search)
   (evil-split-window-below nil)
   (evil-vsplit-window-right nil)
-  ;; :config
-  ;; (global-undo-tree-mode)
   :config
   (eload "leader.el")
   (evil-mode 1)) ;; enable evil-mode in evil-leader
@@ -99,16 +97,6 @@
   :config
   (evil-commentary-mode))
 
-;; (use-package evil-snipe
-;;   :after evil
-;;   :custom
-;;   (evil-snipe-scope 'buffer)
-;;   (evil-snipe-use-vim-sneak-bindings t)
-;;   :config
-;;   (add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode)
-;;   (evil-snipe-mode 1))
-;;   ; (evil-snipe-override-mode 1) ; this overrides f F t T
-
 (use-package evil-quickscope
   :after evil
   :config
@@ -121,7 +109,6 @@
   :custom
   (evil-magit-use-y-for-yank t)
   :config
-  ;; (add-hook 'magit-mode-hook (lambda () (evil-snipe-local-mode 0)))
   (evil-collection-init)
   (evil-collection-define-key 'normal 'dired-mode-map [mouse-2] 'dired-mouse-find-file))
 
@@ -175,27 +162,28 @@
 ;;   :config
 ;;   (add-hook 'smartparens-enabled-hook 'evil-smartparens-mode))
 
-;; (use-package monokai-pro-theme
-;;   :config
-;;   (load-theme 'monokai-pro t))
-
 (use-package gruvbox-theme
   :config
-  ;; (load-theme 'gruvbox-dark-hard t)
+  (load-theme 'gruvbox-dark-hard t)
   ;; (load-theme 'gruvbox-dark-medium t)
   ;; (load-theme 'gruvbox-light-hard t)
   )
 
 (use-package modus-themes
   :config
-  (load-theme 'modus-operandi t)
+  ;; (load-theme 'modus-operandi t)
   ;; (load-theme 'modus-vivendi t)
   )
 
-;; (use-package haskell-mode)
+(use-package openwith
+  :custom
+  (openwith-associations '(("\\.pdf\\'" "zathura" (file))))
+  :config
+  (openwith-mode t))
+
 (use-package markdown-mode)
 
-;; (use-package pandoc-mode)
+(use-package cmake-mode)
 
 (use-package flycheck
   :config
@@ -213,19 +201,20 @@
 ;;   :config
 ;;   (sp-local-pair 'rustic-mode "'" nil :actions :rem)
 ;;   (sp-local-pair 'rustic-mode "<" nil :actions :rem))
-(use-package js2-mode
-  :config
-  (setq js-indent-level 2))
-(use-package typescript-mode
-  :custom
-  (typescript-indent-level 2))
-(use-package json-mode)
 
-(use-package pdf-tools
-  :config 
-  ;; (add-hook 'pdf-view-mode 'auto-revert-mode)
-  (add-hook 'pdf-view-mode 'pdf-view-midnight-minor-mode)
-  (pdf-tools-install))
+;; (use-package js2-mode
+;;   :config
+;;   (setq js-indent-level 2))
+;; (use-package typescript-mode
+;;   :custom
+;;   (typescript-indent-level 2))
+;; (use-package json-mode)
+
+;; (use-package pdf-tools
+;;   :config 
+;;   ;; (add-hook 'pdf-view-mode 'auto-revert-mode)
+;;   (add-hook 'pdf-view-mode 'pdf-view-midnight-minor-mode)
+;;   (pdf-tools-install))
 
 ;; ; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
 (use-package tex
@@ -369,7 +358,7 @@
   (add-hook 'c-mode-hook 'company-tng-mode)
   (add-hook 'c++-mode-hook 'company-tng-mode)
   (add-hook 'rust-mode-hook 'company-tng-mode)
-  (add-hook 'rustic-mode-hook 'company-tng-mode)
+  ;; (add-hook 'rustic-mode-hook 'company-tng-mode)
   (add-hook 'emacs-lisp-mode-hook 'company-tng-mode)
   (add-hook 'LaTeX-mode-hook 'company-tng-mode)
   (add-hook 'python-mode-hook 'company-tng-mode))
@@ -393,16 +382,16 @@
 (use-package spinner
   :pin gnu)
 
-(use-package web-mode
-  :custom
-  (web-mode-code-indent-offset 2)
-  (web-mode-markup-indent-offset 2)
-  (web-mode-css-indent-offset 2)
-  :config
-  (add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.tsx$" . web-mode))
-  (setq web-mode-content-types-alist '(("jsx" . "\\.jsx")))
-  (setq web-mode-content-types-alist '(("jsx" . "\\.tsx"))))
+;; (use-package web-mode
+;;   :custom
+;;   (web-mode-code-indent-offset 2)
+;;   (web-mode-markup-indent-offset 2)
+;;   (web-mode-css-indent-offset 2)
+;;   :config
+;;   (add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.tsx$" . web-mode))
+;;   (setq web-mode-content-types-alist '(("jsx" . "\\.jsx")))
+;;   (setq web-mode-content-types-alist '(("jsx" . "\\.tsx"))))
 
 (use-package treemacs)
 (use-package treemacs-evil
@@ -433,21 +422,26 @@
   ;; (lsp-rust-analyzer-completion-auto-import-enable nil)
   ;; (lsp-rust-analyzer-completion-postfix-enable nil)
   :config
-  (delete '(".*\\.js$" . "javascript") lsp-language-id-configuration)
-  (delete '(".*\\.ts$" . "typescript") lsp-language-id-configuration)
-  (delete '(js-mode . "javascript") lsp-language-id-configuration)
-  (add-to-list 'lsp-language-id-configuration '(js-mode . "deno"))
-  (add-to-list 'lsp-language-id-configuration '(typescript-mode . "deno"))
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("deno" "lsp"))
-                    :activation-fn (lsp-activate-on "deno")
-                    :server-id 'deno))
-  (add-hook 'js-mode-hook 'lsp)
-  (add-hook 'typescript-mode-hook 'lsp)
+  ;; (delete '(".*\\.js$" . "javascript") lsp-language-id-configuration)
+  ;; (delete '(".*\\.ts$" . "typescript") lsp-language-id-configuration)
+  ;; (delete '(js-mode . "javascript") lsp-language-id-configuration)
+  ;; (add-to-list 'lsp-language-id-configuration '(js-mode . "deno"))
+  ;; (add-to-list 'lsp-language-id-configuration '(typescript-mode . "deno"))
+  ;; (lsp-register-client
+  ;;  (make-lsp-client :new-connection (lsp-stdio-connection '("deno" "lsp"))
+  ;;                   :activation-fn (lsp-activate-on "deno")
+  ;;                   :server-id 'deno))
+  ;; (add-hook 'js-mode-hook 'lsp)
+  ;; (add-hook 'typescript-mode-hook 'lsp)
+  (add-hook 'c-mode-hook 'lsp)
+  (add-hook 'c++-mode-hook 'lsp)
   (add-hook 'rust-mode-hook 'lsp))
 
-;; (use-package lsp-ivy)
-;; (use-package ccls)
+(use-package lsp-ivy)
+(use-package lsp-treemacs
+  :config
+  (lsp-treemacs-sync-mode 1))
+(use-package ccls)
 ;; (use-package lsp-latex)
 ;; (use-package lsp-haskell)
 ;; (use-package lsp-python-ms
@@ -472,20 +466,6 @@
   (doom-modeline-irc nil)
   (doom-modeline-height 22)
   (doom-modeline-buffer-encoding nil))
-
-;; (use-package centaur-tabs
-;;   :demand
-;;   :config
-;;   (centaur-tabs-mode t)
-;;   (centaur-tabs-set-icons t)
-;;   (centaur-tabs-set-bar 'over)
-;;   :custom
-;;   (centaur-tabs-change-fonts "Fira Code" 100)
-;;   (define-key evil-normal-state-map (kbd "g t") 'centaur-tabs-forward)
-;;   (define-key evil-normal-state-map (kbd "g T") 'centaur-tabs-backward)
-;;   :bind
-;;   ("C-<prior>" . centaur-tabs-backward)
-;;   ("C-<next>" . centaur-tabs-forward))
 
 ;; Manually cloned
 ;; TODO periodically run "git pull" using midnight (or a cron)

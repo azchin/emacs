@@ -1,7 +1,7 @@
 (menu-bar-mode 0)
 (tool-bar-mode 0)
-;; (scroll-bar-mode 0)
-(scroll-bar-mode)
+(scroll-bar-mode 0)
+;; (scroll-bar-mode)
 (setq scroll-bar-adjust-thumb-portion nil)
 (blink-cursor-mode 0)
 (setq frame-resize-pixelwise t)
@@ -46,9 +46,13 @@
 ;; b4 font bug, we had 113 and 120, after 72, 80
 (defvar default-font-height 113
   "Default face font height") ;; 10: 98, 11: 113, 12: 120
-(defvar markup-font-family "DejaVu Serif"
+;; (defvar markup-font-family "DejaVu Serif"
+;;   "Serif font family")
+;; (defvar markup-font-height 120
+;;   "Serif font height")
+(defvar markup-font-family "DejaVu Sans Mono"
   "Serif font family")
-(defvar markup-font-height 120
+(defvar markup-font-height 113
   "Serif font height")
 (add-to-list 'default-frame-alist `(font . ,(concat default-font-family "-" (number-to-string (round default-font-height 10)))))
 (add-hook 'org-mode-hook (lambda () (buffer-face-set :family markup-font-family :height markup-font-height)))
