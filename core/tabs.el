@@ -72,7 +72,7 @@
 ;;       c-default-style "linux"
 ;;       c-syntactic-indentation nil)
 (setq c-basic-offset custom-tab-width)
-(c-set-offset 'case-label '+)
+(c-set-offset 'case-label 0)
 (c-set-offset 'label '*)
 (setq css-indent-offset 2)
 
@@ -114,6 +114,8 @@
 (setq whitespace-style '(face tabs tab-mark))
 (setq whitespace-display-mappings
       '((tab-mark 9 [183 9] [124 9] [92 9]))) ;; 187 183 8594 9655 8677 8614
+
+(delete-selection-mode)
 
 (defun conditional-tabify ()
   (interactive)

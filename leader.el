@@ -234,6 +234,6 @@
 ;; (define-key global-map (kbd "C-S-SPC") nil)
 
 (evil-global-set-key 'normal (kbd "C-_") nil)
-(global-set-key (kbd "C-+") 'text-scale-increase)
-(global-set-key (kbd "C-_") 'text-scale-decrease)
-(global-set-key (kbd "C-)") (lambda () (interactive) (text-scale-set 0)))
+(keymap-global-set "C-+" 'text-scale-increase)
+(keymap-global-set "C-_" 'text-scale-decrease)
+(keymap-global-set "C-)" (lambda () (interactive) (text-scale-set 0)))

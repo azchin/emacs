@@ -1,4 +1,7 @@
 .last-package-update-day
+.lsp-session*
+.cache
+eln-cache
 auto-save-list
 elpa
 tramp
@@ -7,9 +10,11 @@ eshell/lastdir
 eshell/history
 transient
 recentf
+session.*
 cache/backups/*
 cache/saves/*
 cache/undotree/*
+cache/default-desktop
 !cache/backups/.keep
 !cache/saves/.keep
 !cache/undotree/.keep

@@ -24,10 +24,10 @@
 (setq tab-bar-tab-hints t)
 (setq-default tab-bar-tab-name-function (lambda () (concat 
                                                (when (buffer-modified-p) "+")
-                                               (tab-bar-tab-name-current)
-                                               " ")))
+                                               (tab-bar-tab-name-current))))
 (setq tab-bar-button-margin '(4 . 8))
-(setq tab-bar-select-tab-modifiers '(meta alt))
+(setq tab-bar-format '(tab-bar-format-tabs tab-bar-separator))
+(add-hook 'prog-mode-hook 'tab-bar-history-mode)
 ;; (setq tab-bar-button-relief 32)
 
 ;; (let ((win '(128 40 256 192)))
@@ -100,6 +100,9 @@
 (add-hook 'image-mode-hook 'disable-lines)
 (add-hook 'org-mode-hook 'absolute-lines)
 ;; (add-hook 'minibuffer-inactive-mode-hook 'disable-lines)
+
+;; Column indicator
+(add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
 
 ;; (setq dired-listing-switches "-Ahlo --group-directories-first --time-style='+%b %d %R'")
 ;; (setq dired-listing-switches "-Ahlo --group-directories-first --time-style=iso")

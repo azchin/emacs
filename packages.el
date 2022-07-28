@@ -65,27 +65,25 @@
 
 (use-package evil
   :after (undo-fu)
-  :custom
-  (evil-want-keybinding nil)
-  (evil-want-C-u-scroll t)
-  (evil-want-C-u-delete nil)
-  (evil-want-C-d-scroll t)
-  (evil-want-C-w-delete t)
-  (evil-want-C-i-jump t)
-  (evil-want-Y-yank-to-eol t)
-  (evil-want-integration t)
-  (evil-move-beyond-eol nil)
-  (evil-respect-visual-line-mode nil)
-  ;; (evil-undo-system 'undo-tree)
-  (evil-undo-system 'undo-fu)
-  (evil-want-change-word-to-end nil)
-  ;; (evil-search-module 'isearch)
-  (evil-search-module 'evil-search)
-  (evil-split-window-below nil)
-  (evil-vsplit-window-right nil)
+  :init
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-u-delete nil)
+  (setq evil-want-C-d-scroll t)
+  (setq evil-want-C-w-delete nil)
+  (setq evil-want-C-i-jump t)
+  (setq evil-want-Y-yank-to-eol t)
+  (setq evil-want-integration t)
+  (setq evil-move-beyond-eol nil)
+  (setq evil-respect-visual-line-mode nil)
+  (setq evil-undo-system 'undo-fu)
+  (setq evil-want-change-word-to-end nil)
+  (setq evil-search-module 'evil-search)
+  (setq evil-split-window-below nil)
+  (setq evil-vsplit-window-right nil)
   :config
   (eload "leader.el")
-  (evil-mode 1)) ;; enable evil-mode in evil-leader
+  (evil-mode 1))
 
 (use-package evil-surround
   :after evil

@@ -23,4 +23,5 @@
       '(("en_CA" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
 
 (add-hook 'org-mode-hook 'auto-fill-mode)
+(add-hook 'org-mode-hook 'display-fill-column-indicator-mode)
 (setq-default fill-column 80)
