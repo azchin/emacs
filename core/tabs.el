@@ -106,7 +106,10 @@
 
 (add-hook 'lisp-mode-hook 'auto-tabs)
 (add-hook 'emacs-lisp-mode-hook 'auto-tabs)
-(add-hook 'org-mode-hook 'auto-tabs)
+(add-hook 'org-mode-hook
+          (lambda () (interactive)
+            (auto-tabs)
+            (evil-define-key 'insert 'local (kbd "TAB") 'org-cycle)))
 
 ;; (setq-default electric-indent-inhibit t)
 

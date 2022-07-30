@@ -218,7 +218,8 @@
 
 (evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
 (evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
-(evil-define-key 'insert org-mode-map (kbd "RET") (lambda () (interactive) (org-return nil)))
+(evil-define-key 'insert org-mode-map (kbd "RET")
+  (lambda () (interactive) (org-return nil)))
 
 (evil-global-set-key 'insert (kbd "C-d") 'delete-char)
 (evil-global-set-key 'insert (kbd "C-a") 'beginning-of-line)

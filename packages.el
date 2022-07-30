@@ -114,6 +114,7 @@
   :after (org evil) 
   :custom
   (evil-org-special-o/O '(table-row item))
+  (evil-org-use-additional-insert)
   (org-edit-src-content-indentation 2)
   (org-src-tab-acts-natively t)
   (org-src-preserve-indentation t)
