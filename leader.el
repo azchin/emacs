@@ -151,6 +151,7 @@
 (evil-define-key leader-states 'global (kbd "<leader> /") (lambda () (interactive) (evil-ex-nohighlight) (lazy-highlight-cleanup t)))
 ;; (evil-define-key leader-states 'global (kbd "<leader> /") 'lazy-highlight-cleanup)
 (evil-define-key leader-states 'global (kbd "<leader> 1") 'shell-command)
+(evil-define-key leader-states 'global (kbd "<leader> a") 'modus-themes-toggle)
 (evil-define-key leader-states 'global (kbd "<leader> w q") 'delete-window)
 (evil-define-key leader-states 'global (kbd "<leader> w s") 'evil-window-split)
 (evil-define-key leader-states 'global (kbd "<leader> w v") 'evil-window-vsplit)

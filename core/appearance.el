@@ -109,6 +109,7 @@
 (require 'ls-lisp)
 (setq ls-lisp-dirs-first t)
 (setq ls-lisp-use-insert-directory-program nil)
+(setq ls-lisp-use-string-collate nil)
 (setq dired-listing-switches "-Ahl")
 (setq dired-hide-details-hide-symlink-targets nil)
 (setq dired-hide-details-hide-information-lines t)

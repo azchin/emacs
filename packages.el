@@ -151,6 +151,8 @@
   (sp-local-pair 'org-mode "~" nil :actions :rem)
   (sp-local-pair 'org-mode "=" nil :actions :rem)
   (sp-local-pair 'org-mode "*" nil :actions :rem)
+  (sp-local-pair 'org-mode "_" nil :actions :rem)
+  (sp-local-pair 'org-mode "`" nil :actions :rem)
   (smartparens-strict-mode))
 
 ;; (use-package anzu
@@ -161,18 +163,17 @@
 ;;   :config
 ;;   (add-hook 'smartparens-enabled-hook 'evil-smartparens-mode))
 
-(use-package gruvbox-theme
-  :config
-  (load-theme 'gruvbox-dark-hard t)
-  ;; (load-theme 'gruvbox-dark-medium t)
-  ;; (load-theme 'gruvbox-light-hard t)
-  )
+;; (use-package gruvbox-theme
+;;   :config
+;;   (load-theme 'gruvbox-dark-hard t)
+;;   ;; (load-theme 'gruvbox-dark-medium t)
+;;   ;; (load-theme 'gruvbox-light-hard t)
+;;   )
 
 (use-package modus-themes
+  :after (evil)
   :config
-  ;; (load-theme 'modus-operandi t)
-  ;; (load-theme 'modus-vivendi t)
-  )
+  (load-theme 'modus-vivendi t))
 
 (use-package openwith
   :custom
@@ -186,8 +187,8 @@
 
 (use-package flycheck
   :config
-  (add-hook 'rust-mode 'flycheck-mode)
-  (add-hook 'org-mode-hook 'flyspell-mode))
+  ;; (add-hook 'org-mode-hook 'flyspell-mode)
+  (add-hook 'rust-mode 'flycheck-mode))
 
 (use-package rust-mode
   :after smartparens
@@ -248,7 +249,7 @@
   (clean-buffer-list-kill-never-buffer-names
    '("*scratch*" "*Messages*" "*cmd*"))
   (clean-buffer-list-kill-never-regexps
-   '("^\\ .*$" "\\*.*scratch\\*" "\\` \\*Minibuf-.*\\*\\'" "^\\*EMMS Playlist\\*.*$" "^[A-Za-z].*[A-Za-z]$"))
+   '("^\\ .*$" "\\*.*scratch\\*" "\\` \\*Minibuf-.*\\*\\'" "^\\*EMMS Playlist\\*.*$" "^[A-Za-z].*[A-Za-z]$" "^[A-Za-z].*[A-Za-z]<*[A-Za-z]>$"))
   :config
   (run-at-time t 1800 'clean-buffer-list))
 
@@ -334,8 +335,8 @@
     (interactive)
     (company-select-next-or-complete-selection -1))
 
-  (define-key company-active-map (kbd "<backspace>") 'company-backspace)
-  (define-key company-active-map (kbd "C-h") nil)
+  (keymap-set company-active-map "<backspace>" 'company-backspace)
+  (keymap-set company-active-map "C-h" nil)
 
   (evil-define-key 'insert company-mode-map (kbd "C-n")
     'company-select-next-or-complete-selection)
@@ -395,15 +396,6 @@
 (use-package treemacs)
 (use-package treemacs-evil
   :after (treemacs))
-(use-package treemacs-icons-dired
-  :after (treemacs dired)
-  :config
-  (defun treemacs-icons-frame-enable ()
-    (treemacs-icons-dired-mode)
-    (remove-hook 'server-after-make-frame-hook 'treemacs-icons-frame-enable))
-  (if daemon-mode-snapshot
-      (add-hook 'server-after-make-frame-hook 'treemacs-icons-frame-enable)
-    (treemacs-icons-dired-mode)))
 (use-package treemacs-magit
   :after (treemacs))
 
