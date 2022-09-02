@@ -4,6 +4,10 @@
 (defun eload (file)
   (load (emacsd file)))
 
+;; Supress warnings
+(when (string-match "29\\.0\\.50" (version))
+  (setq warning-minimum-level :error))
+
 (require 'server)
 (setq daemon-mode-snapshot (server-running-p))
 (setq home-dir default-directory)

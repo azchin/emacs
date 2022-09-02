@@ -2,13 +2,9 @@
 
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
-;; (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
-;; (defvar org-elpa '("org" . "http://orgmode.org/elpa/"))
 (setq package-archives nil)
 (add-to-list 'package-archives melpa t)
 (add-to-list 'package-archives gnu t)
-;; (add-to-list 'package-archives melpa-stable t)
-;; (add-to-list 'package-archives org-elpa t)
 
 (when (< emacs-major-version 27)
   (package-initialize))
@@ -51,6 +47,12 @@
   :custom
   (org-superstar-remove-leading-stars t)
   (org-superstar-headline-bullets-list '("◉" "●" "○" "●" "○" "●" "○")))
+
+(use-package hl-todo
+  :custom
+  (hl-todo-wrap-movement t)
+  :hook
+  (prog-mode . hl-todo-mode))
 
 (use-package undo-fu
   :custom
@@ -98,14 +100,12 @@
 (use-package evil-quickscope
   :after evil
   :config
-  ;; (set-face-foreground 'evil-quickscope-first-face "#FBFF00")
-  ;; (set-face-foreground 'evil-quickscope-second-face "#AE57FF")
   (global-evil-quickscope-mode 1))
 
 (use-package evil-collection
   :after (magit evil)
-  :custom
-  (evil-magit-use-y-for-yank t)
+  :init
+  (setq evil-magit-use-y-for-yank t)
   :config
   (evil-collection-init)
   (evil-collection-define-key 'normal 'dired-mode-map [mouse-2] 'dired-mouse-find-file))
@@ -114,7 +114,7 @@
   :after (org evil) 
   :custom
   (evil-org-special-o/O '(table-row item))
-  (evil-org-use-additional-insert)
+  (evil-org-use-additional-insert nil)
   (org-edit-src-content-indentation 2)
   (org-src-tab-acts-natively t)
   (org-src-preserve-indentation t)
@@ -122,10 +122,7 @@
   :config
   (require 'evil-org-agenda)
   (require 'org-tempo)
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (evil-org-mode)
-              ))
+  (add-hook 'org-mode-hook (lambda () (evil-org-mode)))
   (add-hook 'evil-org-mode (lambda () (evil-org-set-key-theme)))
   (evil-org-agenda-set-keys))
 
@@ -220,14 +217,14 @@
 (use-package tex
   :ensure auctex
   :after (evil pdf-tools)
-  :custom
-  (TeX-source-correlate-mode t)
-  (TeX-source-correlate-start-server t)
-  (TeX-auto-save t)
-  (TeX-parse-self t)
-  (TeX-view-program-selection '((output-pdf "PDF Tools")))
-  (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
-  ;; (TeX-engine 'xetex)
+  :init
+  (setq TeX-source-correlate-mode t)
+  (setq TeX-source-correlate-start-server t)
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+  (setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+  ;; (setq TeX-engine 'xetex)
   :config
   (add-hook 'LaTeX-mode-hook
             (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
@@ -264,10 +261,8 @@
 (use-package yasnippet)
 
 (use-package ivy
-  :custom
-  (ivy-count-format "")
-  (ivy-height 16)
-  (ivy-re-builders-alist
+  :init
+  (setq ivy-re-builders-alist
    '((counsel-describe-variable . ivy--regex-ignore-order)
      (counsel-describe-function . ivy--regex-ignore-order)
      (counsel-describe-symbol . ivy--regex-ignore-order)
@@ -277,6 +272,9 @@
      (counsel-find-file . ivy--regex-plus)
      (counsel-dired . ivy--regex-plus)
      (t . ivy--regex-fuzzy)))
+  :custom
+  (ivy-count-format "")
+  (ivy-height 16)
   (ivy-use-virtual-buffers t)
   (ivy-use-selectable-prompt t)
   ;; (ivy-initial-inputs-alist nil)
@@ -401,18 +399,35 @@
 
 (use-package lsp-mode
   :after (spinner)
-  :custom
-  (lsp-restart 'ignore)
-  (lsp-completion-show-detail nil)
-  (lsp-rust-server 'rust-analyzer) ;; rust-analyzer vs rls
-  ;; (lsp-completion-enable-additional-text-edit nil)
-  (lsp-enable-snippet nil)
-  (lsp-rust-analyzer-completion-auto-self-enable nil)
-  (lsp-rust-analyzer-completion-add-call-argument-snippets nil)
-  (lsp-rust-analyzer-completion-add-call-parenthesis nil)
+  :init
+  (setq lsp-restart 'ignore
+        lsp-completion-show-detail nil
+        lsp-completion-enable-additional-text-edit nil
+        lsp-completion-show-label-description nil
+        lsp-headerline-breadcrumb-enable nil
+        lsp-lens-enable nil
+        ;; lsp-enable-symbol-highlighting nil
+        ;; lsp-eldoc-enable-hover nil
+        ;; lsp-enable-xref nil
+        ;; lsp-modeline-code-diagnostics-enable nil
+        ;; lsp-enable-file-watchers nil
+        lsp-modeline-code-actions-enable nil
+        lsp-modeline-code-workspace-status-enable nil
+        lsp-enable-snippet nil
+        lsp-enable-indentation nil
+        lsp-enable-on-type-formatting nil
+        lsp-enable-text-document-color nil
+        lsp-rust-server 'rust-analyzer ;; rust-analyzer vs rls
+        lsp-rust-analyzer-completion-auto-self-enable nil
+        lsp-rust-analyzer-completion-add-call-argument-snippets nil
+        lsp-rust-analyzer-completion-add-call-parenthesis nil
+        lsp-use-plists t
+        gc-cons-threshold 3200000
+        read-process-output-max (* 1024 1024)
+        lsp-log-io nil)
+  :config
   ;; (lsp-rust-analyzer-completion-auto-import-enable nil)
   ;; (lsp-rust-analyzer-completion-postfix-enable nil)
-  :config
   ;; (delete '(".*\\.js$" . "javascript") lsp-language-id-configuration)
   ;; (delete '(".*\\.ts$" . "typescript") lsp-language-id-configuration)
   ;; (delete '(js-mode . "javascript") lsp-language-id-configuration)
@@ -428,10 +443,10 @@
   (add-hook 'c++-mode-hook 'lsp)
   (add-hook 'rust-mode-hook 'lsp))
 
-(use-package lsp-ivy)
-(use-package lsp-treemacs
-  :config
-  (lsp-treemacs-sync-mode 1))
+;; (use-package lsp-ivy)
+;; (use-package lsp-treemacs
+;;   :config
+;;   (lsp-treemacs-sync-mode 1))
 (use-package ccls)
 ;; (use-package lsp-latex)
 ;; (use-package lsp-haskell)

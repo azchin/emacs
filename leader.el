@@ -19,10 +19,13 @@
    ;; NOTE: This requires an evil version from 2018-03-20 or later
    (evil-get-auxiliary-keymap leader-intercept-mode-map state t t)
    state))
-
-;; TODO test which-key integration
-;; TODO put in one evil-define-key statement
+(evil-define-key '(normal insert) 'global (kbd "C-S-v") 'evil-paste-before)
+(evil-define-key 'visual 'global (kbd "C-S-c") 'evil-yank)
+(evil-define-key 'insert 'global (kbd "C-S-c") 'copy-region-as-kill)
 (evil-define-key leader-states leader-intercept-mode-map (kbd "SPC") 'evil-send-leader)
+(evil-define-key leader-states 'global (kbd "[ d") 'hl-todo-previous)
+(evil-define-key leader-states 'global (kbd "] d") 'hl-todo-next)
+(evil-define-key leader-states 'global (kbd "g t") (lambda (x) (interactive "P") (if x (tab-bar-select-tab x) (tab-bar-switch-to-next-tab))))
 (evil-define-key leader-states 'global (kbd "<leader> c t") 'toggle-tabs)
 (evil-define-key leader-states 'global (kbd "<leader> c y") 'conditional-tabify)
 (evil-define-key leader-states 'global (kbd "<leader> c i") 'indent-whole-buffer)
@@ -79,7 +82,7 @@
 ;; (evil-define-key leader-states 'global (kbd "<leader> f o i") (lambda () (interactive) (find-file (concat org-directory "index.org"))))
 (evil-define-key leader-states 'global (kbd "<leader> f s o") (lambda () (interactive) (create-new-buffer "*org-scratch*" 'org-mode)))
 (evil-define-key leader-states 'global (kbd "<leader> f s c") (lambda () (interactive) (create-new-buffer "*c-scratch*" 'c-mode)))
-(evil-define-key leader-states 'global (kbd "<leader> f s r") (lambda () (interactive) (create-new-buffer "*rusc-scratch*" 'rust-mode)))
+(evil-define-key leader-states 'global (kbd "<leader> f s r") (lambda () (interactive) (create-new-buffer "*rust-scratch*" 'rust-mode)))
 (evil-define-key leader-states 'global (kbd "<leader> f s p") (lambda () (interactive) (create-new-buffer "*python-scratch*" 'python-mode)))
 (evil-define-key leader-states 'global (kbd "<leader> f s t") (lambda () (interactive) (create-new-buffer "*text-scratch*" 'text-mode)))
 (evil-define-key leader-states 'global (kbd "<leader> f s h") (lambda () (interactive) (create-new-buffer "*script-scratch*" 'shell-script-mode)))
@@ -98,7 +101,6 @@
 ;; (evil-define-key leader-states 'global (kbd "<leader> t M") (lambda () (interactive) (tab-move -1)))
 (evil-define-key leader-states 'global (kbd "<leader> t M") (lambda () (interactive) (tab-bar-move-tab-to (read-number "Tab index: "))))
 (evil-define-key leader-states 'global (kbd "<leader> t s") (lambda () (interactive) (tab-new) (switch-to-buffer "*scratch*")))
-(evil-define-key leader-states 'global (kbd "g t") (lambda (x) (interactive "P") (if x (tab-bar-select-tab x) (tab-bar-switch-to-next-tab))))
 (evil-define-key leader-states 'global (kbd "<leader> d d") 'dired-jump)
 ;; dired-jump opens new window, dired uses current window
 (evil-define-key leader-states 'global (kbd "<leader> d h") (lambda () (interactive) (dired home-dir)))
@@ -219,8 +221,7 @@
 
 (evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
 (evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
-(evil-define-key 'insert org-mode-map (kbd "RET")
-  (lambda () (interactive) (org-return nil)))
+(evil-define-key 'insert org-mode-map (kbd "RET") (lambda () (interactive) (org-return nil)))
 
 (evil-global-set-key 'insert (kbd "C-d") 'delete-char)
 (evil-global-set-key 'insert (kbd "C-a") 'beginning-of-line)
