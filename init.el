@@ -4,6 +4,10 @@
 (defun eload (file)
   (load (emacsd file)))
 
+;; Garbage collection hack
+(eload "clone/gcmh/gcmh.el")
+(gcmh-mode 1)
+
 ;; Supress warnings
 (when (string-match "29\\.0\\.50" (version))
   (setq warning-minimum-level :error))

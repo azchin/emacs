@@ -1,3 +1,6 @@
 [submodule "clone/evil-unimpaired"]
 	path = clone/evil-unimpaired
 	url = https://github.com/zmaas/evil-unimpaired.git
+[submodule "clone/gcmh"]
+	path = clone/gcmh
+	url = https://github.com/emacsmirror/gcmh.git

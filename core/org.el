@@ -8,6 +8,9 @@
 (setq org-list-allow-alphabetical t)
 (setq org-startup-folded 'nofold)
 (setq org-hide-emphasis-markers t)
+(customize-set-variable 'safe-local-variable-values
+                        '((org-emphasis-alist . nil)
+                          (org-hide-emphasis-markers . nil)))
 ;; (setq org-latex-compiler "pdflatex")
 ;; (setq org-latex-bib-compiler "biber")
 (setq org-latex-pdf-process '("latexmk -pdf -bibtex %f"))

@@ -25,6 +25,8 @@
 (evil-define-key leader-states leader-intercept-mode-map (kbd "SPC") 'evil-send-leader)
 (evil-define-key leader-states 'global (kbd "[ d") 'hl-todo-previous)
 (evil-define-key leader-states 'global (kbd "] d") 'hl-todo-next)
+(evil-define-key leader-states 'global (kbd "[ c") 'flycheck-previous-error)
+(evil-define-key leader-states 'global (kbd "] c") 'flycheck-next-error)
 (evil-define-key leader-states 'global (kbd "g t") (lambda (x) (interactive "P") (if x (tab-bar-select-tab x) (tab-bar-switch-to-next-tab))))
 (evil-define-key leader-states 'global (kbd "<leader> c t") 'toggle-tabs)
 (evil-define-key leader-states 'global (kbd "<leader> c y") 'conditional-tabify)
