@@ -1,3 +1,5 @@
+(setq dired-clean-confirm-killing-deleted-buffers nil)
+
 ;; (defvar pop-up-frame-regexp-list '("\\*Buffer List\\*"
 ;;                                    "\\*eshell\\*"
 ;;                                    "\\*.*-scratch\\*"
