@@ -1,10 +1,12 @@
-(menu-bar-mode 0)
+(menu-bar-mode 1)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
 ;; (scroll-bar-mode)
 (setq scroll-bar-adjust-thumb-portion nil)
 (blink-cursor-mode 0)
 (setq frame-resize-pixelwise t)
+(pixel-scroll-precision-mode)
+(setq pixel-scroll-precision-large-scroll-height 40.0)
 
 (setq lazy-highlight-buffer-max-at-a-time nil)
 (setq lazy-highlight-initial-delay 0)
@@ -14,7 +16,7 @@
 
 (setq visible-cursor nil)
 (setq ring-bell-function 'ignore)
-(setq show-paren-style 'expression)
+(setq show-paren-style 'parenthesis)
 
 (tab-bar-mode)
 (setq tab-bar-show t)
@@ -47,14 +49,10 @@
 ;; b4 font bug, we had 113 and 120, after 72, 80
 (defvar default-font-height 113
   "Default face font height") ;; 10: 98, 11: 113, 12: 120
-;; (defvar markup-font-family "DejaVu Serif"
-;;   "Serif font family")
-;; (defvar markup-font-height 120
-;;   "Serif font height")
-(defvar markup-font-family "DejaVu Sans Mono"
-  "Serif font family")
-(defvar markup-font-height 113
-  "Serif font height")
+(defvar markup-font-family "DejaVu Serif"
+  "Markup font family")
+(defvar markup-font-height 120
+  "Markup font height")
 (add-to-list 'default-frame-alist `(font . ,(concat default-font-family "-" (number-to-string (round default-font-height 10)))))
 (add-hook 'org-mode-hook (lambda () (buffer-face-set :family markup-font-family :height markup-font-height)))
 ;; (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-10"))
@@ -103,7 +101,9 @@
 ;; (add-hook 'minibuffer-inactive-mode-hook 'disable-lines)
 
 ;; Column indicator
-(add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
+(add-hook 'c-mode-hook 'display-fill-column-indicator-mode)
+(add-hook 'c++-mode-hook 'display-fill-column-indicator-mode)
+(add-hook 'rust-mode-hook 'display-fill-column-indicator-mode)
 
 ;; (setq dired-listing-switches "-Ahlo --group-directories-first --time-style='+%b %d %R'")
 ;; (setq dired-listing-switches "-Ahlo --group-directories-first --time-style=iso")
@@ -116,8 +116,44 @@
 (setq dired-hide-details-hide-information-lines t)
 (add-hook 'dired-mode-hook 'dired-hide-details-mode)
 
-(global-prettify-symbols-mode 1)
+;; (global-prettify-symbols-mode 1)
 (setq font-latex-fontify-script nil)
+
+(setq desired-display-width 100)
+
+(setq display-margin-mode-list '(org-mode))
+
+(defun calculate-display-margin (width)
+  (let ((selected-width (window-total-width)))
+    (if (> selected-width width)
+        (round (/ (- selected-width width) 2))
+      0)))
+
+(defun get-desired-display-margin ()
+  (let ((margin (calculate-display-margin desired-display-width)))
+    (set-window-margins (selected-window) margin margin)))
+
+(defun setup-display-margin ()
+  (when (member major-mode display-margin-mode-list)
+    (get-desired-display-margin)
+    (add-hook 'window-configuration-change-hook 'get-desired-display-margin nil t)))
+
+(defun reset-display-margin ()
+  (when (member major-mode display-margin-mode-list)
+    (remove-hook 'window-configuration-change-hook 'get-desired-display-margin t)
+    (set-window-margins (selected-window) 0 0)))
+
+(defun pre-split-margins ()
+  (when (eq this-command 'evil-window-vsplit)
+    (reset-display-margin)))
+
+(defun post-split-margins ()
+  (when (eq this-command 'evil-window-vsplit)
+    (setup-display-margin)))
+
+(add-hook 'text-mode-hook 'setup-display-margin)
+(add-hook 'pre-command-hook 'pre-split-margins)
+(add-hook 'post-command-hook 'post-split-margins)
 
 (defadvice load-theme (before theme-dont-propagate activate)
   (mapc 'disable-theme custom-enabled-themes))

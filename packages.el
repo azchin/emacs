@@ -160,17 +160,23 @@
 ;;   :config
 ;;   (add-hook 'smartparens-enabled-hook 'evil-smartparens-mode))
 
-;; (use-package gruvbox-theme
-;;   :config
-;;   (load-theme 'gruvbox-dark-hard t)
-;;   ;; (load-theme 'gruvbox-dark-medium t)
-;;   ;; (load-theme 'gruvbox-light-hard t)
-;;   )
+(use-package gruvbox-theme
+  ;; :config
+  ;; (load-theme 'gruvbox-dark-hard t)
+  )
 
 (use-package modus-themes
   :after (evil)
+  :init
+  (setq modus-themes-intense-mouseovers t)
+  (setq modus-themes-bold-constructs t)
+  (setq modus-themes-italic-constructs t)
+  (setq modus-themes-deuteranopia t)
+  (setq modus-themes-mixed-fonts t)
+  (modus-themes-load-themes)
   :config
-  (load-theme 'modus-vivendi t))
+  (modus-themes-load-operandi)
+  )
 
 (use-package openwith
   :custom
@@ -182,10 +188,10 @@
 
 (use-package cmake-mode)
 
-(use-package flycheck
-  :config
-  ;; (add-hook 'org-mode-hook 'flyspell-mode)
-  (add-hook 'rust-mode 'flycheck-mode))
+;; (use-package flycheck
+;;   :config
+;;   ;; (add-hook 'org-mode-hook 'flyspell-mode)
+;;   (add-hook 'rust-mode 'flycheck-mode))
 
 (use-package rust-mode
   :after smartparens
@@ -377,8 +383,8 @@
 ;;   (add-to-company-backends '(company-auctex))
 ;;   (company-auctex-init))
 
-(use-package spinner
-  :pin gnu)
+;; (use-package spinner
+;;   :pin gnu)
 
 ;; (use-package web-mode
 ;;   :custom
@@ -397,51 +403,58 @@
 (use-package treemacs-magit
   :after (treemacs))
 
-(use-package lsp-mode
-  :after (spinner)
-  :init
-  (setq lsp-restart 'ignore
-        lsp-completion-show-detail nil
-        lsp-completion-enable-additional-text-edit nil
-        lsp-completion-show-label-description nil
-        lsp-headerline-breadcrumb-enable nil
-        lsp-lens-enable nil
-        ;; lsp-enable-symbol-highlighting nil
-        ;; lsp-eldoc-enable-hover nil
-        ;; lsp-enable-xref nil
-        ;; lsp-modeline-code-diagnostics-enable nil
-        ;; lsp-enable-file-watchers nil
-        lsp-modeline-code-actions-enable nil
-        lsp-modeline-code-workspace-status-enable nil
-        lsp-enable-snippet nil
-        lsp-enable-indentation nil
-        lsp-enable-on-type-formatting nil
-        lsp-enable-text-document-color nil
-        lsp-rust-server 'rust-analyzer ;; rust-analyzer vs rls
-        lsp-rust-analyzer-completion-auto-self-enable nil
-        lsp-rust-analyzer-completion-add-call-argument-snippets nil
-        lsp-rust-analyzer-completion-add-call-parenthesis nil
-        lsp-use-plists t
-        gc-cons-threshold 3200000
-        read-process-output-max (* 1024 1024)
-        lsp-log-io nil)
-  :config
-  ;; (lsp-rust-analyzer-completion-auto-import-enable nil)
-  ;; (lsp-rust-analyzer-completion-postfix-enable nil)
-  ;; (delete '(".*\\.js$" . "javascript") lsp-language-id-configuration)
-  ;; (delete '(".*\\.ts$" . "typescript") lsp-language-id-configuration)
-  ;; (delete '(js-mode . "javascript") lsp-language-id-configuration)
-  ;; (add-to-list 'lsp-language-id-configuration '(js-mode . "deno"))
-  ;; (add-to-list 'lsp-language-id-configuration '(typescript-mode . "deno"))
-  ;; (lsp-register-client
-  ;;  (make-lsp-client :new-connection (lsp-stdio-connection '("deno" "lsp"))
-  ;;                   :activation-fn (lsp-activate-on "deno")
-  ;;                   :server-id 'deno))
-  ;; (add-hook 'js-mode-hook 'lsp)
-  ;; (add-hook 'typescript-mode-hook 'lsp)
-  (add-hook 'c-mode-hook 'lsp)
-  (add-hook 'c++-mode-hook 'lsp)
-  (add-hook 'rust-mode-hook 'lsp))
+(require 'eglot)
+(add-to-list 'eglot-server-programs
+             '(c-mode . ("ccls")))
+(add-to-list 'eglot-server-programs
+             '(rust-mode . ("rustup" "run" "stable" "rust-analyzer")))
+(add-hook 'rust-mode-hook 'eglot-ensure)
+
+;; (use-package lsp-mode
+;;   :after (spinner)
+;;   :init
+;;   (setq lsp-restart 'ignore
+;;         lsp-completion-show-detail nil
+;;         lsp-completion-enable-additional-text-edit nil
+;;         lsp-completion-show-label-description nil
+;;         lsp-headerline-breadcrumb-enable nil
+;;         lsp-lens-enable nil
+;;         ;; lsp-enable-symbol-highlighting nil
+;;         ;; lsp-eldoc-enable-hover nil
+;;         ;; lsp-enable-xref nil
+;;         ;; lsp-modeline-code-diagnostics-enable nil
+;;         ;; lsp-enable-file-watchers nil
+;;         lsp-modeline-code-actions-enable nil
+;;         lsp-modeline-code-workspace-status-enable nil
+;;         lsp-enable-snippet nil
+;;         lsp-enable-indentation nil
+;;         lsp-enable-on-type-formatting nil
+;;         lsp-enable-text-document-color nil
+;;         lsp-rust-server 'rust-analyzer ;; rust-analyzer vs rls
+;;         lsp-rust-analyzer-completion-auto-self-enable nil
+;;         lsp-rust-analyzer-completion-add-call-argument-snippets nil
+;;         lsp-rust-analyzer-completion-add-call-parenthesis nil
+;;         lsp-use-plists t
+;;         gc-cons-threshold 3200000
+;;         read-process-output-max (* 1024 1024)
+;;         lsp-log-io nil)
+;;   :config
+;;   ;; (lsp-rust-analyzer-completion-auto-import-enable nil)
+;;   ;; (lsp-rust-analyzer-completion-postfix-enable nil)
+;;   ;; (delete '(".*\\.js$" . "javascript") lsp-language-id-configuration)
+;;   ;; (delete '(".*\\.ts$" . "typescript") lsp-language-id-configuration)
+;;   ;; (delete '(js-mode . "javascript") lsp-language-id-configuration)
+;;   ;; (add-to-list 'lsp-language-id-configuration '(js-mode . "deno"))
+;;   ;; (add-to-list 'lsp-language-id-configuration '(typescript-mode . "deno"))
+;;   ;; (lsp-register-client
+;;   ;;  (make-lsp-client :new-connection (lsp-stdio-connection '("deno" "lsp"))
+;;   ;;                   :activation-fn (lsp-activate-on "deno")
+;;   ;;                   :server-id 'deno))
+;;   ;; (add-hook 'js-mode-hook 'lsp)
+;;   ;; (add-hook 'typescript-mode-hook 'lsp)
+;;   (add-hook 'c-mode-hook 'lsp)
+;;   (add-hook 'c++-mode-hook 'lsp)
+;;   (add-hook 'rust-mode-hook 'lsp))
 
 ;; (use-package lsp-ivy)
 ;; (use-package lsp-treemacs

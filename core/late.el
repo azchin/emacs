@@ -38,12 +38,20 @@
   (set-face-attribute (car face) nil :family markup-font-family :weight 'medium :height (cdr face)))
 (set-face-attribute 'org-table nil :family default-font-family :height default-font-height)
 
+(set-face-attribute 'default nil :family default-font-family :height default-font-height)
+(set-face-attribute 'variable-pitch nil :family markup-font-family :height markup-font-height)
+(set-face-attribute 'fixed-pitch nil :family default-font-family :height default-font-height)
+(set-face-attribute 'org-block nil :family default-font-family :height default-font-height)
+;; (set-face-attribute 'org-block-begin-line nil :family default-font-family :height default-font-height)
+;; (set-face-attribute 'org-block-end-line nil :family default-font-family :height default-font-height)
+(set-face-attribute 'org-code nil :family default-font-family :height default-font-height)
+
 ;; TODO when new frames are made, highlight gets overridden
 (defun change-highlight-face (&optional frame)
   (set-face-attribute 'highlight frame
                       :weight 'bold
-                      :foreground nil ;; "#ffd866" ;; "#9aedfe" 
-                      :background nil))
+                      :foreground 'unspecified ;; "#ffd866" ;; "#9aedfe" 
+                      :background 'unspecified))
 
 (add-to-list 'after-make-frame-functions 'change-highlight-face)
 (change-highlight-face)

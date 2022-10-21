@@ -23,7 +23,7 @@
 ;; (eload "core/commands.el")
 (eload "core/external.el")
 (eload "core/autoinsert.el")
-(eload "core/late.el")
+;; (eload "core/late.el") ;; late.el triggered by load-theme (appearance.el)
 (eload "core/desktop.el")
 
 (unless daemon-mode-snapshot (server-start))

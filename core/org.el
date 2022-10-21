@@ -4,7 +4,7 @@
 (setq org-agenda-span 'month)
 (setq org-export-with-toc nil)
 (setq org-export-with-section-numbers nil)
-(setq org-src-window-setup 'other-frame)
+(setq org-src-window-setup 'reorganize-frame)
 (setq org-list-allow-alphabetical t)
 (setq org-startup-folded 'nofold)
 (setq org-hide-emphasis-markers t)
@@ -26,5 +26,4 @@
       '(("en_CA" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
 
 (add-hook 'org-mode-hook 'auto-fill-mode)
-(add-hook 'org-mode-hook 'display-fill-column-indicator-mode)
 (setq-default fill-column 80)
