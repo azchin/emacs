@@ -214,6 +214,7 @@
 (evil-define-minor-mode-key leader-states 'hl-todo-mode (kbd "] d") 'hl-todo-next)
 (evil-define-minor-mode-key leader-states 'flymake-mode (kbd "[ c") 'flymake-goto-prev-error)
 (evil-define-minor-mode-key leader-states 'flymake-mode (kbd "] c") 'flymake-goto-next-error)
+;;NOTE Flyspell is by default bound to []s
 
 ;; (evil-set-leader '(normal visual replace emacs motion operator) (kbd "<SPC>"))
 ;; (evil-define-key 'normal 'global (kbd "<leader> o l") 'org-store-link)

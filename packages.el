@@ -409,6 +409,7 @@
 (add-to-list 'eglot-server-programs
              '(rust-mode . ("rustup" "run" "stable" "rust-analyzer")))
 (add-hook 'rust-mode-hook 'eglot-ensure)
+(add-hook 'eglot-managed-mode-hook 'company-mode)
 
 ;; (use-package lsp-mode
 ;;   :after (spinner)
@@ -469,15 +470,15 @@
 
 (use-package which-key)
 
-(use-package all-the-icons
-  :config
-  (unless (member "all-the-icons" (font-family-list)) (all-the-icons-install-fonts)))
+;; (use-package all-the-icons
+;;   :config
+;;   (unless (member "all-the-icons" (font-family-list)) (all-the-icons-install-fonts)))
 
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
-  :after (all-the-icons)
+  ;; :after (all-the-icons)
   :custom
-  (doom-modeline-icon t)
+  (doom-modeline-icon nil)
   (doom-modeline-modal-icon nil)
   (doom-modeline-buffer-state-icon t)
   (doom-modeline-buffer-modification-icon t)

@@ -1,3 +1,4 @@
+(setq use-short-answers t)
 (setq dired-clean-confirm-killing-deleted-buffers nil)
 
 ;; (defvar pop-up-frame-regexp-list '("\\*Buffer List\\*"
@@ -37,6 +38,22 @@ in a pop-up frame")
 is dired"
   (and (equal (buffer-local-value 'major-mode (get-buffer name)) 'pdf-view-mode)
        (not (equal major-mode 'dired-mode))))
+
+(defvar my-window-parameters
+  '(window-parameters . ((no-other-window . t)
+                         (no-delete-other-windows . t))))
+
+(setq fit-window-to-buffer-horizontally t)
+
+(defun dired-default-directory-on-left ()
+  "Display `default-directory' in side window on left, hiding details."
+  (interactive)
+  (let ((buffer (dired-noselect default-directory)))
+    (with-current-buffer buffer (dired-hide-details-mode t))
+    (display-buffer-in-side-window
+     buffer `((side . left) (slot . 0)
+              (window-width . fit-window-to-buffer)
+              (preserve-size . (t . nil)) ,my-window-parameters))))
 
 ;; (add-to-list 'display-buffer-alist
 ;;              '(display-buffer-mode-query

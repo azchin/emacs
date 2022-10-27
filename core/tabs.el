@@ -28,7 +28,6 @@
             (backward-delete-char (- (match-end 1) (match-beginning 1)))
           (call-interactively 'backward-delete-char))))))
 
-;; TODO convert manual-tabs into a minor mode
 (defvar tab-control-auto nil)
 (setq backward-delete-char-untabify-method nil)
 (evil-define-key 'insert 'global
