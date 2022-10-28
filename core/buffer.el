@@ -40,8 +40,7 @@ is dired"
        (not (equal major-mode 'dired-mode))))
 
 (defvar my-window-parameters
-  '(window-parameters . ((no-other-window . t)
-                         (no-delete-other-windows . t))))
+  '(window-parameters . ((no-delete-other-windows . t))))
 
 (setq fit-window-to-buffer-horizontally t)
 
@@ -71,13 +70,19 @@ is dired"
 ;;                (reusable-frames . 0)))
 
 (add-to-list 'display-buffer-alist
-             '("*grep*"
+             '("\\*grep\\*"
                (display-buffer-reuse-window display-buffer-same-window)))
 
 (add-to-list 'display-buffer-alist
              '((lambda (name action)
                  (equal (buffer-local-value 'major-mode (get-buffer name)) 'help-mode))
                (display-buffer-reuse-mode-window display-buffer-pop-up-window)))
+
+(add-to-list 'display-buffer-alist
+             `("\\*.*eshell.*\\*" display-buffer-in-side-window
+               (side . bottom) (slot . 0) (window-height . 12)
+               ,my-window-parameters))
+
 (setq display-buffer-base-action
       '((display-buffer-reuse-mode-window
          display-buffer-same-window
@@ -159,12 +164,17 @@ BUFFER may be either a buffer or its name (a string)."
   ;; (mapc 'delete-frame (frame-list))
   (kill-emacs))
 
+;; (defun create-eshell-window ()
+;;   "Create an eshell terminal window"
+;;   (interactive)
+;;   (let ((new-window (split-window (frame-root-window) -16 'below)))
+;;     (select-window new-window)
+;;     (eshell t)))
+
 (defun create-eshell-window ()
   "Create an eshell terminal window"
   (interactive)
-  (let ((new-window (split-window (frame-root-window) -16 'below)))
-    (select-window new-window)
-    (eshell 't)))
+  (eshell t))
 
 (defun create-scratch-frame (name mode)
   "Create a scratch frame"
