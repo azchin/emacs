@@ -99,9 +99,7 @@
   (global-evil-quickscope-mode 1))
 
 (use-package evil-collection
-  :after (magit evil)
-  :init
-  (setq evil-magit-use-y-for-yank t)
+  :after evil
   :config
   (evil-collection-init)
   (evil-collection-define-key 'normal 'dired-mode-map [mouse-2] 'dired-mouse-find-file))
@@ -390,7 +388,7 @@
   (rust-mode . eglot-ensure)
   (eglot-managed-mode . company-mode)
   :custom
-  (gc-cons-threshold 100000000)
+  (gc-cons-threshold 1600000)
   (read-process-output-max (* 1024 32))
   :config
   (add-to-list 'eglot-server-programs

@@ -260,3 +260,18 @@ BUFFER may be either a buffer or its name (a string)."
       (when (eq 'dired-mode major-mode) (bury-buffer buff)))))
 
 (add-hook 'after-change-major-mode-hook 'filter-dired-buffer-list)
+
+(defvar tab-close-buffer-tmp nil)
+
+(defun tab-close-save-buffer ()
+  (interactive)
+  (setq tab-close-buffer-tmp (current-buffer))
+  (tab-close))
+
+(defun restore-tab-close-buffer ()
+  (interactive)
+  (let ((ret (if tab-close-buffer-tmp
+                 tab-close-buffer-tmp
+               (read-buffer "Choose buffer: "))))
+    (setq tab-close-buffer-tmp nil)
+    ret))

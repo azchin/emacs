@@ -143,12 +143,18 @@
     (remove-hook 'window-configuration-change-hook 'get-desired-display-margin t)
     (set-window-margins (selected-window) 0 0)))
 
+(defvar margin-window-vsplit-commands
+  '(evil-window-vsplit
+    window-file-vsplit
+    window-buffer-vsplit
+    window-dired-vsplit))
+
 (defun pre-split-margins ()
-  (when (eq this-command 'evil-window-vsplit)
+  (when (member this-command margin-window-vsplit-commands)
     (reset-display-margin)))
 
 (defun post-split-margins ()
-  (when (eq this-command 'evil-window-vsplit)
+  (when (member this-command margin-window-vsplit-commands)
     (setup-display-margin)))
 
 (add-hook 'text-mode-hook 'setup-display-margin)
