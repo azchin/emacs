@@ -11,10 +11,10 @@ eshell/history
 transient
 recentf
 session.*
-cache/backups/*
-cache/saves/*
-cache/undotree/*
-cache/default-desktop
+cache
 !cache/backups/.keep
 !cache/saves/.keep
 !cache/undotree/.keep
+!cache/default-desktop/.keep
+projects
+url/

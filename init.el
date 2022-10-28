@@ -19,7 +19,7 @@
 (eload "packages.el")
 
 (eload "core/tabs.el")
-;; (eload "core/modeline.el")
+(eload "core/modeline.el")
 ;; (eload "core/commands.el")
 (eload "core/external.el")
 (eload "core/autoinsert.el")

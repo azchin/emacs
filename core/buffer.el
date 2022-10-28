@@ -104,7 +104,7 @@ BUFFER may be either a buffer or its name (a string)."
             (when (window-live-p win)
               ;; Ignore error, in particular,
               ;; "Attempt to delete the sole visible or iconified frame".
-              (condition-case nil (delete-window win) ((error nil) (tab-bar-close-tab)))))))
+              (condition-case nil (delete-window win) (error (tab-bar-close-tab)))))))
     (when (interactive-p)
       (error "Cannot kill buffer.  Not a live buffer: `%s'" buffer))))
 

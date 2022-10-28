@@ -1,10 +1,10 @@
 (require 'package)
 
-(defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
 (setq package-archives nil)
 (add-to-list 'package-archives melpa t)
-(add-to-list 'package-archives gnu t)
+;; (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
+;; (add-to-list 'package-archives gnu t)
 
 (when (< emacs-major-version 27)
   (package-initialize))
@@ -21,25 +21,16 @@
   :custom
   (auto-package-update-delete-old-versions t)
   (auto-package-update-hide-results t)
+  :hook (auto-package-update-before . (lambda () (message "Updating packages...")))
   :config
-  (add-hook 'auto-package-update-before-hook (lambda () (message "Updating packages...")))
   (auto-package-update-maybe))
 
-(use-package magit)
+;; (use-package magit)
 
 (use-package org
+  :ensure nil
   :config
   (eload "core/org.el"))
-
-;; (use-package undo-tree
-;;   :custom
-;;   ; (undo-tree-visualizer-diff t)
-;;   ; (undo-tree-visualizer-timestamps t)
-;;   ; (undo-tree-visualizer-relative-timestamps t)
-;;   (undo-tree-auto-save-history t)
-;;   (undo-tree-history-directory-alist `(("." . ,(emacsd "cache/undotree"))))
-;;   :config
-;;   (global-undo-tree-mode 1))
 
 (use-package org-superstar
   :after org
@@ -47,6 +38,10 @@
   :custom
   (org-superstar-remove-leading-stars t)
   (org-superstar-headline-bullets-list '("◉" "●" "○" "●" "○" "●" "○")))
+
+(use-package org-tempo
+  :ensure nil
+  :after org)
 
 (use-package hl-todo
   :custom
@@ -59,7 +54,7 @@
   (undo-fu-ignore-keyboard-quit t))
 
 (use-package undo-fu-session
-  :after (undo-fu)
+  :after undo-fu
   :custom
   (undo-fu-session-directory (emacsd "cache/backups"))
   :config
@@ -68,24 +63,25 @@
 (use-package evil
   :after (undo-fu)
   :init
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-u-delete nil)
-  (setq evil-want-C-d-scroll t)
-  (setq evil-want-C-w-delete nil)
-  (setq evil-want-C-i-jump t)
-  (setq evil-want-Y-yank-to-eol t)
-  (setq evil-want-integration t)
-  (setq evil-move-beyond-eol nil)
-  (setq evil-respect-visual-line-mode nil)
-  (setq evil-undo-system 'undo-fu)
-  (setq evil-want-change-word-to-end nil)
-  (setq evil-search-module 'evil-search)
-  (setq evil-split-window-below nil)
-  (setq evil-vsplit-window-right nil)
+  (setq evil-want-keybinding nil
+        evil-want-C-u-scroll t
+        evil-want-C-u-delete nil
+        evil-want-C-d-scroll t
+        evil-want-C-w-delete nil
+        evil-want-C-i-jump t
+        evil-want-Y-yank-to-eol t
+        evil-want-integration t
+        evil-move-beyond-eol nil
+        evil-respect-visual-line-mode nil
+        evil-undo-system 'undo-fu
+        evil-want-change-word-to-end nil
+        evil-search-module 'evil-search
+        evil-split-window-below nil
+        evil-vsplit-window-right nil)
   :config
   (eload "leader.el")
-  (evil-mode 1))
+  (evil-mode 1)
+  )
 
 (use-package evil-surround
   :after evil
@@ -119,21 +115,20 @@
   (org-src-tab-acts-natively t)
   (org-src-preserve-indentation t)
   (org-todo-keywords '((sequence "TODO" "PROG" "|" "DONE" "AXED")))
+  :hook
+  (org-mode . evil-org-mode)
+  (evil-org-mode . evil-org-set-key-theme)
   :config
   (require 'evil-org-agenda)
-  (require 'org-tempo)
-  (add-hook 'org-mode-hook (lambda () (evil-org-mode)))
-  (add-hook 'evil-org-mode (lambda () (evil-org-set-key-theme)))
   (evil-org-agenda-set-keys))
 
+;; TODO replace with electric-pair? this does provide latex \begin{} \end{} pairs tho
+;;      maybe snippets for latex instead
 (use-package smartparens
   :after (org)
+  :hook (prog-mode special-mode text-mode conf-mode)
   :config
   (require 'smartparens-config)
-  (add-hook 'prog-mode-hook #'smartparens-mode)
-  (add-hook 'special-mode-hook #'smartparens-mode)
-  (add-hook 'text-mode-hook #'smartparens-mode)
-  (add-hook 'conf-mode-hook #'smartparens-mode)
   ;; (sp-pair "\\\\(" nil :actions :rem)
   ;; (sp-pair "\\{" nil :actions :rem)
   ;; (sp-pair "\\(" nil :actions :rem)
@@ -152,10 +147,6 @@
   (sp-local-pair 'org-mode "`" nil :actions :rem)
   (smartparens-strict-mode))
 
-;; (use-package anzu
-;;   :config
-;;   (global-anzu-mode +1))
-
 ;; (use-package evil-smartparens
 ;;   :config
 ;;   (add-hook 'smartparens-enabled-hook 'evil-smartparens-mode))
@@ -166,14 +157,15 @@
   )
 
 (use-package modus-themes
+  :ensure nil
   :after (evil)
   :init
-  (setq modus-themes-intense-mouseovers t)
-  (setq modus-themes-bold-constructs t)
-  (setq modus-themes-italic-constructs t)
-  (setq modus-themes-deuteranopia t)
-  (setq modus-themes-mixed-fonts t)
-  (modus-themes-load-themes)
+  (setq modus-themes-intense-mouseovers t
+        modus-themes-bold-constructs t
+        modus-themes-italic-constructs t
+        modus-themes-deuteranopia t
+        modus-themes-mixed-fonts t)
+  ;; (modus-themes-load-themes)
   :config
   (modus-themes-load-operandi)
   )
@@ -220,30 +212,31 @@
 ;;   (pdf-tools-install))
 
 ;; ; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
-(use-package tex
-  :ensure auctex
-  :after (evil pdf-tools)
-  :init
-  (setq TeX-source-correlate-mode t)
-  (setq TeX-source-correlate-start-server t)
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
-  (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
-  (setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
-  ;; (setq TeX-engine 'xetex)
-  :config
-  (add-hook 'LaTeX-mode-hook
-            (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
+;; (use-package tex
+;;   :ensure auctex
+;;   :after (evil pdf-tools)
+;;   :init
+;;   (setq TeX-source-correlate-mode t)
+;;   (setq TeX-source-correlate-start-server t)
+;;   (setq TeX-auto-save t)
+;;   (setq TeX-parse-self t)
+;;   (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+;;   (setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+;;   ;; (setq TeX-engine 'xetex)
+;;   :config
+;;   (add-hook 'LaTeX-mode-hook
+;;             (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
 
-  (add-hook 'TeX-after-compilation-finished-functions 
-            #'TeX-revert-document-buffer)
-  ;; (add-hook 'LaTeX-mode-hook
-  ;;           (lambda () (reftex-mode t) (flyspell-mode t)))
-  )
+;;   (add-hook 'TeX-after-compilation-finished-functions 
+;;             'TeX-revert-document-buffer)
+;;   ;; (add-hook 'LaTeX-mode-hook
+;;   ;;           (lambda () (reftex-mode t) (flyspell-mode t)))
+;;   )
 
 ;; TODO evil-tex
 
 (use-package midnight
+  :ensure nil
   :custom
   (clean-buffer-list-delay-special 0)
   (clean-buffer-list-delay-general 1)
@@ -256,7 +249,8 @@
   :config
   (run-at-time t 1800 'clean-buffer-list))
 
-(require 'dired-x)
+(use-package dired-x
+  :ensure nil)
 
 (use-package dired-subtree
   :after dired
@@ -275,7 +269,7 @@
      (counsel-describe-face . ivy--regex-ignore-order)
      (counsel-descbinds . ivy--regex-ignore-order)
      (counsel-M-x . ivy--regex-ignore-order)
-     (counsel-find-file . ivy--regex-plus)
+     (counsel-find-file . ivy--regex-fuzzy)
      (counsel-dired . ivy--regex-plus)
      (t . ivy--regex-fuzzy)))
   :custom
@@ -307,6 +301,7 @@
   :config
   (counsel-mode 1))
 
+;; TODO fix backends
 (use-package company
   :after (evil)
   :custom
@@ -318,6 +313,9 @@
   (company-backends
    '((company-semantic company-capf company-files company-etags company-keywords
                        company-dabbrev company-dabbrev-code company-cmake)))
+  :hook
+  ((sh-mode conf-mode c-mode c++-mode rust-mode emacs-lisp-mode LaTeX-mode python-mode))
+  (company-mode . company-tng-mode)
   :config
   ;; Company start
   (defun company-backspace ()
@@ -357,15 +355,7 @@
   (defun add-to-company-backends (list)
     (setq company-backends `(,(append list (car company-backends)))))
   ;; (global-company-mode)
-  (add-hook 'sh-mode-hook 'company-tng-mode)
-  (add-hook 'conf-mode-hook 'company-tng-mode)
-  (add-hook 'c-mode-hook 'company-tng-mode)
-  (add-hook 'c++-mode-hook 'company-tng-mode)
-  (add-hook 'rust-mode-hook 'company-tng-mode)
-  ;; (add-hook 'rustic-mode-hook 'company-tng-mode)
-  (add-hook 'emacs-lisp-mode-hook 'company-tng-mode)
-  (add-hook 'LaTeX-mode-hook 'company-tng-mode)
-  (add-hook 'python-mode-hook 'company-tng-mode))
+  )
 
 ;; (use-package company-c-headers
 ;;   :after company
@@ -383,9 +373,6 @@
 ;;   (add-to-company-backends '(company-auctex))
 ;;   (company-auctex-init))
 
-;; (use-package spinner
-;;   :pin gnu)
-
 ;; (use-package web-mode
 ;;   :custom
 ;;   (web-mode-code-indent-offset 2)
@@ -397,19 +384,19 @@
 ;;   (setq web-mode-content-types-alist '(("jsx" . "\\.jsx")))
 ;;   (setq web-mode-content-types-alist '(("jsx" . "\\.tsx"))))
 
-(use-package treemacs)
-(use-package treemacs-evil
-  :after (treemacs))
-(use-package treemacs-magit
-  :after (treemacs))
-
-(require 'eglot)
-(add-to-list 'eglot-server-programs
-             '(c-mode . ("ccls")))
-(add-to-list 'eglot-server-programs
-             '(rust-mode . ("rustup" "run" "stable" "rust-analyzer")))
-(add-hook 'rust-mode-hook 'eglot-ensure)
-(add-hook 'eglot-managed-mode-hook 'company-mode)
+(use-package eglot
+  :ensure nil
+  :hook
+  (rust-mode . eglot-ensure)
+  (eglot-managed-mode . company-mode)
+  :custom
+  (gc-cons-threshold 100000000)
+  (read-process-output-max (* 1024 32))
+  :config
+  (add-to-list 'eglot-server-programs
+               '(c-mode . ("ccls")))
+  (add-to-list 'eglot-server-programs
+               '(rust-mode . ("rustup" "run" "stable" "rust-analyzer"))))
 
 ;; (use-package lsp-mode
 ;;   :after (spinner)
@@ -461,7 +448,7 @@
 ;; (use-package lsp-treemacs
 ;;   :config
 ;;   (lsp-treemacs-sync-mode 1))
-(use-package ccls)
+;; (use-package ccls)
 ;; (use-package lsp-latex)
 ;; (use-package lsp-haskell)
 ;; (use-package lsp-python-ms
@@ -470,25 +457,10 @@
 
 (use-package which-key)
 
-;; (use-package all-the-icons
-;;   :config
-;;   (unless (member "all-the-icons" (font-family-list)) (all-the-icons-install-fonts)))
-
-(use-package doom-modeline
-  :init (doom-modeline-mode 1)
-  ;; :after (all-the-icons)
-  :custom
-  (doom-modeline-icon nil)
-  (doom-modeline-modal-icon nil)
-  (doom-modeline-buffer-state-icon t)
-  (doom-modeline-buffer-modification-icon t)
-  (doom-modeline-enable-word-count nil)
-  (doom-modeline-irc nil)
-  (doom-modeline-height 22)
-  (doom-modeline-buffer-encoding nil))
-
 ;; Manually cloned
 ;; TODO periodically run "git pull" using midnight (or a cron)
-(eload "clone/evil-unimpaired/evil-unimpaired.el")
-(require 'evil-unimpaired)
-(evil-unimpaired-mode)
+(use-package evil-unimpaired
+  :ensure nil
+  :load-path "clone/evil-unimpaired/"
+  :after evil
+  :config (evil-unimpaired-mode))
