@@ -46,7 +46,7 @@
 (defun get-projects-in-cache ()
   (mapcar 'car
           (seq-filter (lambda (x) (file-exists-p (get-full-desktop-path (cdr x))))
-                      (mapcar (lambda (pname) `(,(car pname) . ,(project-identifier-encode pname)))
+                      (mapcar (lambda (pname) (cons pname (project-identifier-encode pname)))
                               (project-known-project-roots)))))
 
 (defun read-project-desktop ()
