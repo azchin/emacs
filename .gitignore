@@ -11,7 +11,7 @@ eshell/history
 transient
 recentf
 session.*
-cache
+cache/*/*
 !cache/backups/.keep
 !cache/saves/.keep
 !cache/undotree/.keep
