@@ -43,11 +43,11 @@
   :ensure nil
   :after org)
 
-(use-package hl-todo
-  :custom
-  (hl-todo-wrap-movement t)
-  :hook
-  (prog-mode . hl-todo-mode))
+;; (use-package hl-todo
+;;   :custom
+;;   (hl-todo-wrap-movement t)
+;;   :hook
+;;   (prog-mode . hl-todo-mode))
 
 (use-package undo-fu
   :custom
@@ -122,28 +122,28 @@
 
 ;; TODO replace with electric-pair? this does provide latex \begin{} \end{} pairs tho
 ;;      maybe snippets for latex instead
-(use-package smartparens
-  :after (org)
-  :hook (prog-mode special-mode text-mode conf-mode)
-  :config
-  (require 'smartparens-config)
-  ;; (sp-pair "\\\\(" nil :actions :rem)
-  ;; (sp-pair "\\{" nil :actions :rem)
-  ;; (sp-pair "\\(" nil :actions :rem)
-  ;; (sp-pair "\\\"" nil :actions :rem)
-  ;; (sp-pair "[" nil :actions :rem)
-  ;; (sp-pair "(" nil :actions :rem)
-  ;; (sp-pair "'" nil :actions :rem)
-  ;; (sp-pair "`" nil :actions :rem)
-  ;; (sp-pair "\"" nil :actions :rem)
-  ;; (sp-local-pair 'emacs-lisp-mode "(" ")")
-  (sp-local-pair 'org-mode "/" nil :actions :rem)
-  (sp-local-pair 'org-mode "~" nil :actions :rem)
-  (sp-local-pair 'org-mode "=" nil :actions :rem)
-  (sp-local-pair 'org-mode "*" nil :actions :rem)
-  (sp-local-pair 'org-mode "_" nil :actions :rem)
-  (sp-local-pair 'org-mode "`" nil :actions :rem)
-  (smartparens-strict-mode))
+;; (use-package smartparens
+;;   :after (org)
+;;   :hook (prog-mode special-mode text-mode conf-mode)
+;;   :config
+;;   (require 'smartparens-config)
+;;   ;; (sp-pair "\\\\(" nil :actions :rem)
+;;   ;; (sp-pair "\\{" nil :actions :rem)
+;;   ;; (sp-pair "\\(" nil :actions :rem)
+;;   ;; (sp-pair "\\\"" nil :actions :rem)
+;;   ;; (sp-pair "[" nil :actions :rem)
+;;   ;; (sp-pair "(" nil :actions :rem)
+;;   ;; (sp-pair "'" nil :actions :rem)
+;;   ;; (sp-pair "`" nil :actions :rem)
+;;   ;; (sp-pair "\"" nil :actions :rem)
+;;   ;; (sp-local-pair 'emacs-lisp-mode "(" ")")
+;;   (sp-local-pair 'org-mode "/" nil :actions :rem)
+;;   (sp-local-pair 'org-mode "~" nil :actions :rem)
+;;   (sp-local-pair 'org-mode "=" nil :actions :rem)
+;;   (sp-local-pair 'org-mode "*" nil :actions :rem)
+;;   (sp-local-pair 'org-mode "_" nil :actions :rem)
+;;   (sp-local-pair 'org-mode "`" nil :actions :rem)
+;;   (smartparens-strict-mode))
 
 ;; (use-package evil-smartparens
 ;;   :config
@@ -154,19 +154,13 @@
   ;; (load-theme 'gruvbox-dark-hard t)
   )
 
-(use-package modus-themes
-  :ensure nil
-  :after (evil)
-  :init
-  (setq modus-themes-intense-mouseovers t
-        modus-themes-bold-constructs t
-        modus-themes-italic-constructs t
-        modus-themes-deuteranopia t
-        modus-themes-mixed-fonts t)
-  ;; (modus-themes-load-themes)
-  :config
-  (modus-themes-load-operandi)
-  )
+(setq modus-themes-intense-mouseovers t
+      modus-themes-bold-constructs t
+      modus-themes-italic-constructs t
+      modus-themes-deuteranopia t
+      modus-themes-tabs-accented nil
+      modus-themes-mixed-fonts t)
+(load-theme 'modus-operandi) 
 
 (use-package openwith
   :custom
@@ -183,10 +177,11 @@
 ;;   ;; (add-hook 'org-mode-hook 'flyspell-mode)
 ;;   (add-hook 'rust-mode 'flycheck-mode))
 
-(use-package rust-mode
-  :after smartparens
-  :config
-  (sp-local-pair 'rust-mode "'" nil :actions :rem))
+(use-package rust-mode)
+;; (use-package rust-mode
+;;   :after smartparens
+;;   :config
+;;   (sp-local-pair 'rust-mode "'" nil :actions :rem))
 ;; (use-package rustic
 ;;   :after flycheck smartparens
 ;;   :custom

@@ -2,6 +2,8 @@
 (setq auto-insert-query nil)
 (setq auto-insert-directory (emacsd "insert"))
 
+(setq auto-insert-alist (delq (assoc '("\\.el\\'" . "Emacs Lisp header")
+                                     auto-insert-alist) auto-insert-alist))
 (define-auto-insert 'sh-mode "shell")
 ;; (define-auto-insert "\\.\\(cc\\|cpp\\)" "cplusplus")
 

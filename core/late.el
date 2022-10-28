@@ -4,7 +4,6 @@
 ;;                     :background (face-attribute 'default :background)
 ;;                     :bold t)
 
-(show-paren-mode 1)
 (set-face-attribute 'show-paren-match nil
                     :weight 'bold
                     ;; :foreground "#ff5c57"

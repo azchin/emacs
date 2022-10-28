@@ -44,11 +44,10 @@
     (error (desktop-save (emacsd "cache/default-desktop")))))
 
 (defun get-projects-in-cache ()
-  (project--ensure-read-project-list)
   (mapcar 'car
           (seq-filter (lambda (x) (file-exists-p (get-full-desktop-path (cdr x))))
-                      (mapcar (lambda (pname) `(,(car pname) . ,(project-identifier-encode (car pname))))
-                              project--list))))
+                      (mapcar (lambda (pname) `(,(car pname) . ,(project-identifier-encode pname)))
+                              (project-known-project-roots)))))
 
 (defun read-project-desktop ()
   (interactive)

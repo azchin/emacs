@@ -19,6 +19,7 @@
 (eload "packages.el")
 
 (eload "core/tabs.el")
+(eload "core/parens.el")
 (eload "core/modeline.el")
 ;; (eload "core/commands.el")
 (eload "core/external.el")
@@ -38,8 +39,7 @@
    ["#ebdbb2" "#cc241d" "#98971a" "#d79921" "#458588" "#b16286" "#689d6a" "#3c3836"])
  '(company-show-quick-access t nil nil "Customized with use-package company")
  '(package-selected-packages
-   '(modus-themes yasnippet pandoc-mode modus-vivendi-theme markdown-mode ivy-hydra ivy magit auctex use-package smartparens pdf-tools monokai-pro-theme minimap latex-preview-pane haskell-mode gruvbox-theme evil-surround evil-snipe evil-quickscope evil-leader evil-commentary evil-collection doom-themes dired-subtree auto-package-update))
- '(pdf-view-midnight-colors '("#282828" . "#f9f5d7"))
+   '(which-key company counsel swiper ivy-hydra ivy yasnippet dired-subtree rust-mode cmake-mode markdown-mode openwith gruvbox-theme evil-org evil-collection evil-quickscope evil-commentary evil-surround evil undo-fu-session undo-fu org-superstar auto-package-update use-package))
  '(tab-bar-select-tab-modifiers '(meta)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

@@ -16,7 +16,6 @@
 
 (setq visible-cursor nil)
 (setq ring-bell-function 'ignore)
-(setq show-paren-style 'parenthesis)
 
 (tab-bar-mode)
 (setq tab-bar-show t)

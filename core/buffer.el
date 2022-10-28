@@ -285,3 +285,6 @@ BUFFER may be either a buffer or its name (a string)."
                (read-buffer "Choose buffer: "))))
     (setq tab-close-buffer-tmp nil)
     ret))
+
+(winner-mode)
+;; C-c LEFT, C-c RIGHT
