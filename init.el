@@ -11,6 +11,7 @@
 (require 'server)
 (setq daemon-mode-snapshot (server-running-p))
 (setq home-dir default-directory)
+(put 'suspend-frame 'disabled t)
 
 (eload "core/appearance.el")
 (eload "core/backup.el")
@@ -26,6 +27,7 @@
 (eload "core/autoinsert.el")
 ;; (eload "core/late.el") ;; late.el triggered by load-theme (appearance.el)
 (eload "core/desktop.el")
+(eload "core/gnus.el")
 
 (unless daemon-mode-snapshot (server-start))
 (setq tramp-default-method "ssh")

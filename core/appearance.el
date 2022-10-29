@@ -144,9 +144,9 @@
 
 (defvar margin-window-vsplit-commands
   '(evil-window-vsplit
-    window-file-vsplit
-    window-buffer-vsplit
-    window-dired-vsplit))
+    evil-window-vsplit-leader
+    evil-file-vsplit
+    evil-buffer-vsplit))
 
 (defun pre-split-margins ()
   (when (member this-command margin-window-vsplit-commands)

@@ -27,8 +27,7 @@
           (call-interactively 'backward-delete-char))))))
 
 (setq-default backward-delete-char-untabify-method nil)
-(evil-define-key 'insert 'global
-  (kbd "<backspace>") 'backspace-whitespace-to-tab-stop)
+(evil-global-set-key 'insert (kbd "<backspace>") 'backspace-whitespace-to-tab-stop)
 
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width custom-tab-width)

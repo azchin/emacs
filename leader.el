@@ -7,7 +7,7 @@
 
 (defvar leader-rw-states '(normal visual))
 
-(defvar leader-states (append leader-rw-states '(emacs motion))
+(defvar leader-states (append leader-rw-states '(motion))
   "Evil states for the leader keybinding")
 
 (define-minor-mode leader-intercept-mode
@@ -15,6 +15,12 @@
   :global t)
 
 (leader-intercept-mode)
+
+(defvar leader-key-string "SPC")
+
+(defun noisy-send-leader ()
+  (interactive)
+  (evil-send-leader) (message "Sent <leader>"))
 
 (dolist (state leader-states)
   (evil-make-intercept-map
@@ -24,8 +30,11 @@
 (evil-define-key '(normal insert) 'global (kbd "C-S-v") 'yank)
 (evil-define-key 'visual 'global (kbd "C-S-c") 'evil-yank)
 (evil-define-key 'insert 'global (kbd "C-S-c") 'copy-region-as-kill)
-(evil-define-key leader-states leader-intercept-mode-map (kbd "SPC") 'evil-send-leader)
+(evil-define-key leader-states leader-intercept-mode-map (kbd leader-key-string) 'evil-send-leader)
+(evil-define-key leader-states 'global (kbd (concat "<leader> " leader-key-string)) 'keyboard-quit)
+(evil-define-key leader-states 'global (kbd "<leader> a") 'execute-extended-command)
 (evil-define-key leader-rw-states 'global (kbd "g t") (lambda (x) (interactive "P") (if x (tab-bar-select-tab x) (tab-bar-switch-to-next-tab))))
+(evil-define-key leader-states 'global (kbd "<leader> c a") 'modus-themes-toggle)
 (evil-define-key leader-rw-states 'global (kbd "<leader> c t") 'toggle-tabs)
 (evil-define-key leader-rw-states 'global (kbd "<leader> c y") 'conditional-tabify)
 (evil-define-key leader-rw-states 'global (kbd "<leader> c i") 'indent-whole-buffer)
@@ -104,7 +113,7 @@
 (evil-define-key leader-states 'global (kbd "<leader> p k") 'project-kill-buffers)
 (evil-define-key leader-states 'global (kbd "<leader> p p") 'project-switch-project)
 (evil-define-key leader-states 'global (kbd "<leader> p R") 'project-forget-project)
-(evil-define-key leader-states 'global (kbd "<leader> t t") 'tab-new)
+(evil-define-key leader-states 'global (kbd "<leader> t n") 'tab-new)
 (evil-define-key leader-states 'global (kbd "<leader> t b") 'switch-to-buffer-other-tab)
 (evil-define-key leader-states 'global (kbd "<leader> t f") 'find-file-other-tab)
 (evil-define-key leader-states 'global (kbd "<leader> t w") 'tab-window-detach)
@@ -120,7 +129,11 @@
 ;; (evil-define-key leader-states 'global (kbd "<leader> t m") 'tab-move)
 ;; (evil-define-key leader-states 'global (kbd "<leader> t M") (lambda () (interactive) (tab-move -1)))
 (evil-define-key leader-states 'global (kbd "<leader> t m") (lambda () (interactive) (tab-bar-move-tab-to (read-number "Tab index: "))))
-(evil-define-key leader-states 'global (kbd "<leader> t s") (lambda () (interactive) (tab-new) (switch-to-buffer "*scratch*")))
+(defun tab-new-scratch ()
+  (interactive)
+  (tab-new) (switch-to-buffer "*scratch*") (call-interactively 'noisy-send-leader))
+(evil-define-key leader-states 'global (kbd "<leader> t t") 'tab-new-scratch)
+(keymap-global-set "C-S-t" 'tab-new-scratch)
 (evil-define-key leader-states 'global (kbd "<leader> d d") 'dired-jump)
 ;; dired-jump opens new window, dired uses current window
 (evil-define-key leader-states 'global (kbd "<leader> d h") (lambda () (interactive) (dired home-dir)))
@@ -139,6 +152,7 @@
 ;;                 (revert-buffer)))
 ;; https://stackoverflow.com/questions/22971299/conditionally-set-dired-listing-switches-locally-but-nil-remotely
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Help-Summary.html#Help-Summary
+(evil-define-key leader-states 'global (kbd "<leader> x g") 'gnus)
 (evil-define-key leader-states 'global (kbd "<leader> h k") 'describe-key)
 (evil-define-key leader-states 'global (kbd "<leader> h v") 'describe-variable)
 (evil-define-key leader-states 'global (kbd "<leader> h f") 'describe-function)
@@ -148,7 +162,8 @@
 (evil-define-key leader-states 'global (kbd "<leader> h o") 'describe-symbol)
 (evil-define-key leader-states 'global (kbd "<leader> b b") 'switch-to-buffer)
 (evil-define-key leader-states 'global (kbd "<leader> b c") (lambda () (interactive) (let ((clean-buffer-list-kill-never-regexps
-                                                                                            (remove "^[A-Za-z].*[A-Za-z]$" clean-buffer-list-kill-never-regexps)))
+                                                                                            (remove "^[A-Za-z].*[A-Za-z]$"
+                                                                                                    (remove "^\\*.*eshell\\*" clean-buffer-list-kill-never-regexps))))
                                                                                        (clean-buffer-list))))
 (evil-define-key leader-states 'global (kbd "<leader> b n") 'next-buffer)
 (evil-define-key leader-states 'global (kbd "<leader> b p") 'previous-buffer)
@@ -172,7 +187,6 @@
 (evil-define-key leader-states 'global (kbd "<leader> /") (lambda () (interactive) (evil-ex-nohighlight) (lazy-highlight-cleanup t)))
 ;; (evil-define-key leader-states 'global (kbd "<leader> /") 'lazy-highlight-cleanup)
 (evil-define-key leader-states 'global (kbd "<leader> 1") 'shell-command)
-(evil-define-key leader-states 'global (kbd "<leader> a") 'modus-themes-toggle)
 (evil-define-key leader-states 'global (kbd "<leader> w q") 'delete-window)
 (evil-define-key leader-states 'global (kbd "<leader> w s") 'evil-window-split)
 (evil-define-key leader-states 'global (kbd "<leader> w v") 'evil-window-vsplit)
@@ -206,12 +220,17 @@
 ;; "q k" (lambda () (interactive) (kill-buffer-mod (current-buffer)))
 ;; "q g" (lambda () (interactive) (kill-buffer-greedy (current-buffer)))
 (evil-define-key leader-states 'global (kbd "<leader> q o") 'delete-other-frames)
-(evil-define-key leader-states 'global (kbd "<leader> q f") (lambda () (interactive) (cond ((> (length (visible-frame-list)) 1) (delete-frame))
-                                                                                           (t (save-buffers-kill-terminal)))))
-(evil-define-key leader-states 'global (kbd "<leader> q q") (lambda () (interactive) (cond ((> (length (window-list)) 1) (delete-window))
-                                                                                           ((> (length (tab-bar-tabs)) 1) (tab-close-save-buffer))
-                                                                                           ((> (length (visible-frame-list)) 1) (delete-frame))
-                                                                                           (t (save-buffers-kill-terminal)))))
+(defun delete-frame-or-kill-terminal ()
+  (interactive)
+  (cond ((> (length (visible-frame-list)) 1) (delete-frame))
+        (t (save-buffers-kill-terminal))))
+(defun delete-granular-display ()
+  (interactive)
+  (cond ((> (length (window-list)) 1) (delete-window))
+        ((> (length (tab-bar-tabs)) 1) (tab-close-save-buffer))
+        (t (delete-frame-or-kill-terminal))))
+(evil-define-key leader-states 'global (kbd "<leader> q f") 'delete-frame-or-kill-terminal)
+(evil-define-key leader-states 'global (kbd "<leader> q q") 'delete-granular-display)
 ;; (evil-define-key leader-states 'global (kbd "<leader> q h") 'kill-regex-buffer-frame)
 (evil-define-key leader-states 'global (kbd "<leader> q a") (lambda () (interactive) (if daemon-mode-snapshot (mapc 'delete-frame (frame-list))
                                                                                        (save-buffers-kill-terminal))))
@@ -250,29 +269,19 @@
 (evil-define-key 'normal dired-mode-map "f" 'find-file)
 (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory)
 (evil-define-key 'normal dired-mode-map "l" 'dired-find-file)
-(define-key dired-mode-map [mouse-2] 'dired-mouse-find-file)
+(keymap-set dired-mode-map "<mouse-2>" 'dired-mouse-find-file)
 (setq mouse-wheel-progressive-speed nil)
 
-(evil-define-key 'normal org-mode-map (kbd "H") 'org-shiftleft)
-(evil-define-key 'normal org-mode-map (kbd "L") 'org-shiftright)
-;; (evil-define-key 'insert org-mode-map (kbd "RET") (lambda () (interactive) (org-return nil)))
-(evil-define-key 'insert org-mode-map (kbd "RET") 'org-return)
-(evil-define-key 'insert org-mode-map (kbd "TAB") 'org-cycle)
-
-(evil-global-set-key 'insert (kbd "C-d") 'delete-char)
-(evil-global-set-key 'insert (kbd "C-a") 'beginning-of-line)
-(evil-global-set-key 'insert (kbd "C-e") 'end-of-line)
+(evil-define-key 'insert 'global (kbd "C-d") 'delete-char)
+(evil-define-key 'insert 'global (kbd "C-a") 'beginning-of-line)
+(evil-define-key 'insert 'global (kbd "C-e") 'end-of-line)
 
 ;; (evil-define-key 'normal pdf-view-mode-map (kbd "J") 'pdf-view-next-page)
 ;; (evil-define-key 'normal pdf-view-mode-map (kbd "K") 'pdf-view-previous-page)
 
-;; (evil-define-key 'normal 'global "G"
-;;   (lambda () (interactive) (evil-goto-line) (forward-line -1)))
-
 ;; (define-key global-map (kbd "C-SPC") nil)
 ;; (define-key global-map (kbd "C-S-SPC") nil)
 
-(evil-global-set-key 'normal (kbd "C-_") nil)
 (keymap-global-set "C-+" 'text-scale-increase)
 (keymap-global-set "C-_" 'text-scale-decrease)
 (keymap-global-set "C-)" (lambda () (interactive) (text-scale-set 0)))

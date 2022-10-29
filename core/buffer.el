@@ -79,7 +79,7 @@ is dired"
                (display-buffer-reuse-mode-window display-buffer-pop-up-window)))
 
 (add-to-list 'display-buffer-alist
-             `("\\*.*eshell.*\\*" display-buffer-in-side-window
+             `("\\*.*eshell\\*" display-buffer-in-side-window
                (side . bottom) (slot . 0) (window-height . 12)
                ,my-window-parameters))
 

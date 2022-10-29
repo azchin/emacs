@@ -1,10 +1,10 @@
 (require 'package)
 
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
+(defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (setq package-archives nil)
 (add-to-list 'package-archives melpa t)
-;; (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
-;; (add-to-list 'package-archives gnu t)
+(add-to-list 'package-archives gnu t)
 
 (when (< emacs-major-version 27)
   (package-initialize))
@@ -32,22 +32,15 @@
   :config
   (eload "core/org.el"))
 
-(use-package org-superstar
-  :after org
-  :hook (org-mode . org-superstar-mode)
-  :custom
-  (org-superstar-remove-leading-stars t)
-  (org-superstar-headline-bullets-list '("◉" "●" "○" "●" "○" "●" "○")))
-
 (use-package org-tempo
   :ensure nil
   :after org)
 
-;; (use-package hl-todo
-;;   :custom
-;;   (hl-todo-wrap-movement t)
-;;   :hook
-;;   (prog-mode . hl-todo-mode))
+(use-package hl-todo
+  :custom
+  (hl-todo-wrap-movement t)
+  :hook
+  (prog-mode . hl-todo-mode))
 
 (use-package undo-fu
   :custom
@@ -80,8 +73,10 @@
         evil-vsplit-window-right nil)
   :config
   (eload "leader.el")
-  (evil-mode 1)
-  )
+  (evil-set-initial-state 'eshell-mode 'insert)
+  (add-hook 'gnus-mode-hook 'turn-off-evil-mode)
+  (add-hook 'newsticker-treeview-mode-hook 'turn-off-evil-mode)
+  (evil-mode 1))
 
 (use-package evil-surround
   :after evil
@@ -101,6 +96,8 @@
 (use-package evil-collection
   :after evil
   :config
+  (delete 'gnus evil-collection-mode-list)
+  (delete 'newsticker evil-collection-mode-list)
   (evil-collection-init)
   (evil-collection-define-key 'normal 'dired-mode-map [mouse-2] 'dired-mouse-find-file))
 
@@ -109,45 +106,16 @@
   :custom
   (evil-org-special-o/O '(table-row item))
   (evil-org-use-additional-insert nil)
-  (org-edit-src-content-indentation 2)
-  (org-src-tab-acts-natively t)
-  (org-src-preserve-indentation t)
-  (org-todo-keywords '((sequence "TODO" "PROG" "|" "DONE" "AXED")))
   :hook
   (org-mode . evil-org-mode)
   (evil-org-mode . evil-org-set-key-theme)
   :config
+  ;; (evil-define-minor-mode-key '(normal visual) 'evil-org-mode (kbd "H") 'org-shiftleft)
+  ;; (evil-define-minor-mode-key '(normal visual) 'evil-org-mode (kbd "L") 'org-shiftright)
+  (evil-define-key '(normal visual) org-mode-map (kbd "H") 'org-shiftleft)
+  (evil-define-key '(normal visual) org-mode-map (kbd "L") 'org-shiftright)
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
-
-;; TODO replace with electric-pair? this does provide latex \begin{} \end{} pairs tho
-;;      maybe snippets for latex instead
-;; (use-package smartparens
-;;   :after (org)
-;;   :hook (prog-mode special-mode text-mode conf-mode)
-;;   :config
-;;   (require 'smartparens-config)
-;;   ;; (sp-pair "\\\\(" nil :actions :rem)
-;;   ;; (sp-pair "\\{" nil :actions :rem)
-;;   ;; (sp-pair "\\(" nil :actions :rem)
-;;   ;; (sp-pair "\\\"" nil :actions :rem)
-;;   ;; (sp-pair "[" nil :actions :rem)
-;;   ;; (sp-pair "(" nil :actions :rem)
-;;   ;; (sp-pair "'" nil :actions :rem)
-;;   ;; (sp-pair "`" nil :actions :rem)
-;;   ;; (sp-pair "\"" nil :actions :rem)
-;;   ;; (sp-local-pair 'emacs-lisp-mode "(" ")")
-;;   (sp-local-pair 'org-mode "/" nil :actions :rem)
-;;   (sp-local-pair 'org-mode "~" nil :actions :rem)
-;;   (sp-local-pair 'org-mode "=" nil :actions :rem)
-;;   (sp-local-pair 'org-mode "*" nil :actions :rem)
-;;   (sp-local-pair 'org-mode "_" nil :actions :rem)
-;;   (sp-local-pair 'org-mode "`" nil :actions :rem)
-;;   (smartparens-strict-mode))
-
-;; (use-package evil-smartparens
-;;   :config
-;;   (add-hook 'smartparens-enabled-hook 'evil-smartparens-mode))
 
 (use-package gruvbox-theme
   ;; :config
@@ -172,23 +140,7 @@
 
 (use-package cmake-mode)
 
-;; (use-package flycheck
-;;   :config
-;;   ;; (add-hook 'org-mode-hook 'flyspell-mode)
-;;   (add-hook 'rust-mode 'flycheck-mode))
-
 (use-package rust-mode)
-;; (use-package rust-mode
-;;   :after smartparens
-;;   :config
-;;   (sp-local-pair 'rust-mode "'" nil :actions :rem))
-;; (use-package rustic
-;;   :after flycheck smartparens
-;;   :custom
-;; ;; (rustic-lsp-server 'rust-analyzer)
-;;   :config
-;;   (sp-local-pair 'rustic-mode "'" nil :actions :rem)
-;;   (sp-local-pair 'rustic-mode "<" nil :actions :rem))
 
 ;; (use-package js2-mode
 ;;   :config
@@ -238,7 +190,9 @@
   (clean-buffer-list-kill-never-buffer-names
    '("*scratch*" "*Messages*" "*cmd*"))
   (clean-buffer-list-kill-never-regexps
-   '("^\\ .*$" "\\*.*scratch\\*" "\\` \\*Minibuf-.*\\*\\'" "^\\*EMMS Playlist\\*.*$" "^[A-Za-z].*[A-Za-z]$" "^[A-Za-z].*[A-Za-z]<*[A-Za-z]>$"))
+   '("^\\ .*$" "\\*.*scratch\\*" "\\` \\*Minibuf-.*\\*\\'"
+     "^\\*EMMS Playlist\\*.*$" "^[A-Za-z].*[A-Za-z]$" "^\\*.*eshell\\*"
+     "^[A-Za-z].*[A-Za-z]<*[A-Za-z]>$"))
   :config
   (run-at-time t 1800 'clean-buffer-list))
 
@@ -272,12 +226,7 @@
   (ivy-use-selectable-prompt t)
   ;; (ivy-initial-inputs-alist nil)
   :config
-  ;; (add-to-list 'ivy-initial-inputs-alist '(counsel-find-file . "^"))
   (add-to-list 'ivy-initial-inputs-alist '(counsel-minor . ""))
-  ;; (add-hook 'ebuild-mode-hook
-  ;;           (lambda () (setq-local completing-read-function #'completing-read-default)))
-  ;; (add-to-list 'ivy-completing-read-handlers-alist
-  ;;              '(ebuild-mode-insert-skeleton . completing-read-default))
   (ivy-mode 1))
 
 (use-package ivy-hydra)
@@ -286,9 +235,6 @@
   :config
   (defvaralias 'swiper-history 'regexp-search-ring)
   (evil-global-set-key 'normal (kbd "s") 'swiper)
-  ;; (evil-global-set-key 'normal (kbd "S") 'swiper-backward)
-  ;; (evil-global-set-key 'normal (kbd "C-n") 'isearch-repeat-forward)
-  ;; (evil-global-set-key 'normal (kbd "C-p") 'isearch-repeat-backward)
   (evil-global-set-key 'normal (kbd "C-s") 'swiper-isearch))
 (use-package counsel
   :config
@@ -299,9 +245,8 @@
   :after (evil)
   :custom
   (company-idle-delay 0.0)
-  ;; (company-idle-delay nil)
-  (company-minimum-prefix-length 1)
-  (company-show-numbers t)
+  (company-minimum-prefix-length 2)
+  (company-show-quick-access t)
   (company-selection-wrap-around t)
   (company-backends
    '((company-semantic company-capf company-files company-etags company-keywords
@@ -314,8 +259,7 @@
   (defun company-backspace ()
     (interactive)
     (if (equal company-selection-changed nil)
-        (if tab-control-auto (backward-delete-char-untabify 1)
-          (backspace-whitespace-to-tab-stop))
+        (backspace-whitespace-to-tab-stop)
       (company-abort)))
 
   (defun company-select-next-or-complete-selection (&optional arg)
@@ -342,8 +286,7 @@
   (evil-define-key 'insert company-active-map (kbd "C-p")
     'company-select-previous)
   (evil-define-key 'insert company-active-map (kbd "ESC")
-    (lambda () (interactive) (company-abort)(evil-normal-state)))
-  ;; Company end
+    (lambda () (interactive) (company-abort) (evil-normal-state)))
 
   (defun add-to-company-backends (list)
     (setq company-backends `(,(append list (car company-backends)))))
@@ -391,69 +334,12 @@
   (add-to-list 'eglot-server-programs
                '(rust-mode . ("rustup" "run" "stable" "rust-analyzer"))))
 
-;; (use-package lsp-mode
-;;   :after (spinner)
-;;   :init
-;;   (setq lsp-restart 'ignore
-;;         lsp-completion-show-detail nil
-;;         lsp-completion-enable-additional-text-edit nil
-;;         lsp-completion-show-label-description nil
-;;         lsp-headerline-breadcrumb-enable nil
-;;         lsp-lens-enable nil
-;;         ;; lsp-enable-symbol-highlighting nil
-;;         ;; lsp-eldoc-enable-hover nil
-;;         ;; lsp-enable-xref nil
-;;         ;; lsp-modeline-code-diagnostics-enable nil
-;;         ;; lsp-enable-file-watchers nil
-;;         lsp-modeline-code-actions-enable nil
-;;         lsp-modeline-code-workspace-status-enable nil
-;;         lsp-enable-snippet nil
-;;         lsp-enable-indentation nil
-;;         lsp-enable-on-type-formatting nil
-;;         lsp-enable-text-document-color nil
-;;         lsp-rust-server 'rust-analyzer ;; rust-analyzer vs rls
-;;         lsp-rust-analyzer-completion-auto-self-enable nil
-;;         lsp-rust-analyzer-completion-add-call-argument-snippets nil
-;;         lsp-rust-analyzer-completion-add-call-parenthesis nil
-;;         lsp-use-plists t
-;;         gc-cons-threshold 3200000
-;;         read-process-output-max (* 1024 1024)
-;;         lsp-log-io nil)
-;;   :config
-;;   ;; (lsp-rust-analyzer-completion-auto-import-enable nil)
-;;   ;; (lsp-rust-analyzer-completion-postfix-enable nil)
-;;   ;; (delete '(".*\\.js$" . "javascript") lsp-language-id-configuration)
-;;   ;; (delete '(".*\\.ts$" . "typescript") lsp-language-id-configuration)
-;;   ;; (delete '(js-mode . "javascript") lsp-language-id-configuration)
-;;   ;; (add-to-list 'lsp-language-id-configuration '(js-mode . "deno"))
-;;   ;; (add-to-list 'lsp-language-id-configuration '(typescript-mode . "deno"))
-;;   ;; (lsp-register-client
-;;   ;;  (make-lsp-client :new-connection (lsp-stdio-connection '("deno" "lsp"))
-;;   ;;                   :activation-fn (lsp-activate-on "deno")
-;;   ;;                   :server-id 'deno))
-;;   ;; (add-hook 'js-mode-hook 'lsp)
-;;   ;; (add-hook 'typescript-mode-hook 'lsp)
-;;   (add-hook 'c-mode-hook 'lsp)
-;;   (add-hook 'c++-mode-hook 'lsp)
-;;   (add-hook 'rust-mode-hook 'lsp))
-
-;; (use-package lsp-ivy)
-;; (use-package lsp-treemacs
-;;   :config
-;;   (lsp-treemacs-sync-mode 1))
-;; (use-package ccls)
-;; (use-package lsp-latex)
-;; (use-package lsp-haskell)
-;; (use-package lsp-python-ms
-;;   :custom
-;;   (lsp-python-ms-auto-install-server t))
-
 (use-package which-key)
 
 ;; Manually cloned
 ;; TODO periodically run "git pull" using midnight (or a cron)
-(use-package evil-unimpaired
-  :ensure nil
-  :load-path "clone/evil-unimpaired/"
-  :after evil
-  :config (evil-unimpaired-mode))
+;; (use-package evil-unimpaired
+;;   :ensure nil
+;;   :load-path "clone/evil-unimpaired/"
+;;   :after evil
+;;   :config (evil-unimpaired-mode))
