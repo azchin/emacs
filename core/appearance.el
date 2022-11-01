@@ -5,8 +5,15 @@
 (setq scroll-bar-adjust-thumb-portion nil)
 (blink-cursor-mode 0)
 (setq frame-resize-pixelwise t)
-(pixel-scroll-precision-mode)
-(setq pixel-scroll-precision-large-scroll-height 40.0)
+(setq scroll-conservatively 128)
+(setq mouse-wheel-progressive-speed nil)
+;; (setq auto-window-vscroll nil)
+;; (setq mouse-wheel-scroll-amount
+;;       '(0.02 ((shift) . hscroll) ((meta))
+;;           ((control meta) . global-text-scale)
+;;           ((control) . text-scale)))
+;; (pixel-scroll-precision-mode)
+;; (setq pixel-scroll-precision-large-scroll-height 64.0)
 
 (setq lazy-highlight-buffer-max-at-a-time nil)
 (setq lazy-highlight-initial-delay 0)
@@ -16,6 +23,7 @@
 
 (setq visible-cursor nil)
 (setq ring-bell-function 'ignore)
+(setq text-scale-mode-step 1.1)
 
 (tab-bar-mode)
 (setq tab-bar-show t)
@@ -48,12 +56,12 @@
 ;; b4 font bug, we had 113 and 120, after 72, 80
 (defvar default-font-height 113
   "Default face font height") ;; 10: 98, 11: 113, 12: 120
-(defvar markup-font-family "DejaVu Serif"
+(defvar markup-font-family "DejaVu Sans"
   "Markup font family")
 (defvar markup-font-height 120
   "Markup font height")
 (add-to-list 'default-frame-alist `(font . ,(concat default-font-family "-" (number-to-string (round default-font-height 10)))))
-(add-hook 'org-mode-hook (lambda () (buffer-face-set :family markup-font-family :height markup-font-height)))
+;; (add-hook 'org-mode-hook (lambda () (buffer-face-set :family markup-font-family :height markup-font-height)))
 ;; (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-10"))
 
 ;; (set-frame-parameter (selected-frame) 'alpha '(95 . 86))
@@ -67,7 +75,6 @@
 ;; (setq frame-title-format `(,(system-name) " - %b [%m] %f"  ))
 (setq frame-title-format '("%b :: %f"))
 
-(setq scroll-conservatively 128)
 (setq initial-major-mode 'org-mode)
 (setq initial-scratch-message
       "# This buffer is for text that is not saved.
@@ -165,3 +172,8 @@
 
 (defadvice load-theme (after theme-dont-propagate activate)
   (eload "core/late.el"))
+
+(defun set-faces-to-default-font-family (faces)
+  (dolist (face faces)
+    (set-face-attribute face nil
+                        :family default-font-family)))

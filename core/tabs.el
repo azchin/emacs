@@ -1,4 +1,4 @@
-(setq custom-tab-width 4)
+(defvar custom-tab-width 4)
 
 (defun toggle-tabs () (interactive)
        (setq indent-tabs-mode (not indent-tabs-mode)))
@@ -7,6 +7,7 @@
   (setq tab-width width)
   (setq evil-shift-width width))
 
+;; https://www.emacswiki.org/emacs/BackspaceWhitespaceToTabStop
 (defun backspace-whitespace-to-tab-stop ()
   "Delete whitespace backwards to the next tab-stop, otherwise delete one character."
   (interactive)
@@ -26,10 +27,31 @@
             (backward-delete-char (- (match-end 1) (match-beginning 1)))
           (call-interactively 'backward-delete-char))))))
 
-(setq-default backward-delete-char-untabify-method nil)
-(evil-global-set-key 'insert (kbd "<backspace>") 'backspace-whitespace-to-tab-stop)
+(defvar editor-mode-maps (list prog-mode-map text-mode-map))
+(defun keymap-set-editor-key (key function)
+  (dolist (map-it editor-mode-maps)
+    (keymap-set map-it key function)))
+
+;; Overwriting global backspace causes issues when package remaps function (e.g. ivy)
+(keymap-set-editor-key "<backspace>" 'backspace-whitespace-to-tab-stop)
+
+(defun backspace-delete-word-or-whitespace ()
+  "Deletes previous word, or whitespace until previous word if whitespace is long"
+  (interactive)
+  (if (and (not (region-active-p))
+           (or (equal (char-before) ?\n)
+               (and (member (char-before) '(?\s ?\t))
+                    (member (char-before (- (point) 1)) '(?\s ?\t)))))
+      (let ((backward-delete-char-untabify-method 'hungry))
+        (call-interactively 'backward-delete-char-untabify))
+    (call-interactively 'backward-kill-word)))
+
+(keymap-set-editor-key "C-<backspace>" 'backspace-delete-word-or-whitespace)
+;; Alternative is to use Vim's "db"
+;; (evil-define-key 'insert 'global (kbd "C-<backspace>") 'evil-delete-backward-word)
 
 (setq-default indent-tabs-mode nil)
+(setq-default backward-delete-char-untabify-method nil)
 (setq-default tab-width custom-tab-width)
 (setq-default evil-shift-width custom-tab-width)
 (setq tab-always-indent nil)
@@ -70,3 +92,8 @@
 (defun fill-whole-buffer ()
   (interactive)
   (fill-region (point-min) (point-max)))
+
+(defun fundamental-to-text-mode ()
+  (when (equal major-mode 'fundamental-mode)
+    (text-mode)))
+(add-hook 'find-file-hook 'fundamental-to-text-mode)

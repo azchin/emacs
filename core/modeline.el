@@ -25,6 +25,7 @@ Containing LEFT, and RIGHT aligned respectively."
 ;; (setq mode-line-whitespace '(:eval whitespace))
 
 (setq-default mode-line-position `(:eval ,(concat "(%l %C)" mode-line-whitespace "%p")))
+(setq-default mode-line-buffer-identification '(:propertize "%b" face (:weight bold)))
 
 (setq-default
  mode-line-format
@@ -39,7 +40,7 @@ Containing LEFT, and RIGHT aligned respectively."
              mode-line-whitespace
              mode-line-modified
              mode-line-whitespace
-             (:propertize "%b" face (:weight bold))
+             mode-line-buffer-identification
              mode-line-whitespace
              mode-name
              ))

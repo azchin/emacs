@@ -48,6 +48,7 @@
 ;; (evil-define-key leader-rw-states 'global (kbd "<leader> c f") 'fill-whole-buffer)
 (evil-define-key leader-rw-states 'global (kbd "<leader> c f") 'fill-region)
 (evil-define-key leader-states 'global (kbd "<leader> c w") 'count-words-region)
+(evil-define-key leader-rw-states 'global (kbd "<leader> c z") (lambda () (interactive) (insert-char #x200b)))
 (evil-define-key leader-states 'global (kbd "<leader> e e") (lambda () (interactive) (if desktop-save-mode
                                                                                          (progn (desktop-save (emacsd "cache/default-desktop"))
                                                                                                 (desktop-save-mode 0))
@@ -122,6 +123,7 @@
 (evil-define-key leader-states 'global (kbd "<leader> t d") (lambda () (interactive) (dired-other-tab default-directory)))
 (evil-define-key leader-states 'global (kbd "<leader> t h") (lambda () (interactive) (let ((new-file (read-file-name "Choose file: " home-dir))) (tab-new) (find-file new-file))))
 ;; (evil-define-key leader-states 'global (kbd "<leader> t z") (lambda () (interactive) (switch-to-buffer-other-tab (read-buffer-to-switch "Choose buffer: "))))
+;; TODO not quite correct, check for nil project
 (evil-define-key leader-states 'global (kbd "<leader> t v") (lambda () (interactive) (let ((vcbuf (project-root (project-current t))))
                                                                                        (tab-new) (vc-dir vcbuf))))
 (evil-define-key leader-states 'global (kbd "<leader> t q") 'tab-close-save-buffer)
@@ -143,7 +145,7 @@
 (evil-define-key leader-states 'global (kbd "<leader> d p") (lambda () (interactive) (dired (concat home-dir "projects"))))
 (evil-define-key leader-states 'global (kbd "<leader> d l") (lambda () (interactive) (dired (concat home-dir "clone"))))
 (evil-define-key leader-states 'global (kbd "<leader> d o") (lambda () (interactive) (dired (concat home-dir "org"))))
-(evil-define-key leader-states 'global (kbd "<leader> d s") (lambda () (interactive) (dired (concat "/ssh:" (read-string "SSH: ") ":"))))
+(evil-define-key leader-states 'global (kbd "<leader> d s") (lambda () (interactive) (dired (concat "/-:" (read-string "TRAMP: ") ":"))))
 (evil-define-key leader-states 'global (kbd "<leader> d u") (lambda () (interactive) (dired "/sudo::/")))
 ;; (evil-define-key leader-states 'global (kbd "<leader> d g") 'dired)
 ;; "d z h" (lambda () (interactive)
@@ -270,7 +272,6 @@
 (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory)
 (evil-define-key 'normal dired-mode-map "l" 'dired-find-file)
 (keymap-set dired-mode-map "<mouse-2>" 'dired-mouse-find-file)
-(setq mouse-wheel-progressive-speed nil)
 
 (evil-define-key 'insert 'global (kbd "C-d") 'delete-char)
 (evil-define-key 'insert 'global (kbd "C-a") 'beginning-of-line)

@@ -8,8 +8,6 @@
 
 (when (< emacs-major-version 27)
   (package-initialize))
-(unless (or package-archive-contents (not daemon-mode-snapshot))
-  (package-refresh-contents))
 (unless (require 'use-package nil 'noerror)
   (package-install 'use-package))
 (eval-when-compile
@@ -21,11 +19,16 @@
   :custom
   (auto-package-update-delete-old-versions t)
   (auto-package-update-hide-results t)
-  :hook (auto-package-update-before . (lambda () (message "Updating packages...")))
+  :hook
+  (auto-package-update-before . (lambda () (message "Updating packages...")))
+  (auto-package-update-after . (lambda () (message "Packages updated...")))
   :config
   (auto-package-update-maybe))
 
 ;; (use-package magit)
+
+(use-package dired
+  :ensure nil)
 
 (use-package org
   :ensure nil
@@ -34,7 +37,7 @@
 
 (use-package org-tempo
   :ensure nil
-  :after org)
+  :requires org)
 
 (use-package hl-todo
   :custom
@@ -47,14 +50,14 @@
   (undo-fu-ignore-keyboard-quit t))
 
 (use-package undo-fu-session
-  :after undo-fu
+  :requires undo-fu
   :custom
   (undo-fu-session-directory (emacsd "cache/backups"))
   :config
   (global-undo-fu-session-mode))
 
 (use-package evil
-  :after (undo-fu)
+  :requires (undo-fu dired org)
   :init
   (setq evil-want-keybinding nil
         evil-want-C-u-scroll t
@@ -64,6 +67,7 @@
         evil-want-C-i-jump t
         evil-want-Y-yank-to-eol t
         evil-want-integration t
+        evil-kbd-macro-suppress-motion-error 'replay
         evil-move-beyond-eol nil
         evil-respect-visual-line-mode nil
         evil-undo-system 'undo-fu
@@ -74,35 +78,42 @@
   :config
   (eload "leader.el")
   (evil-set-initial-state 'eshell-mode 'insert)
-  (add-hook 'gnus-mode-hook 'turn-off-evil-mode)
-  (add-hook 'newsticker-treeview-mode-hook 'turn-off-evil-mode)
+  (evil-set-initial-state 'vc-annotate-mode 'insert)
+  (evil-set-initial-state 'gnus-mode 'emacs)
   (evil-mode 1))
 
 (use-package evil-surround
-  :after evil
+  :requires evil
   :config
   (global-evil-surround-mode 1))
 
 (use-package evil-commentary
-  :after evil
+  :requires evil
   :config
   (evil-commentary-mode))
 
 (use-package evil-quickscope
-  :after evil
+  :requires evil
   :config
   (global-evil-quickscope-mode 1))
 
 (use-package evil-collection
-  :after evil
+  :requires evil
   :config
-  (delete 'gnus evil-collection-mode-list)
-  (delete 'newsticker evil-collection-mode-list)
-  (evil-collection-init)
+  ;; (delete 'gnus evil-collection-mode-list)
+  ;; (delete 'newsticker evil-collection-mode-list)
+  (evil-collection-init
+   '(apropos auto-package-update bookmark calc calendar cmake-mode compile debug
+             dictionary diff-mode dired dired-sidebar doc-view ediff eglot
+             elisp-mode elisp-refs eshell eww go-mode grep help image
+             image-dired imenu info ivy js2-mode log-edit log-view kotlin-mode
+             org org-present org-roam outline-mode (pdf pdf-view) popup python
+             replace simple typescript-mode vc-annotate vc-dir vc-git vdiff view
+             which-key xref yaml-mode))
   (evil-collection-define-key 'normal 'dired-mode-map [mouse-2] 'dired-mouse-find-file))
 
 (use-package evil-org
-  :after (org evil) 
+  :requires (org evil) 
   :custom
   (evil-org-special-o/O '(table-row item))
   (evil-org-use-additional-insert nil)
@@ -130,11 +141,11 @@
       modus-themes-mixed-fonts t)
 (load-theme 'modus-operandi) 
 
-(use-package openwith
-  :custom
-  (openwith-associations '(("\\.pdf\\'" "zathura" (file))))
-  :config
-  (openwith-mode t))
+;; (use-package openwith
+;;   :custom
+;;   (openwith-associations '(("\\.pdf\\'" "zathura" (file))))
+;;   :config
+;;   (openwith-mode t))
 
 (use-package markdown-mode)
 
@@ -159,7 +170,7 @@
 ;; ; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
 ;; (use-package tex
 ;;   :ensure auctex
-;;   :after (evil pdf-tools)
+;;   :requires (evil pdf-tools)
 ;;   :init
 ;;   (setq TeX-source-correlate-mode t)
 ;;   (setq TeX-source-correlate-start-server t)
@@ -192,6 +203,7 @@
   (clean-buffer-list-kill-never-regexps
    '("^\\ .*$" "\\*.*scratch\\*" "\\` \\*Minibuf-.*\\*\\'"
      "^\\*EMMS Playlist\\*.*$" "^[A-Za-z].*[A-Za-z]$" "^\\*.*eshell\\*"
+     "^\\*Article.*\\*$" "^\\*Summary.*\\*$" "^\\*eww\\*$" "^\\*Group\\*$"
      "^[A-Za-z].*[A-Za-z]<*[A-Za-z]>$"))
   :config
   (run-at-time t 1800 'clean-buffer-list))
@@ -199,11 +211,11 @@
 (use-package dired-x
   :ensure nil)
 
-(use-package dired-subtree
-  :after dired
-  :config
-  (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map)
-  (bind-key "<backtab>" #'dired-subtree-cycle dired-mode-map))
+;; (use-package dired-subtree
+;;   :requires dired
+;;   :config
+;;   (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map)
+;;   (bind-key "<backtab>" #'dired-subtree-cycle dired-mode-map))
 
 (use-package yasnippet)
 
@@ -231,31 +243,51 @@
 
 (use-package ivy-hydra)
 (use-package swiper
-  :after (evil)
   :config
   (defvaralias 'swiper-history 'regexp-search-ring)
-  (evil-global-set-key 'normal (kbd "s") 'swiper)
-  (evil-global-set-key 'normal (kbd "C-s") 'swiper-isearch))
+  (keymap-global-set "C-s" 'swiper-isearch))
 (use-package counsel
   :config
   (counsel-mode 1))
 
 ;; TODO fix backends
 (use-package company
-  :after (evil)
+  :requires (evil)
   :custom
   (company-idle-delay 0.0)
   (company-minimum-prefix-length 2)
   (company-show-quick-access t)
   (company-selection-wrap-around t)
+  (company-tooltip-maximum-width 60)
   (company-backends
-   '((company-semantic company-capf company-files company-etags company-keywords
-                       company-dabbrev company-dabbrev-code company-cmake)))
-  :hook
-  ((sh-mode conf-mode c-mode c++-mode rust-mode emacs-lisp-mode LaTeX-mode python-mode))
-  (company-mode . company-tng-mode)
+   '((company-capf company-clang company-cmake company-keywords :with company-dabbrev-code :separate)))
+  (company-global-modes
+   '(sh-mode conf-mode c-mode c++-mode rust-mode emacs-lisp-mode latex-mode
+             python-mode org-mode eglot-managed-mode))
   :config
-  ;; Company start
+  ;; TODO :with yasnippet, abbrev
+  (defun company-shell-mode-configure ()
+    (setq-local company-backends
+                '((company-capf company-keywords company-files :with company-dabbrev-code :separate))))
+  (defun company-org-mode-configure ()
+    (setq-local company-backends
+                '((company-capf company-ispell :with company-dabbrev :separate))))
+  (defun company-cmake-mode-configure ()
+    (setq-local company-backends
+                '((company-capf company-keywords company-cmake :with company-dabbrev-code :separate))))
+  (add-hook 'sh-mode-hook 'company-shell-mode-configure)
+  (add-hook 'conf-mode-hook 'company-shell-mode-configure)
+  (add-hook 'org-mode-hook 'company-org-mode-configure)
+  (add-hook 'cmake-mode-hook 'company-cmake-mode-configure)
+
+  (defun set-company-faces-to-default-font-family ()
+    (dolist (face '(company-tooltip company-tooltip-common
+                                    company-tooltip-search
+                                    company-tooltip-search-selection))
+      (set-face-attribute face nil
+                          :family default-font-family)))
+  (add-hook 'company-mode-hook 'set-company-faces-to-default-font-family)
+  
   (defun company-backspace ()
     (interactive)
     (if (equal company-selection-changed nil)
@@ -290,21 +322,21 @@
 
   (defun add-to-company-backends (list)
     (setq company-backends `(,(append list (car company-backends)))))
-  ;; (global-company-mode)
-  )
+  (global-company-mode)
+  (company-tng-mode))
 
 ;; (use-package company-c-headers
-;;   :after company
+;;   :requires company
 ;;   :config
 ;;   (add-to-company-backends '(company-c-headers)))
 
 ;; (use-package company-shell
-;;   :after company
+;;   :requires company
 ;;   :custom
 ;;   (add-to-company-backends '(company-shell company-shell-env)))
 
 ;; (use-package company-auctex
-;;   :after company
+;;   :requires company
 ;;   :config
 ;;   (add-to-company-backends '(company-auctex))
 ;;   (company-auctex-init))
@@ -324,7 +356,6 @@
   :ensure nil
   :hook
   (rust-mode . eglot-ensure)
-  (eglot-managed-mode . company-mode)
   :custom
   (gc-cons-threshold 1600000)
   (read-process-output-max (* 1024 32))
@@ -341,5 +372,5 @@
 ;; (use-package evil-unimpaired
 ;;   :ensure nil
 ;;   :load-path "clone/evil-unimpaired/"
-;;   :after evil
+;;   :requires evil
 ;;   :config (evil-unimpaired-mode))

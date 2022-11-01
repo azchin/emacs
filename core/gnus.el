@@ -1,6 +1,7 @@
 (setq gnus-select-method '(nnnil))
-(setq gnus-secondary-select-methods
-      '((nntp "news.gwene.org")))
+;; (setq gnus-secondary-select-methods
+;;       '((nntp "news.gwene.org")))
+(add-hook 'kill-emacs-query-functions
+          (lambda () (when (gnus-alive-p) (gnus-group-exit)) t))
 
-(add-to-list 'newsticker-url-list
-             '("CISA Current Activity" "https://www.cisa.gov/uscert/ncas/current-activity.xml"))
+(setq doc-view-continuous t)

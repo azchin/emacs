@@ -13,12 +13,13 @@
 (setq org-startup-indented t)
 (setq org-pretty-entities t)
 (setq org-src-tab-acts-natively t)
-(setq org-src-window-setup 'reorganize-frame)
+(setq org-src-window-setup 'other-frame)
 (setq org-src-preserve-indentation t)
 (setq org-todo-keywords '((sequence "TODO" "PROG" "|" "DONE" "AXED")))
 (customize-set-variable 'safe-local-variable-values
                         '((org-emphasis-alist . nil)
-                          (org-hide-emphasis-markers . nil)))
+                          (org-hide-emphasis-markers . nil)
+                          (org-pretty-entities . nil)))
 (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
 
 (require 'ox-latex)

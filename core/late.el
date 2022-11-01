@@ -17,25 +17,27 @@
 ;;                     :foreground "#636363")
 ;; (set-face-background 'whitespace-tab nil)
 
-(set-face-attribute 'line-number nil
-                    :family default-font-family
-                    :height default-font-height)
-(set-face-attribute 'line-number-current-line nil
-                    :family default-font-family
-                    :height default-font-height)
+(dolist (face '(line-number line-number-current-line))
+  (set-face-attribute face nil
+                      :family default-font-family
+                      :inherit 'default))
 
+(set-face-attribute 'org-document-title nil :weight 'bold :height 1.5)
+(dolist (face '(org-level-1 org-level-2 org-level-3 org-level-4 org-level-5
+                            org-level-6 org-level-7 org-level-8))
+  (set-face-attribute face nil :weight 'bold))
 
-(set-face-attribute 'org-document-title nil :family markup-font-family :weight 'bold :height 1.5)
-(dolist (face '((org-level-1 . 1.4)
-                (org-level-2 . 1.2)
-                (org-level-3 . 1.1)
-                (org-level-4 . 1.1)
-                (org-level-5 . 1.0)
-                (org-level-6 . 1.0)
-                (org-level-7 . 1.0)
-                (org-level-8 . 1.0)))
-  (set-face-attribute (car face) nil :family markup-font-family :weight 'medium :height (cdr face)))
-(set-face-attribute 'org-table nil :family default-font-family :height default-font-height)
+;; (set-face-attribute 'org-document-title nil :family markup-font-family :weight 'bold :height 1.5)
+;; (dolist (face '((org-level-1 . 1.4)
+;;                 (org-level-2 . 1.2)
+;;                 (org-level-3 . 1.1)
+;;                 (org-level-4 . 1.1)
+;;                 (org-level-5 . 1.0)
+;;                 (org-level-6 . 1.0)
+;;                 (org-level-7 . 1.0)
+;;                 (org-level-8 . 1.0)))
+;;   (set-face-attribute (car face) nil :family markup-font-family :weight 'medium :height (cdr face)))
+;; (set-face-attribute 'org-table nil :family default-font-family :height default-font-height)
 
 (set-face-attribute 'default nil :family default-font-family :height default-font-height)
 (set-face-attribute 'variable-pitch nil :family markup-font-family :height markup-font-height)
