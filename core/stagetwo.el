@@ -4,10 +4,17 @@
 (when (string-match "29\\.0\\.50" (version))
   (setq warning-minimum-level :error))
 
+(setq gc-cons-threshold most-positive-fixnum)
+;; Lower threshold back to 8 MiB (default is 800kB)
+(add-hook 'emacs-startup-hook
+          (lambda () (setq gc-cons-threshold 800000)))
+
 (require 'server)
 (defvar daemon-mode-snapshot (and (boundp 'server-process)
                                   (processp server-process)
                                   (server-running-p)))
+                                  ;; Minimize garbage collection during startup
+
 (cd "~")
 (defvar home-dir default-directory)
 
@@ -24,13 +31,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; My package agnostic customizations
 (require 'my-modeline)
-
 (require 'my-tabs)
-
 (require 'my-buffer)
-
 (require 'my-desktop)
-
 (require 'my-extra)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -133,7 +136,7 @@ advice like this:
 ;; Soft dependency on yasnippets and company
 (require 'eglot)
 (add-hook 'rust-mode-hook 'eglot-ensure)
-(setq gc-cons-threshold 1600000)
+;; (setq gc-cons-threshold 1600000)
 (setq read-process-output-max (* 1024 32))
 (add-to-list 'eglot-server-programs
              '(c-mode . ("ccls")))
@@ -160,16 +163,16 @@ advice like this:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MELPA packages
-(use-package auto-package-update
-  :ensure t
-  :custom
-  (auto-package-update-delete-old-versions t)
-  (auto-package-update-hide-results t)
-  :hook
-  (auto-package-update-before . (lambda () (message "Updating packages...")))
-  (auto-package-update-after . (lambda () (message "Packages updated...")))
-  :config
-  (auto-package-update-maybe))
+;; (use-package auto-package-update
+;;   :ensure t
+;;   :custom
+;;   (auto-package-update-delete-old-versions t)
+;;   (auto-package-update-hide-results t)
+;;   :hook
+;;   (auto-package-update-before . (lambda () (message "Updating packages...")))
+;;   (auto-package-update-after . (lambda () (message "Packages updated...")))
+;;   :config
+;;   (auto-package-update-maybe))
 
 (use-package hl-todo
   :ensure t
@@ -430,6 +433,8 @@ advice like this:
 
 (use-package my-leader
   :requires (evil dired org ido my-tabs my-desktop my-buffer))
+
+(require 'my-update) ;; run after packages are loaded
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Code graveyard
