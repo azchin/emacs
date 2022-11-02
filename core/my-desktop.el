@@ -1,3 +1,5 @@
+(provide 'my-desktop)
+
 (setq desktop-path `(,(emacsd "cache/default-desktop/")))
 (setq desktop-load-locked-desktop t)
 ;; (setq desktop-restore-frames nil)

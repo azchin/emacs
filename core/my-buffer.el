@@ -1,3 +1,5 @@
+(provide 'my-buffer)
+
 (setq use-short-answers t)
 (setq dired-clean-confirm-killing-deleted-buffers nil)
 
@@ -22,9 +24,7 @@
         (t (concat (car list) "\\|" (construct-regexp-from-list (cdr list))))))
 
 (defvar pop-up-frame-modes '(help-mode
-                             ;; messages-buffer-mode
-                             magit-status-mode
-                             )
+                             apropos-mode)
   "List of major modes that denote the buffers to be displayed
 in a pop-up frame")
 
@@ -69,14 +69,27 @@ is dired"
 ;;                (display-buffer-reuse-window display-buffer-pop-up-frame)
 ;;                (reusable-frames . 0)))
 
+(defvar help-modes '(help-mode apropos-mode))
+
+(defun my-display-buffer-match-mode-window (windows mode-list buffer alist)
+  (when windows
+    (let ((current-window-mode (buffer-local-value 'major-mode (window-buffer (car windows)))))
+      (or (when (member current-window-mode mode-list)
+            (display-buffer-reuse-mode-window buffer `((mode . ,current-window-mode) . ,alist)))
+          (my-display-buffer-match-mode-window (cdr windows) mode-list buffer alist)))))
+
+(defun display-buffer-help-window (buffer alist)
+  (my-display-buffer-match-mode-window (window-list) help-modes buffer alist))
+
 (add-to-list 'display-buffer-alist
              '("\\*grep\\*"
                (display-buffer-reuse-window display-buffer-same-window)))
 
 (add-to-list 'display-buffer-alist
              '((lambda (name action)
-                 (equal (buffer-local-value 'major-mode (get-buffer name)) 'help-mode))
-               (display-buffer-reuse-mode-window display-buffer-pop-up-window)))
+                 (member (buffer-local-value 'major-mode (get-buffer name))
+                         help-modes))
+               (display-buffer-help-window display-buffer-pop-up-window)))
 
 (add-to-list 'display-buffer-alist
              `("\\*.*eshell\\*" display-buffer-in-side-window

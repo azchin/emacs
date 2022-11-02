@@ -1,3 +1,5 @@
+(provide 'my-tabs)
+
 (defvar custom-tab-width 4)
 
 (defun toggle-tabs () (interactive)

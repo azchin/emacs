@@ -1,3 +1,6 @@
+(provide 'my-org)
+
+(require 'org)
 (setq org-directory "~/org/")
 (setq org-agenda-files `(,(concat org-directory "agenda.org")))
 (setq org-agenda-span 'month)
@@ -36,4 +39,3 @@
       '(("en_CA" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
 
 (add-hook 'org-mode-hook 'auto-fill-mode)
-(setq-default fill-column 80)

@@ -1,3 +1,5 @@
+(provide 'my-appearance)
+
 (menu-bar-mode 1)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
@@ -61,7 +63,7 @@
 (defvar markup-font-height 120
   "Markup font height")
 (add-to-list 'default-frame-alist `(font . ,(concat default-font-family "-" (number-to-string (round default-font-height 10)))))
-;; (add-hook 'org-mode-hook (lambda () (buffer-face-set :family markup-font-family :height markup-font-height)))
+(add-hook 'org-mode-hook (lambda () (buffer-face-set :family markup-font-family :height markup-font-height)))
 ;; (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-10"))
 
 ;; (set-frame-parameter (selected-frame) 'alpha '(95 . 86))
@@ -69,12 +71,12 @@
 (defun make-frame-opaque() (interactive) (set-frame-parameter (selected-frame) 'alpha 100))
 ;; (add-to-list 'default-frame-alist '(alpha . (95 . 86))) ;; first(?) frame flickers
 ;; (add-to-list 'default-frame-alist '(alpha . 95))
-(setq inhibit-startup-screen t)
 ;; (setq frame-title-format '("Emacs - %b [%m] %f"))
 ;; (setq frame-title-format `(,(user-login-name) "@" ,(system-name) "     " global-mode-string "     %f" ))
 ;; (setq frame-title-format `(,(system-name) " - %b [%m] %f"  ))
 (setq frame-title-format '("%b :: %f"))
 
+(setq initial-buffer-choice t)
 (setq initial-major-mode 'org-mode)
 (setq initial-scratch-message
       "# This buffer is for text that is not saved.
@@ -107,6 +109,7 @@
 ;; (add-hook 'minibuffer-inactive-mode-hook 'disable-lines)
 
 ;; Column indicator
+(setq-default fill-column 80)
 (add-hook 'c-mode-hook 'display-fill-column-indicator-mode)
 (add-hook 'c++-mode-hook 'display-fill-column-indicator-mode)
 (add-hook 'rust-mode-hook 'display-fill-column-indicator-mode)
@@ -171,9 +174,18 @@
   (mapc 'disable-theme custom-enabled-themes))
 
 (defadvice load-theme (after theme-dont-propagate activate)
-  (eload "core/late.el"))
+  (load "my-late"))
 
 (defun set-faces-to-default-font-family (faces)
   (dolist (face faces)
     (set-face-attribute face nil
                         :family default-font-family)))
+
+;; Theme
+(setq modus-themes-intense-mouseovers t
+      modus-themes-bold-constructs t
+      modus-themes-italic-constructs t
+      modus-themes-deuteranopia t
+      modus-themes-tabs-accented nil
+      modus-themes-mixed-fonts t)
+(load-theme 'modus-operandi) 

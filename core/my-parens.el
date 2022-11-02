@@ -1,3 +1,5 @@
+(provide 'my-parens)
+
 (setq show-paren-style 'parenthesis)
 (setq show-paren-highlight-openparen t)
 (setq show-paren-when-point-inside-paren t)
