@@ -17,10 +17,11 @@
 ;;                     :foreground "#636363")
 ;; (set-face-background 'whitespace-tab nil)
 
-(dolist (face '(line-number line-number-current-line))
-  (set-face-attribute face nil
-                      :family default-font-family
-                      :inherit 'default))
+(set-face-attribute 'line-number nil
+                    :family default-font-family
+                    :inherit 'default)
+(set-face-attribute 'line-number-current-line nil
+                    :inherit '(bold line-number))
 
 (set-face-attribute 'org-document-title nil :weight 'bold :height 1.5)
 (dolist (face '(org-level-1 org-level-2 org-level-3 org-level-4 org-level-5

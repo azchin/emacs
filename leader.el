@@ -160,7 +160,10 @@
 (evil-define-key leader-states 'global (kbd "<leader> h f") 'describe-function)
 (evil-define-key leader-states 'global (kbd "<leader> h m") 'describe-mode)
 (evil-define-key leader-states 'global (kbd "<leader> h b") 'describe-bindings)
-(evil-define-key leader-states 'global (kbd "<leader> h a") 'apropos)
+(evil-define-key leader-states 'global (kbd "<leader> h a a") 'apropos)
+(evil-define-key leader-states 'global (kbd "<leader> h a c") 'apropos-command)
+(evil-define-key leader-states 'global (kbd "<leader> h a f") 'apropos-function)
+(evil-define-key leader-states 'global (kbd "<leader> h a v") 'apropos-variable)
 (evil-define-key leader-states 'global (kbd "<leader> h o") 'describe-symbol)
 (evil-define-key leader-states 'global (kbd "<leader> b b") 'switch-to-buffer)
 (evil-define-key leader-states 'global (kbd "<leader> b c") (lambda () (interactive) (let ((clean-buffer-list-kill-never-regexps

@@ -25,8 +25,6 @@
   :config
   (auto-package-update-maybe))
 
-;; (use-package magit)
-
 (use-package dired
   :ensure nil)
 
@@ -121,8 +119,6 @@
   (org-mode . evil-org-mode)
   (evil-org-mode . evil-org-set-key-theme)
   :config
-  ;; (evil-define-minor-mode-key '(normal visual) 'evil-org-mode (kbd "H") 'org-shiftleft)
-  ;; (evil-define-minor-mode-key '(normal visual) 'evil-org-mode (kbd "L") 'org-shiftright)
   (evil-define-key '(normal visual) org-mode-map (kbd "H") 'org-shiftleft)
   (evil-define-key '(normal visual) org-mode-map (kbd "L") 'org-shiftright)
   (require 'evil-org-agenda)
@@ -217,40 +213,52 @@
 ;;   (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map)
 ;;   (bind-key "<backtab>" #'dired-subtree-cycle dired-mode-map))
 
-(use-package yasnippet)
+(use-package yasnippet
+  :config
+  ;; (keymap-unset yas-minor-mode-map "<tab>" t)
+  ;; (keymap-unset yas-minor-mode-map "TAB" t)
+  ;; (keymap-unset yas-minor-mode-map "<shift-tab>" t)
+  ;; (keymap-unset yas-minor-mode-map "<backtab>" t)
+  ;; (evil-define-minor-mode-key 'insert 'yas-minor-mode (kbd "SPC") yas-maybe-expand)
+  (yas-global-mode 1))
 
-(use-package ivy
-  :init
-  (setq ivy-re-builders-alist
-   '((counsel-describe-variable . ivy--regex-ignore-order)
-     (counsel-describe-function . ivy--regex-ignore-order)
-     (counsel-describe-symbol . ivy--regex-ignore-order)
-     (counsel-describe-face . ivy--regex-ignore-order)
-     (counsel-descbinds . ivy--regex-ignore-order)
-     (counsel-M-x . ivy--regex-ignore-order)
-     (counsel-find-file . ivy--regex-fuzzy)
-     (counsel-dired . ivy--regex-plus)
-     (t . ivy--regex-fuzzy)))
+;; (use-package yasnippet-snippets
+;;   :requires yasnippet)
+
+(use-package ido
+  :ensure nil
   :custom
-  (ivy-count-format "")
-  (ivy-height 16)
-  (ivy-use-virtual-buffers t)
-  (ivy-use-selectable-prompt t)
-  ;; (ivy-initial-inputs-alist nil)
+  (ido-enable-flex-matching t)
+  (ido-decorations
+   '("\n" "" "\n" "" "[" "]" " [No match]" " [Matched]" " [Not readable]"
+     " [Too big]" " [Confirm]" "\n" " >>"))
+  (ido-max-window-height 0.5)
+  (ido-max-prospects 25)
+  (ido-enable-last-directory-history nil)
   :config
-  (add-to-list 'ivy-initial-inputs-alist '(counsel-minor . ""))
-  (ivy-mode 1))
+  (keymap-unset ido-common-completion-map "C-s" t)
+  (keymap-unset ido-common-completion-map "C-r" t)
+  (keymap-unset ido-common-completion-map "M-n" t)
+  (keymap-set ido-common-completion-map "C-n" 'ido-next-match)
+  (keymap-set ido-common-completion-map "C-p" 'ido-prev-match)
+  (defun ido-complete-or-match (matchf)
+    (let ((ido-cannot-complete-command matchf))
+      (call-interactively 'ido-complete)))
+  (defun ido-complete-or-next ()
+    (interactive)
+    (ido-complete-or-match 'ido-next-match))
+  (defun ido-complete-or-prev ()
+    (interactive)
+    (ido-complete-or-match 'ido-prev-match))
+  (keymap-set ido-common-completion-map "TAB" 'ido-complete-or-next)
+  (keymap-set ido-common-completion-map "<tab>" 'ido-complete-or-next)
+  (keymap-set ido-common-completion-map "<shift-tab>" 'ido-complete-or-prev)
+  (keymap-set ido-common-completion-map "<backtab>" 'ido-complete-or-prev)
+  (keymap-set ido-common-completion-map "SPC" 'ido-exit-minibuffer)
+  ;; (keymap-set ido-common-completion-map "RET" 'ido-select-text) ;; C-j
+  (ido-everywhere 1)
+  (ido-mode 1))
 
-(use-package ivy-hydra)
-(use-package swiper
-  :config
-  (defvaralias 'swiper-history 'regexp-search-ring)
-  (keymap-global-set "C-s" 'swiper-isearch))
-(use-package counsel
-  :config
-  (counsel-mode 1))
-
-;; TODO fix backends
 (use-package company
   :requires (evil)
   :custom
@@ -259,26 +267,24 @@
   (company-show-quick-access t)
   (company-selection-wrap-around t)
   (company-tooltip-maximum-width 60)
+  (company-selection-default nil)
   (company-backends
    '((company-capf company-clang company-cmake company-keywords :with company-dabbrev-code :separate)))
+  (company-frontends
+   '(company-pseudo-tooltip-unless-just-one-frontend company-preview-frontend company-echo-metadata-frontend))
   (company-global-modes
-   '(sh-mode conf-mode c-mode c++-mode rust-mode emacs-lisp-mode latex-mode
-             python-mode org-mode eglot-managed-mode))
+   '(sh-mode conf-mode c-mode c++-mode rust-mode latex-mode python-mode
+             eglot-managed-mode))
   :config
-  ;; TODO :with yasnippet, abbrev
   (defun company-shell-mode-configure ()
     (setq-local company-backends
                 '((company-capf company-keywords company-files :with company-dabbrev-code :separate))))
   (defun company-org-mode-configure ()
     (setq-local company-backends
                 '((company-capf company-ispell :with company-dabbrev :separate))))
-  (defun company-cmake-mode-configure ()
-    (setq-local company-backends
-                '((company-capf company-keywords company-cmake :with company-dabbrev-code :separate))))
   (add-hook 'sh-mode-hook 'company-shell-mode-configure)
   (add-hook 'conf-mode-hook 'company-shell-mode-configure)
   (add-hook 'org-mode-hook 'company-org-mode-configure)
-  (add-hook 'cmake-mode-hook 'company-cmake-mode-configure)
 
   (defun set-company-faces-to-default-font-family ()
     (dolist (face '(company-tooltip company-tooltip-common
@@ -306,6 +312,13 @@
     (interactive)
     (company-select-next-or-complete-selection -1))
 
+  (defun company-complete-or-self-insert ()
+    "Complete selection if selected, otherwise self insert"
+    (interactive)
+    (if (equal company-selection-changed nil)
+        (call-interactively 'self-insert-command)
+      (company-complete-selection)))
+  
   (keymap-set company-active-map "<backspace>" 'company-backspace)
   (keymap-set company-active-map "C-h" nil)
 
@@ -313,17 +326,18 @@
     'company-select-next-or-complete-selection)
   (evil-define-key 'insert company-mode-map (kbd "C-p")
     'company-select-previous-or-complete-selection)
-  (evil-define-key 'insert company-active-map (kbd "C-n")
-    'company-select-next)
-  (evil-define-key 'insert company-active-map (kbd "C-p")
-    'company-select-previous)
   (evil-define-key 'insert company-active-map (kbd "ESC")
     (lambda () (interactive) (company-abort) (evil-normal-state)))
 
+  (keymap-set company-active-map "TAB" 'company-select-next)
+  (keymap-set company-active-map "<tab>" 'company-select-next)
+  (keymap-set company-active-map "<shift-tab>" 'company-select-previous)
+  (keymap-set company-active-map "<backtab>" 'company-select-previous)
+  (keymap-set company-active-map "SPC" 'company-complete-or-self-insert)
+
   (defun add-to-company-backends (list)
     (setq company-backends `(,(append list (car company-backends)))))
-  (global-company-mode)
-  (company-tng-mode))
+  (global-company-mode))
 
 ;; (use-package company-c-headers
 ;;   :requires company
@@ -363,14 +377,6 @@
   (add-to-list 'eglot-server-programs
                '(c-mode . ("ccls")))
   (add-to-list 'eglot-server-programs
-               '(rust-mode . ("rustup" "run" "stable" "rust-analyzer"))))
+               '(rust-mode . ("rust-analyzer"))))
 
 (use-package which-key)
-
-;; Manually cloned
-;; TODO periodically run "git pull" using midnight (or a cron)
-;; (use-package evil-unimpaired
-;;   :ensure nil
-;;   :load-path "clone/evil-unimpaired/"
-;;   :requires evil
-;;   :config (evil-unimpaired-mode))
