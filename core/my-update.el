@@ -1,5 +1,4 @@
 (provide 'my-update)
-
 (require 'package)
 
 (defvar my-update-file (emacsd ".my-update"))

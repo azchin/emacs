@@ -1,6 +1,8 @@
 (provide 'my-org)
-
 (require 'org)
+(require 'org-tempo)
+(require 'ox-latex)
+
 (setq org-directory "~/org/")
 (setq org-agenda-files `(,(concat org-directory "agenda.org")))
 (setq org-agenda-span 'month)
@@ -25,7 +27,6 @@
                           (org-pretty-entities . nil)))
 (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
 
-(require 'ox-latex)
 ;; (setq org-latex-compiler "pdflatex")
 ;; (setq org-latex-bib-compiler "biber")
 (setq org-latex-pdf-process '("latexmk -pdf -bibtex %f"))

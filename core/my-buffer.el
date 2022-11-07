@@ -1,7 +1,16 @@
 (provide 'my-buffer)
+(require 'my-appearance)
 
-(setq use-short-answers t)
-(setq dired-clean-confirm-killing-deleted-buffers nil)
+(defun split-window-with-margins (&optional window)
+  (interactive)
+  (let* ((window (or window (selected-window)))
+         (margs (not (eq (window-width window)
+                         (window-total-width window)))))
+    (when margs (set-window-margins window 0 0))
+    (let ((res (split-window-sensibly window)))
+      (when margs (get-desired-display-margin)) res)))
+
+(setq split-window-preferred-function 'split-window-with-margins)
 
 ;; (defvar pop-up-frame-regexp-list '("\\*Buffer List\\*"
 ;;                                    "\\*eshell\\*"
@@ -170,8 +179,8 @@ BUFFER may be either a buffer or its name (a string)."
   (interactive)
   (save-some-buffers)
   (when desktop-save-mode
-    (progn (desktop-save-mode 0)
-           (desktop-save (emacsd "cache/default-desktop"))))
+    (desktop-save-mode 0)
+    (desktop-save (emacsd "cache/default-desktop")))
   (unless daemon-mode-snapshot (save-buffers-kill-terminal))
   (mapc 'kill-buffer-mod (buffer-list))
   ;; (mapc 'delete-frame (frame-list))
@@ -211,11 +220,6 @@ BUFFER may be either a buffer or its name (a string)."
     (funcall (or mode 'text-mode))
     (whitespace-mode)
     (auto-insert)))
-;; (let ((new-f (buffer-live-p (get-buffer name)))
-;;       (new-window (display-buffer (get-buffer-create name))))
-;;   (select-window new-window)
-;;   (unless live
-;;     (funcall (or mode 'text-mode)))))
 
 (defun create-new-buffer (name &optional mode)
   "Create a new buffer in the current window"
@@ -263,7 +267,6 @@ BUFFER may be either a buffer or its name (a string)."
 
 (defvar buffer-regexp-name
   "\\*Help\\*\\|\\*Buffer List\\*\\|\\*Messages\\*")
-                                        ; (regexp-opt '("*Help*" "*Buffer List*" "*Messages*")))
 
 (defun kill-regex-buffer-frame (&optional regexp)
   "Kill all buffers and its frames matching the pattern regexp"

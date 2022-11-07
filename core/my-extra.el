@@ -40,11 +40,10 @@
   (let ((number (number-at-point))
         (point (point)))
     (when number
-      (progn
-        (forward-word)
-        (search-backward (number-to-string number))
-        (replace-match (number-to-string (funcall change number increment)))
-        (goto-char point)))))
+      (forward-word)
+      (search-backward (number-to-string number))
+      (replace-match (number-to-string (funcall change number increment)))
+      (goto-char point))))
 
 (defun my-increment-number-at-point (&optional increment)
   "Increment number at point like vim's C-a"
@@ -131,3 +130,4 @@ The app is chosen from your OS's preference."
 (put 'suspend-frame 'disabled t)
 (setq tramp-default-method "ssh")
 (setq doc-view-continuous t)
+(setq use-short-answers t)

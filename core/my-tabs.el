@@ -1,4 +1,5 @@
 (provide 'my-tabs)
+(require 'evil)
 
 (defvar custom-tab-width 4)
 
@@ -32,7 +33,7 @@
 (defvar editor-mode-maps (list prog-mode-map text-mode-map))
 (defun keymap-set-editor-key (key function)
   (dolist (map-it editor-mode-maps)
-    (keymap-set map-it key function)))
+    (evil-define-key 'insert map-it (kbd key) function)))
 
 ;; Overwriting global backspace causes issues when package remaps function (e.g. ivy)
 (keymap-set-editor-key "<backspace>" 'backspace-whitespace-to-tab-stop)

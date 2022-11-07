@@ -1,5 +1,6 @@
 (provide 'my-late)
 
+(require 'org)
 (global-hl-line-mode 1)
 ;; (set-face-attribute hl-line-face nil 
 ;;                     :foreground nil

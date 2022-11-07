@@ -3,9 +3,6 @@
 (setq line-number-mode t)
 (setq column-number-mode t)
 
-;; (defun mode-line-minor-mode-get (mode)
-;;   (list mode `(:eval ,(car (cdr (assoc mode minor-mode-alist))))))
-
 (defun mode-line-minor-mode-get (mode)
   (list mode (car (cdr (assoc mode minor-mode-alist)))))
 
@@ -13,8 +10,7 @@
   "Return a string of `window-width' length.
 Containing LEFT, and RIGHT aligned respectively."
   (let ((available-width
-         (- (+ (window-width) (if (car (window-margins)) (+ (car (window-margins))
-                                                            (cdr (window-margins))) 0))
+         (- (window-total-width)
             (+ (length (format-mode-line left))
                (length (format-mode-line right))))))
     (append left
@@ -23,7 +19,6 @@ Containing LEFT, and RIGHT aligned respectively."
 
 
 (setq mode-line-whitespace " ")
-;; (setq mode-line-whitespace '(:eval whitespace))
 
 (setq-default mode-line-position `(:eval ,(concat "(%l %C)" mode-line-whitespace "%p")))
 (setq-default mode-line-buffer-identification '(:propertize "%b" face (:weight bold)))

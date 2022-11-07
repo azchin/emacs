@@ -5,7 +5,6 @@
   (setq warning-minimum-level :error))
 
 (setq gc-cons-threshold most-positive-fixnum)
-;; Lower threshold back to 8 MiB (default is 800kB)
 (add-hook 'emacs-startup-hook
           (lambda () (setq gc-cons-threshold 800000)))
 
@@ -13,7 +12,6 @@
 (defvar daemon-mode-snapshot (and (boundp 'server-process)
                                   (processp server-process)
                                   (server-running-p)))
-                                  ;; Minimize garbage collection during startup
 
 (cd "~")
 (defvar home-dir default-directory)
@@ -29,64 +27,149 @@
 (eval-when-compile (require 'use-package))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; My package agnostic customizations
-(require 'my-modeline)
-(require 'my-tabs)
-(require 'my-buffer)
-(require 'my-desktop)
-(require 'my-extra)
+;; Comments on package dependency structure:
+;; - Assume the use of evil - key bindings should be set in the
+;;   appropariate package expression rather than aggregated in evil
+;; - Use hooks and commands wherever possible
+;; - :config + setq vs. :custom - setq can be more easily evaluated
+;; - :after vs. :requires - :after allows for sorting by source
+;; - my-leader can be aggregate since it doesn't override bindings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; My customizations
+(use-package my-appearance)
+(use-package my-modeline)
+(use-package my-buffer)
+(use-package my-desktop)
+(use-package my-extra)
+(use-package my-update)
+(use-package my-org)
+(use-package my-parens ;; evil-define-minor-mode-key
+  :after evil)
+(use-package my-tabs ;; evil-shift-width and evil-define-key
+  :after evil)
+(use-package my-leader
+  :after (evil dired org ido my-tabs my-desktop my-buffer))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Built-in packages
-(require 'dired)
-(require 'dired-x)
-(require 'dired-aux)
-(setq dired-free-space nil)
+(use-package dired
+  :after evil-collection
+  :config
+  (require 'dired-x)
+  (require 'dired-aux)
+  (require 'ls-lisp)
+  (setq dired-listing-switches "-Ahl")
+  (setq dired-hide-details-hide-symlink-targets nil)
+  (setq dired-hide-details-hide-information-lines t)
+  (setq dired-clean-confirm-killing-deleted-buffers nil)
+  (setq dired-free-space nil)
+  (setq ls-lisp-dirs-first t)
+  (setq ls-lisp-use-insert-directory-program nil)
+  (setq ls-lisp-use-string-collate nil)
+  (add-hook 'dired-mode-hook 'dired-hide-details-mode)
+  (keymap-set dired-mode-map "<mouse-2>" 'dired-mouse-find-file)
 
-(require 'org)
-(require 'org-tempo)
+  (defun dired-goto-subdir-and-focus ()
+    (interactive)
+    (call-interactively 'dired-maybe-insert-subdir)
+    (recenter 1))
 
-(require 'ido)
-(setq ido-enable-flex-matching t)
-(setq ido-decorations
-      '("\n " "" "\n " "" "[" "]" " [No match]" " [Matched]" " [Not readable]"
-        " [Too big]" " [Confirm]" "\n " " >>"))
-(setq ido-max-window-height 0.5)
-(setq ido-max-prospects 25)
-(setq ido-enable-last-directory-history nil)
-(setq ido-enter-matching-directory 'first)
+  (defun dired-kill-subdir-and-pop ()
+    (interactive)
+    (dired-kill-subdir)
+    (set-mark-command 1)
+    (recenter))
 
-(keymap-unset ido-common-completion-map "C-s" t)
-(keymap-unset ido-common-completion-map "C-r" t)
-(keymap-unset ido-common-completion-map "M-n" t)
-(keymap-set ido-common-completion-map "C-n" 'ido-next-match)
-(keymap-set ido-common-completion-map "C-p" 'ido-prev-match)
+  (defun dired-kill-subdir-and-up ()
+    (interactive)
+    (set-mark-command nil)
+    (condition-case nil
+        (progn (dired-tree-up 1)
+               (exchange-point-and-mark)
+               (dired-kill-subdir)
+               (set-mark-command 1)
+               (recenter 0))
+      (error (deactivate-mark))))
 
-(defun ido-complete-or-match (matchf)
-  (let ((ido-cannot-complete-command matchf))
-    (call-interactively 'ido-complete)))
-(defun ido-complete-or-next ()
-  (interactive)
-  (ido-complete-or-match 'ido-next-match))
-(defun ido-complete-or-prev ()
-  (interactive)
-  (ido-complete-or-match 'ido-prev-match))
-(defun ido-select-text-or-complete ()
-  (interactive)
-  (if (and ido-current-directory (equal "" ido-text))
-      (call-interactively 'ido-select-text)
-    (call-interactively 'ido-exit-minibuffer)))
+  (defun dired-kill-subdir-recurse (level)
+    (interactive)
+    (condition-case nil
+        (progn (dired-tree-down) (dired-kill-subdir-recurse (+ level 1)))
+      (error (condition-case nil
+                 (unless (eq level 0)
+                   (progn (dired-kill-subdir-and-up)
+                          (dired-kill-subdir-recurse (- level 1))))
+               (error nil)))))
 
-(keymap-set ido-common-completion-map "TAB" 'ido-complete-or-next)
-(keymap-set ido-common-completion-map "<tab>" 'ido-complete-or-next)
-(keymap-set ido-common-completion-map "<shift-tab>" 'ido-complete-or-prev)
-(keymap-set ido-common-completion-map "<backtab>" 'ido-complete-or-prev)
-(keymap-set ido-common-completion-map "SPC" 'ido-exit-minibuffer)
-(keymap-set ido-common-completion-map "RET" 'ido-select-text-or-complete)
+  (defun dired-kill-children-subdir ()
+    (interactive)
+    (dired-kill-subdir-recurse 0)
+    (dired-kill-subdir-and-up))
 
-;; https://stackoverflow.com/questions/905338/can-i-use-ido-completing-read-instead-of-completing-read-everywhere
-(defvar ido-enable-replace-completing-read nil
-  "If t, use ido-completing-read instead of completing-read if possible.
+  (evil-define-key 'normal dired-mode-map "f" 'find-file)
+  (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory)
+  (evil-define-key 'normal dired-mode-map "l" 'dired-find-file)
+  (evil-define-key 'normal dired-mode-map (kbd "TAB") 'dired-goto-subdir-and-focus)
+  (evil-define-key 'normal dired-mode-map (kbd "<backtab>") 'dired-kill-children-subdir)
+  (evil-define-key 'normal dired-mode-map (kbd "<shift-tab>") 'dired-kill-children-subdir)
+  (evil-define-key 'normal dired-mode-map (kbd "gu") 'dired-kill-children-subdir)
+  (evil-define-key 'normal dired-mode-map (kbd "gh") 'dired-tree-up)
+  (evil-define-key 'normal dired-mode-map (kbd "gj") 'dired-next-subdir)
+  (evil-define-key 'normal dired-mode-map (kbd "gk") 'dired-prev-subdir)
+  (evil-define-key 'normal dired-mode-map (kbd "gl") 'dired-goto-subdir-and-focus)
+  (evil-define-key 'normal dired-mode-map [mouse-2] 'dired-mouse-find-file))
+
+(use-package icomplete
+  :disabled
+  :config
+  ;; TODO use current text for dired rename
+  (fido-vertical-mode 1))
+
+(use-package ido
+  :config
+  (setq ido-enable-flex-matching t)
+  (setq ido-decorations
+        '("\n " "" "\n " "" "[" "]" " [No match]" " [Matched]" " [Not readable]"
+          " [Too big]" " [Confirm]" "\n " " >>"))
+  (setq ido-max-window-height 0.5)
+  (setq ido-max-prospects 25)
+  (setq ido-enable-last-directory-history nil)
+  (setq ido-enter-matching-directory 'first)
+  (setq ido-create-new-buffer 'always)
+
+  (keymap-unset ido-common-completion-map "C-s" t)
+  (keymap-unset ido-common-completion-map "C-r" t)
+  (keymap-unset ido-common-completion-map "M-n" t)
+  (keymap-set ido-common-completion-map "C-n" 'ido-next-match)
+  (keymap-set ido-common-completion-map "C-p" 'ido-prev-match)
+
+  (defun ido-complete-or-match (matchf)
+    (let ((ido-cannot-complete-command matchf))
+      (call-interactively 'ido-complete)))
+  (defun ido-complete-or-next ()
+    (interactive)
+    (ido-complete-or-match 'ido-next-match))
+  (defun ido-complete-or-prev ()
+    (interactive)
+    (ido-complete-or-match 'ido-prev-match))
+  (defun ido-select-text-or-complete ()
+    (interactive)
+    (if (and ido-current-directory (equal "" ido-text))
+        (call-interactively 'ido-select-text)
+      (call-interactively 'ido-exit-minibuffer)))
+
+  (keymap-set ido-common-completion-map "TAB" 'ido-complete-or-next)
+  (keymap-set ido-common-completion-map "<tab>" 'ido-complete-or-next)
+  (keymap-set ido-common-completion-map "<shift-tab>" 'ido-complete-or-prev)
+  (keymap-set ido-common-completion-map "<backtab>" 'ido-complete-or-prev)
+  (keymap-set ido-common-completion-map "SPC" 'ido-exit-minibuffer)
+  (keymap-set ido-common-completion-map "RET" 'ido-select-text-or-complete)
+
+  ;; https://stackoverflow.com/questions/905338/can-i-use-ido-completing-read-instead-of-completing-read-everywhere
+  (defvar ido-enable-replace-completing-read nil
+    "If t, use ido-completing-read instead of completing-read if possible.
 
 Set it to nil using let in around-advice for functions where the
 original completing-read is required.  For example, if a function
@@ -96,70 +179,83 @@ advice like this:
 (defadvice foo (around original-completing-read-only activate)
   (let (ido-enable-replace-completing-read) ad-do-it))")
 
-;; Replace completing-read wherever possible, unless directed otherwise
-(defadvice completing-read
-    (around use-ido-when-possible activate)
-  (if (or (not ido-enable-replace-completing-read) ; Manual override disable ido
-          (boundp 'ido-cur-list)) ; Avoid infinite loop from ido calling this
-      ad-do-it
-    (let ((allcomp (all-completions "" collection predicate)))
-      (if allcomp
-          (setq ad-return-value
-                (ido-completing-read prompt
-                                     allcomp
-                                     nil require-match initial-input hist def))
-        ad-do-it))))
+  ;; Replace completing-read wherever possible, unless directed otherwise
+  (defadvice completing-read
+      (around use-ido-when-possible activate)
+    (if (or (not ido-enable-replace-completing-read) ; Manual override disable ido
+            (boundp 'ido-cur-list)) ; Avoid infinite loop from ido calling this
+        ad-do-it
+      (let ((allcomp (all-completions "" collection predicate)))
+        (if allcomp
+            (setq ad-return-value
+                  (ido-completing-read prompt
+                                       allcomp
+                                       nil require-match initial-input hist def))
+          ad-do-it))))
 
-(defmacro ido-replace-completing-read-gen (fname)
-  `(defun ,(intern (concat "ido-" (symbol-name fname))) ()
-     (interactive)
-     (let ((ido-enable-replace-completing-read t))
-       (call-interactively (quote ,fname)))))
+  (defmacro ido-replace-completing-read-gen (fname)
+    `(defun ,(intern (concat "ido-" (symbol-name fname))) ()
+       (interactive)
+       (let ((ido-enable-replace-completing-read t))
+         (call-interactively (quote ,fname)))))
 
-(ido-everywhere 1)
-(ido-mode 1)
+  (ido-everywhere 1)
+  (ido-mode 1))
 
-(require 'midnight)
-(setq clean-buffer-list-delay-special 0)
-(setq clean-buffer-list-delay-general 1)
-;; (setq clean-buffer-list-timer (run-at-time t 3600 'clean-buffer-list))
-(setq clean-buffer-list-kill-regexps '("^.*$"))
-(setq clean-buffer-list-kill-never-buffer-names
-      '("*scratch*" "*Messages*" "*cmd*"))
-(setq clean-buffer-list-kill-never-regexps
-      '("^\\ .*$" "\\*.*scratch\\*" "\\` \\*Minibuf-.*\\*\\'"
-        "^\\*EMMS Playlist\\*.*$" "^[A-Za-z].*[A-Za-z]$" "^\\*.*eshell\\*"
-        "^\\*Article.*\\*$" "^\\*Summary.*\\*$" "^\\*eww\\*$" "^\\*Group\\*$"
-        "^[A-Za-z].*[A-Za-z]<*[A-Za-z]>$"))
-(run-at-time t 1800 'clean-buffer-list)
+(use-package midnight
+  :config
+  (setq clean-buffer-list-delay-special 0)
+  (setq clean-buffer-list-delay-general 1)
+  ;; (setq clean-buffer-list-timer (run-at-time t 3600 'clean-buffer-list))
+  (setq clean-buffer-list-kill-regexps '("^.*$"))
+  (setq clean-buffer-list-kill-never-buffer-names
+        '("*scratch*" "*Messages*" "*cmd*"))
+  (setq clean-buffer-list-kill-never-regexps
+        '("^\\ .*$" "\\*.*scratch\\*" "\\` \\*Minibuf-.*\\*\\'"
+          "^\\*EMMS Playlist\\*.*$" "^[A-Za-z].*[A-Za-z]$" "^\\*.*eshell\\*"
+          "^\\*Article.*\\*$" "^\\*Summary.*\\*$" "^\\*eww\\*$" "^\\*Group\\*$"
+          "^[A-Za-z].*[A-Za-z]<*[A-Za-z]>$"))
+  (run-at-time t 1800 'clean-buffer-list))
 
 ;; Soft dependency on yasnippets and company
-(require 'eglot)
-(add-hook 'rust-mode-hook 'eglot-ensure)
-;; (setq gc-cons-threshold 1600000)
-(setq read-process-output-max (* 1024 32))
-(add-to-list 'eglot-server-programs
-             '(c-mode . ("ccls")))
-(add-to-list 'eglot-server-programs
-             '(rust-mode . ("rust-analyzer")))
+(use-package eglot
+  :hook
+  (rust-mode . eglot-ensure)
+  :config
+  (setq read-process-output-max (* 1024 32))
+  (add-to-list 'eglot-server-programs
+               '(c-mode . ("ccls")))
+  (add-to-list 'eglot-server-programs
+               '(rust-mode . ("rust-analyzer"))))
 
-(require 'gnus)
-(setq gnus-select-method '(nnnil))
-(add-hook 'kill-emacs-query-functions
-          (lambda () (when (gnus-alive-p) (gnus-group-exit)) t))
+(use-package gnus
+  :commands gnus
+  :config
+  (setq gnus-select-method '(nnnil))
+  (add-hook 'kill-emacs-query-functions
+            (lambda () (when (gnus-alive-p) (gnus-group-exit)) t)))
 
-(require 'eww)
-(setq browse-url-generic-program "vimb")
-(defun buffer-local-eww-browser-default ()
-  (make-local-variable 'browse-url-browser-function)
-  (setq browse-url-browser-function 'eww-browse-url))
+(use-package eww
+  :config
+  (setq browse-url-generic-program "vimb")
 
-(defun buffer-local-generic-browser-default ()
-  (make-local-variable 'browse-url-browser-function)
-  (setq browse-url-browser-function 'browse-url-generic))
+  (defun buffer-local-eww-browser-default ()
+    (make-local-variable 'browse-url-browser-function)
+    (setq browse-url-browser-function 'eww-browse-url))
 
-(add-hook 'gnus-mode-hook 'buffer-local-generic-browser-default)
-(add-hook 'eww-after-render-hook 'eww-readable)
+  (defun buffer-local-generic-browser-default ()
+    (make-local-variable 'browse-url-browser-function)
+    (setq browse-url-browser-function 'browse-url-generic))
+
+  (add-hook 'gnus-mode-hook 'buffer-local-generic-browser-default)
+  (add-hook 'eww-after-render-hook 'eww-readable))
+
+(use-package flymake
+  :after evil
+  :commands (flmake-mode flymake-start)
+  :config
+  (evil-define-minor-mode-key 'normal 'flymake-mode (kbd "[ c") 'flymake-goto-prev-error)
+  (evil-define-minor-mode-key 'normal 'flymake-mode (kbd "] c") 'flymake-goto-next-error))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MELPA packages
@@ -176,36 +272,44 @@ advice like this:
 
 (use-package hl-todo
   :ensure t
-  :custom
-  (hl-todo-wrap-movement t)
+  :after evil
   :hook
-  (prog-mode . hl-todo-mode))
+  (prog-mode . hl-todo-mode)
+  :config
+  (setq hl-todo-wrap-movement t)
+  (evil-define-minor-mode-key 'normal 'hl-todo-mode (kbd "[ d") 'hl-todo-previous)
+  (evil-define-minor-mode-key 'normal 'hl-todo-mode (kbd "] d") 'hl-todo-next))
 
 (use-package markdown-mode
-  :ensure t)
+  :ensure t
+  :mode "\\.md\\'")
 
 (use-package cmake-mode
-  :ensure t)
+  :ensure t
+  :mode
+  "\\.cmake\\'"
+  "CMakeLists\\.txt\\'")
 
 (use-package rust-mode
-  :ensure t)
+  :ensure t
+  :mode
+  "\\.rs\\'")
 
 (use-package undo-fu
   :ensure t
-  :custom
-  (undo-fu-ignore-keyboard-quit t))
+  :config
+  (setq undo-fu-ignore-keyboard-quit t))
 
 (use-package undo-fu-session
   :ensure t
-  :requires undo-fu
-  :custom
-  (undo-fu-session-directory (emacsd "cache/backups"))
+  :after undo-fu
   :config
+  (setq undo-fu-session-directory (emacsd "cache/backups"))
   (global-undo-fu-session-mode))
 
 (use-package evil
   :ensure t
-  :requires undo-fu
+  :after undo-fu
   :init
   (setq evil-want-keybinding nil
         evil-want-C-u-scroll t
@@ -227,32 +331,36 @@ advice like this:
   (evil-set-initial-state 'eshell-mode 'insert)
   (evil-set-initial-state 'vc-annotate-mode 'insert)
   (evil-set-initial-state 'gnus-mode 'emacs)
+  (evil-define-key 'insert 'global (kbd "C-d") 'delete-char)
+  (evil-define-key 'insert 'global (kbd "C-a") 'beginning-of-line)
+  (evil-define-key 'insert 'global (kbd "C-e") 'end-of-line)
+  (evil-define-key '(normal insert) 'global (kbd "C-S-v") 'yank)
+  (evil-define-key 'visual 'global (kbd "C-S-c") 'evil-yank)
+  (evil-define-key 'insert 'global (kbd "C-S-c") 'copy-region-as-kill)
   (evil-mode 1))
 
 (use-package evil-surround
   :ensure t
-  :requires evil
+  :after evil
   :config
   (global-evil-surround-mode 1))
 
 (use-package evil-commentary
   :ensure t
-  :requires evil
+  :after evil
   :config
   (evil-commentary-mode))
 
 (use-package evil-quickscope
   :ensure t
-  :requires evil
+  :after evil
   :config
   (global-evil-quickscope-mode 1))
 
 (use-package evil-collection
   :ensure t
-  :requires evil
+  :after evil
   :config
-  ;; (delete 'gnus evil-collection-mode-list)
-  ;; (delete 'newsticker evil-collection-mode-list)
   (evil-collection-init
    '(apropos auto-package-update bookmark calc calendar cmake-mode compile debug
              dictionary diff-mode dired dired-sidebar doc-view ediff eglot
@@ -260,64 +368,17 @@ advice like this:
              image-dired imenu info ivy js2-mode log-edit log-view kotlin-mode
              org org-present org-roam outline-mode (pdf pdf-view) popup python
              replace simple typescript-mode vc-annotate vc-dir vc-git vdiff view
-             which-key xref yaml-mode))
-
-  (evil-define-key 'normal dired-mode-map "f" 'find-file)
-  (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory)
-  (evil-define-key 'normal dired-mode-map "l" 'dired-find-file)
-  (keymap-set dired-mode-map "<mouse-2>" 'dired-mouse-find-file)
-  (defun dired-goto-subdir-and-focus ()
-    (interactive)
-    (call-interactively 'dired-maybe-insert-subdir)
-    (recenter 1))
-  (defun dired-kill-subdir-and-pop ()
-    (interactive)
-    (dired-kill-subdir)
-    (set-mark-command 1)
-    (recenter))
-  (defun dired-kill-subdir-and-up ()
-    (interactive)
-    (set-mark-command nil)
-    (condition-case nil
-        (progn (dired-tree-up 1)
-               (exchange-point-and-mark)
-               (dired-kill-subdir)
-               (set-mark-command 1)
-               (recenter 0))
-      (error (deactivate-mark))))
-  (defun dired-kill-subdir-recurse (level)
-    (interactive)
-    (condition-case nil
-        (progn (dired-tree-down) (dired-kill-subdir-recurse (+ level 1)))
-      (error (condition-case nil
-                 (unless (eq level 0)
-                   (progn (dired-kill-subdir-and-up)
-                          (dired-kill-subdir-recurse (- level 1))))
-               (error nil)))))
-  (defun dired-kill-children-subdir ()
-    (interactive)
-    (dired-kill-subdir-recurse 0)
-    (dired-kill-subdir-and-up))
-  (evil-define-key 'normal dired-mode-map (kbd "TAB") 'dired-goto-subdir-and-focus)
-  (evil-define-key 'normal dired-mode-map (kbd "<backtab>") 'dired-kill-children-subdir)
-  (evil-define-key 'normal dired-mode-map (kbd "<shift-tab>") 'dired-kill-children-subdir)
-  (evil-define-key 'normal dired-mode-map (kbd "gu") 'dired-kill-children-subdir)
-  (evil-define-key 'normal dired-mode-map (kbd "gh") 'dired-tree-up)
-  (evil-define-key 'normal dired-mode-map (kbd "gj") 'dired-next-subdir)
-  (evil-define-key 'normal dired-mode-map (kbd "gk") 'dired-prev-subdir)
-  (evil-define-key 'normal dired-mode-map (kbd "gl") 'dired-goto-subdir-and-focus)
-  (evil-define-key 'normal dired-mode-map [mouse-2] 'dired-mouse-find-file))
+             which-key xref yaml-mode)))
 
 (use-package evil-org
   :ensure t
-  :requires (org evil) 
-  :custom
-  (evil-org-special-o/O '(table-row item))
-  (evil-org-use-additional-insert nil)
+  :after (org evil) 
   :hook
   (org-mode . evil-org-mode)
   (evil-org-mode . evil-org-set-key-theme)
   :config
+  (setq evil-org-special-o/O '(table-row item))
+  (setq evil-org-use-additional-insert nil)
   (evil-define-key '(normal visual) org-mode-map (kbd "H") 'org-shiftleft)
   (evil-define-key '(normal visual) org-mode-map (kbd "L") 'org-shiftright)
   (require 'evil-org-agenda)
@@ -325,38 +386,39 @@ advice like this:
 
 (use-package yasnippet
   :ensure t
+  :hook
+  (eglot-managed-mode . yas-minor-mode)
   :config
-  ;; (keymap-unset yas-minor-mode-map "<tab>" t)
-  ;; (keymap-unset yas-minor-mode-map "TAB" t)
-  ;; (keymap-unset yas-minor-mode-map "<shift-tab>" t)
-  ;; (keymap-unset yas-minor-mode-map "<backtab>" t)
-  ;; (evil-define-minor-mode-key 'insert 'yas-minor-mode (kbd "SPC") yas-maybe-expand)
-  (yas-global-mode 1))
+  (yas-reload-all))
 
-;; (use-package yasnippet-snippets
-;;   :requires yasnippet)
+(use-package yasnippet-snippets
+  :disabled
+  :after yasnippet)
 
 (use-package company
   :ensure t
-  :requires evil
-  :custom
-  (company-idle-delay 0.0)
-  (company-minimum-prefix-length 2)
-  (company-show-quick-access t)
-  (company-selection-wrap-around t)
-  (company-tooltip-maximum-width 60)
-  (company-selection-default nil)
-  (company-backends
-   '((company-capf company-clang company-cmake company-keywords :with company-dabbrev-code :separate)))
-  (company-frontends
-   '(company-pseudo-tooltip-unless-just-one-frontend company-preview-frontend company-echo-metadata-frontend))
-  (company-global-modes
-   '(sh-mode conf-mode c-mode c++-mode rust-mode latex-mode python-mode
-             eglot-managed-mode))
+  :after evil
+  :hook
+  (sh-mode conf-mode c-mode c++-mode rust-mode latex-mode python-mode
+           eglot-managed-mode)
   :config
+  (setq company-idle-delay 0.0)
+  (setq company-minimum-prefix-length 2)
+  (setq company-show-quick-access t)
+  (setq company-selection-wrap-around t)
+  (setq company-tooltip-maximum-width 60)
+  (setq company-selection-default nil)
+  (setq company-backends
+   '((company-capf company-clang company-cmake company-keywords
+                   :with company-dabbrev-code :separate)))
+  (setq company-frontends
+   '(company-pseudo-tooltip-unless-just-one-frontend
+     company-preview-frontend-if-just-one-frontend
+     company-echo-metadata-frontend))
   (defun company-shell-mode-configure ()
     (setq-local company-backends
-                '((company-capf company-keywords company-files :with company-dabbrev-code :separate))))
+                '((company-capf company-keywords company-files
+                                :with company-dabbrev-code :separate))))
   (defun company-org-mode-configure ()
     (setq-local company-backends
                 '((company-capf company-ispell :with company-dabbrev :separate))))
@@ -368,8 +430,7 @@ advice like this:
     (dolist (face '(company-tooltip company-tooltip-common
                                     company-tooltip-search
                                     company-tooltip-search-selection))
-      (set-face-attribute face nil
-                          :family default-font-family)))
+      (set-face-attribute face nil :family default-font-family)))
   (add-hook 'company-mode-hook 'set-company-faces-to-default-font-family)
   
   (defun company-backspace ()
@@ -414,27 +475,11 @@ advice like this:
   (keymap-set company-active-map "SPC" 'company-complete-or-self-insert)
 
   (defun add-to-company-backends (list)
-    (setq company-backends `(,(append list (car company-backends)))))
-  (global-company-mode))
+    (setq company-backends `(,(append list (car company-backends))))))
 
 (use-package which-key
-  :ensure t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; My package-dependent customizations
-(use-package my-appearance
-  :requires org)
-
-(use-package my-org
-  :requires org)
-
-(use-package my-parens
-  :requires evil)
-
-(use-package my-leader
-  :requires (evil dired org ido my-tabs my-desktop my-buffer))
-
-(require 'my-update) ;; run after packages are loaded
+  :ensure t
+  :commands which-key-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Code graveyard
@@ -467,7 +512,7 @@ advice like this:
 ;; ; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
 ;; (use-package tex
 ;;   :ensure auctex
-;;   :requires (evil pdf-tools)
+;;   :after (evil pdf-tools)
 ;;   :init
 ;;   (setq TeX-source-correlate-mode t)
 ;;   (setq TeX-source-correlate-start-server t)
@@ -487,17 +532,17 @@ advice like this:
 ;;   )
 
 ;; (use-package company-c-headers
-;;   :requires company
+;;   :after company
 ;;   :config
 ;;   (add-to-company-backends '(company-c-headers)))
 
 ;; (use-package company-shell
-;;   :requires company
+;;   :after company
 ;;   :custom
 ;;   (add-to-company-backends '(company-shell company-shell-env)))
 
 ;; (use-package company-auctex
-;;   :requires company
+;;   :after company
 ;;   :config
 ;;   (add-to-company-backends '(company-auctex))
 ;;   (company-auctex-init))
@@ -513,21 +558,3 @@ advice like this:
 ;;   (setq web-mode-content-types-alist '(("jsx" . "\\.jsx")))
 ;;   (setq web-mode-content-types-alist '(("jsx" . "\\.tsx"))))
 
-
-;; (require 'my-appearance) ;; load (setq, defun, add-hook, defadvice)
-;; (require 'my-modeline) ;; flymake, vc, flyspell
-;; (require 'my-backup) ;; load (setq)
-;; (require 'my-buffer) ;; (setq alist, defun interactive)
-;; (require 'my-desktop) ;; load before leader.el, need symbols
-;; leader needs evil, buffer.el, dired, desktop, gnus (command), external.el,
-;;      org, flymake, hl-todo (can remap to hl-todo's use-package)
-
-;; (require 'my-packages)
-
-;; (require 'my-tabs) ;; has some mode-hooks, could load early and set in pkg. May need evil
-;; (require 'my-parens) ;; currently needs evil, rewrite to use tabs.el' helper f for global overwrite
-;; (require 'my-commands) ;; TODO inc/dec number
-;; (require 'my-external) ;; literally just xdg-open wrapper
-;; (require 'my-autoinsert) ;; has js2-mode hook, move out
-;; (require 'my-gnus) ;; some variables
-;; (require 'my-eww) ;; some variables

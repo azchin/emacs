@@ -1,9 +1,10 @@
 (provide 'my-appearance)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; UI
 (menu-bar-mode 1)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
-;; (scroll-bar-mode)
 (setq scroll-bar-adjust-thumb-portion nil)
 (blink-cursor-mode 0)
 (setq frame-resize-pixelwise t)
@@ -17,6 +18,8 @@
 ;; (pixel-scroll-precision-mode)
 ;; (setq pixel-scroll-precision-large-scroll-height 64.0)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (setq lazy-highlight-buffer-max-at-a-time nil)
 (setq lazy-highlight-initial-delay 0)
 (setq lazy-highlight-interval 0)
@@ -27,6 +30,12 @@
 (setq ring-bell-function 'ignore)
 (setq text-scale-mode-step 1.1)
 
+(keymap-global-set "C-+" 'text-scale-increase)
+(keymap-global-set "C-_" 'text-scale-decrease)
+(keymap-global-set "C-)" (lambda () (interactive) (text-scale-set 0)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Tab bar
 (tab-bar-mode)
 (setq tab-bar-show t)
 (setq tab-bar-close-button-show nil)
@@ -42,17 +51,22 @@
 (add-hook 'prog-mode-hook 'tab-bar-history-mode)
 ;; (setq tab-bar-button-relief 32)
 
-;; (let ((win '(128 40 256 192)))
-;;     (add-to-list 'initial-frame-alist `(width . ,(nth 0 win)))
-;;     (add-to-list 'initial-frame-alist `(height . ,(nth 1 win)))
-;;     (add-to-list 'initial-frame-alist `(left . ,(nth 2 win)))
-;;     (add-to-list 'initial-frame-alist `(top . ,(nth 3 win)))
-;;     (add-to-list 'default-frame-alist `(width . ,(nth 0 win)))
-;;     (add-to-list 'default-frame-alist `(height . ,(nth 1 win)))
-;;     (add-to-list 'default-frame-alist `(left . ,(nth 2 win)))
-;;     (add-to-list 'default-frame-alist `(top . ,(nth 3 win))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Window dimensions
+(let ((win '(100 40 256 192)))
+    (add-to-list 'initial-frame-alist `(width . ,(nth 0 win)))
+    (add-to-list 'initial-frame-alist `(height . ,(nth 1 win)))
+    ;; (add-to-list 'initial-frame-alist `(left . ,(nth 2 win)))
+    ;; (add-to-list 'initial-frame-alist `(top . ,(nth 3 win)))
+    (add-to-list 'default-frame-alist `(width . ,(nth 0 win)))
+    (add-to-list 'default-frame-alist `(height . ,(nth 1 win)))
+    ;; (add-to-list 'default-frame-alist `(left . ,(nth 2 win)))
+    ;; (add-to-list 'default-frame-alist `(top . ,(nth 3 win)))
+    )
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Fonts
 (defvar default-font-family "DejaVu Sans Mono"
   "Default face font family")
 ;; b4 font bug, we had 113 and 120, after 72, 80
@@ -65,6 +79,8 @@
 (add-to-list 'default-frame-alist `(font . ,(concat default-font-family "-" (number-to-string (round default-font-height 10)))))
 (add-hook 'org-mode-hook (lambda () (buffer-face-set :family markup-font-family :height markup-font-height)))
 ;; (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-10"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (set-frame-parameter (selected-frame) 'alpha '(95 . 86))
 (defun make-frame-transparent() (interactive) (set-frame-parameter (selected-frame) 'alpha 80))
@@ -90,6 +106,16 @@
 (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
 (setq echo-keystrokes 0.2)
 
+;; Column indicator
+(setq-default fill-column 80)
+(add-hook 'c-mode-hook 'display-fill-column-indicator-mode)
+(add-hook 'c++-mode-hook 'display-fill-column-indicator-mode)
+(add-hook 'rust-mode-hook 'display-fill-column-indicator-mode)
+
+;; (global-prettify-symbols-mode 1)
+(setq font-latex-fontify-script nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Line numbers
 (global-display-line-numbers-mode)
 (setq display-line-numbers-width-start 3)
@@ -108,35 +134,16 @@
 (add-hook 'org-mode-hook 'absolute-lines)
 ;; (add-hook 'minibuffer-inactive-mode-hook 'disable-lines)
 
-;; Column indicator
-(setq-default fill-column 80)
-(add-hook 'c-mode-hook 'display-fill-column-indicator-mode)
-(add-hook 'c++-mode-hook 'display-fill-column-indicator-mode)
-(add-hook 'rust-mode-hook 'display-fill-column-indicator-mode)
-
-;; (setq dired-listing-switches "-Ahlo --group-directories-first --time-style='+%b %d %R'")
-;; (setq dired-listing-switches "-Ahlo --group-directories-first --time-style=iso")
-(require 'ls-lisp)
-(setq ls-lisp-dirs-first t)
-(setq ls-lisp-use-insert-directory-program nil)
-(setq ls-lisp-use-string-collate nil)
-(setq dired-listing-switches "-Ahl")
-(setq dired-hide-details-hide-symlink-targets nil)
-(setq dired-hide-details-hide-information-lines t)
-(add-hook 'dired-mode-hook 'dired-hide-details-mode)
-
-;; (global-prettify-symbols-mode 1)
-(setq font-latex-fontify-script nil)
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Margins
 (setq desired-display-width 100)
 
-(setq display-margin-mode-list '(org-mode))
+(defvar display-margin-mode-list '(org-mode))
 
 (defun calculate-display-margin (width)
   (let ((selected-width (window-total-width)))
     (if (> selected-width width)
-        (round (/ (- selected-width width) 2))
-      0)))
+        (round (/ (- selected-width width) 2)) 0)))
 
 (defun get-desired-display-margin ()
   (let ((margin (calculate-display-margin desired-display-width)))
@@ -155,6 +162,8 @@
 (defvar margin-window-vsplit-commands
   '(evil-window-vsplit
     evil-window-vsplit-leader
+    split-window-right
+    split-window-with-margins
     evil-file-vsplit
     evil-buffer-vsplit))
 
@@ -166,10 +175,14 @@
   (when (member this-command margin-window-vsplit-commands)
     (setup-display-margin)))
 
-(add-hook 'text-mode-hook 'setup-display-margin)
+(dolist (minor-mode display-margin-mode-list)
+  (add-hook (intern (concat (symbol-name minor-mode) "-hook"))
+            'setup-display-margin))
 (add-hook 'pre-command-hook 'pre-split-margins)
 (add-hook 'post-command-hook 'post-split-margins)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Theme
 (defadvice load-theme (before theme-dont-propagate activate)
   (mapc 'disable-theme custom-enabled-themes))
 
@@ -181,7 +194,6 @@
     (set-face-attribute face nil
                         :family default-font-family)))
 
-;; Theme
 (setq modus-themes-intense-mouseovers t
       modus-themes-bold-constructs t
       modus-themes-italic-constructs t
@@ -189,3 +201,7 @@
       modus-themes-tabs-accented nil
       modus-themes-mixed-fonts t)
 (load-theme 'modus-operandi) 
+;; (use-package dracula-theme
+;;   :ensure t
+;;   :config
+;;   (load-theme 'dracula t))
