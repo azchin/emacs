@@ -131,8 +131,8 @@
   :config
   (setq ido-enable-flex-matching t)
   (setq ido-decorations
-        '("\n " "" "\n " "" "[" "]" " [No match]" " [Matched]" " [Not readable]"
-          " [Too big]" " [Confirm]" "\n " " >>"))
+        '("\n> " "" "\n  " "" "[" "]" " [No match]" " [Matched]" " [Not readable]"
+          " [Too big]" " [Confirm]" "\n>[" "]"))
   (setq ido-max-window-height 0.5)
   (setq ido-max-prospects 25)
   (setq ido-enable-last-directory-history nil)
@@ -252,7 +252,7 @@ advice like this:
 
 (use-package flymake
   :after evil
-  :commands (flmake-mode flymake-start)
+  :commands (flymake-mode flymake-start)
   :config
   (evil-define-minor-mode-key 'normal 'flymake-mode (kbd "[ c") 'flymake-goto-prev-error)
   (evil-define-minor-mode-key 'normal 'flymake-mode (kbd "] c") 'flymake-goto-next-error))
@@ -412,8 +412,7 @@ advice like this:
    '((company-capf company-clang company-cmake company-keywords
                    :with company-dabbrev-code :separate)))
   (setq company-frontends
-   '(company-pseudo-tooltip-unless-just-one-frontend
-     company-preview-frontend-if-just-one-frontend
+   '(company-pseudo-tooltip-frontend
      company-echo-metadata-frontend))
   (defun company-shell-mode-configure ()
     (setq-local company-backends
@@ -458,9 +457,6 @@ advice like this:
         (call-interactively 'self-insert-command)
       (company-complete-selection)))
   
-  (keymap-set company-active-map "<backspace>" 'company-backspace)
-  (keymap-set company-active-map "C-h" nil)
-
   (evil-define-key 'insert company-mode-map (kbd "C-n")
     'company-select-next-or-complete-selection)
   (evil-define-key 'insert company-mode-map (kbd "C-p")
@@ -468,6 +464,9 @@ advice like this:
   (evil-define-key 'insert company-active-map (kbd "ESC")
     (lambda () (interactive) (company-abort) (evil-normal-state)))
 
+  ;;TODO eglot overrides some bindings, look into what's needed
+  (keymap-set company-active-map "<backspace>" 'company-backspace)
+  (keymap-set company-active-map "C-h" nil)
   (keymap-set company-active-map "TAB" 'company-select-next)
   (keymap-set company-active-map "<tab>" 'company-select-next)
   (keymap-set company-active-map "<shift-tab>" 'company-select-previous)
@@ -480,6 +479,45 @@ advice like this:
 (use-package which-key
   :ensure t
   :commands which-key-mode)
+
+(use-package ivy
+  :ensure t
+  :disabled
+  :init
+  (setq ivy-re-builders-alist
+   '((counsel-describe-variable . ivy--regex-ignore-order)
+     (counsel-describe-function . ivy--regex-ignore-order)
+     (counsel-describe-symbol . ivy--regex-ignore-order)
+     (counsel-describe-face . ivy--regex-ignore-order)
+     (counsel-descbinds . ivy--regex-ignore-order)
+     (counsel-M-x . ivy--regex-ignore-order)
+     (counsel-find-file . ivy--regex-fuzzy)
+     (counsel-dired . ivy--regex-plus)
+     (t . ivy--regex-fuzzy)))
+  :config
+  (setq ivy-count-format "")
+  (setq ivy-height 16)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-use-selectable-prompt t)
+  (add-to-list 'ivy-initial-inputs-alist '(counsel-minor . ""))
+  (ivy-mode 1))
+
+(use-package ivy-hydra
+  :ensure t
+  :disabled)
+
+(use-package swiper
+  :ensure t
+  :disabled
+  :config
+  (defvaralias 'swiper-history 'regexp-search-ring)
+  (keymap-global-set "C-s" 'swiper-isearch))
+
+(use-package counsel
+  :ensure t
+  :disabled
+  :config
+  (counsel-mode 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Code graveyard

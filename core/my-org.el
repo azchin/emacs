@@ -40,3 +40,7 @@
       '(("en_CA" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
 
 (add-hook 'org-mode-hook 'auto-fill-mode)
+
+(defun insert-zero-width-char ()
+  (interactive) (insert-char #x200b))
+(keymap-set org-mode-map "C-c z" 'insert-zero-width-char)

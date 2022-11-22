@@ -44,6 +44,7 @@ Containing LEFT, and RIGHT aligned respectively."
      (quote ((vc-mode vc-mode)
              (:eval (mode-line-minor-mode-get 'flymake-mode))
              (:eval (mode-line-minor-mode-get 'flyspell-mode))
+             (display-battery-mode battery-mode-line-string)
              mode-line-whitespace
              mode-line-position
              mode-line-whitespace

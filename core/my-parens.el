@@ -10,7 +10,7 @@
 (setq electric-pair-delete-adjacent-pairs t)
 (setq electric-pair-open-newline-between-pairs t)
 (setq electric-pair-skip-whitespace 'chomp)
-(electric-pair-mode 1)
+(add-hook 'prog-mode-hook 'electric-pair-local-mode)
 
 ;; Modified from electric-pair-mode-map
 (evil-define-minor-mode-key 'insert 'electric-pair-mode (kbd "<backspace>")

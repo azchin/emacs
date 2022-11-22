@@ -38,12 +38,12 @@
 (evil-define-key 'normal 'global (kbd "<leader> c y") 'conditional-tabify)
 (evil-define-key 'normal 'global (kbd "<leader> c i") 'indent-whole-buffer)
 (evil-define-key 'normal 'global (kbd "<leader> c m") (lambda () (interactive) (menu-bar-mode 'toggle)))
-(evil-define-key 'visual 'global (kbd "<leader> c e") 'eval-last-sexp)
+(evil-define-key 'visual 'global (kbd "<leader> c e") (lambda () (interactive) (call-interactively 'eval-last-sexp) (evil-exit-visual-state)))
 (evil-define-key leader-rw-states 'global (kbd "<leader> c r") 'rename-uniquely)
 ;; (evil-define-key leader-rw-states 'global (kbd "<leader> c f") 'fill-whole-buffer)
 (evil-define-key leader-rw-states 'global (kbd "<leader> c f") 'fill-region)
 (evil-define-key 'visual 'global (kbd "<leader> c w") 'count-words-region)
-(evil-define-key 'normal 'global (kbd "<leader> c z") (lambda () (interactive) (insert-char #x200b)))
+(evil-define-key 'normal 'global (kbd "<leader> c z") 'insert-zero-width-char)
 (evil-define-key leader-states 'global (kbd "<leader> e e") (lambda () (interactive) (if desktop-save-mode
                                                                                          (progn (desktop-save (emacsd "cache/default-desktop"))
                                                                                                 (desktop-save-mode 0))
@@ -245,7 +245,8 @@
 ;; (evil-define-key leader-states 'global (kbd "<leader> q h") 'kill-regex-buffer-frame)
 (evil-define-key leader-states 'global (kbd "<leader> q a") (lambda () (interactive) (if daemon-mode-snapshot (mapc 'delete-frame (frame-list))
                                                                                        (save-buffers-kill-terminal))))
-(evil-define-key leader-states 'global (kbd "<leader> q e") 'server-shutdown)
+;; (evil-define-key leader-states 'global (kbd "<leader> q e") 'server-shutdown)
+(evil-define-key leader-states 'global (kbd "<leader> q e") 'save-buffers-kill-terminal)
 
 ;; (evil-leader/set-key-for-mode 'dired-mode
 ;;   "s" 'dired-jump

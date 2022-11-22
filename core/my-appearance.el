@@ -119,7 +119,7 @@
 ;; Line numbers
 (global-display-line-numbers-mode)
 (setq display-line-numbers-width-start 3)
-(defun relative-lines() (setq display-line-numbers-type 'relative))
+(defun relative-lines() (setq display-line-numbers-type 'visual))
 (defun disable-lines() (setq display-line-numbers-type nil))
 (defun absolute-lines() (setq display-line-numbers-type t))
 
@@ -131,11 +131,12 @@
 (add-hook 'pdf-view-mode-hook 'disable-lines)
 (add-hook 'doc-view-mode-hook 'disable-lines)
 (add-hook 'image-mode-hook 'disable-lines)
-(add-hook 'org-mode-hook 'absolute-lines)
+;; (add-hook 'org-mode-hook 'absolute-lines)
 ;; (add-hook 'minibuffer-inactive-mode-hook 'disable-lines)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Margins
+;; TODO make minor mode
 (setq desired-display-width 100)
 
 (defvar display-margin-mode-list '(org-mode))
