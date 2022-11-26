@@ -50,7 +50,7 @@
 (use-package my-tabs ;; evil-shift-width and evil-define-key
   :after evil)
 (use-package my-leader
-  :after (evil dired org ido my-tabs my-desktop my-buffer))
+  :after (evil dired org my-tabs my-desktop my-buffer))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Built-in packages
@@ -121,87 +121,6 @@
   (evil-define-key 'normal dired-mode-map (kbd "gl") 'dired-goto-subdir-and-focus)
   (evil-define-key 'normal dired-mode-map [mouse-2] 'dired-mouse-find-file))
 
-(use-package icomplete
-  :disabled
-  :config
-  ;; TODO use current text for dired rename
-  (fido-vertical-mode 1))
-
-(use-package ido
-  :config
-  (setq ido-enable-flex-matching t)
-  (setq ido-decorations
-        '("\n> " "" "\n  " "" "[" "]" " [No match]" " [Matched]" " [Not readable]"
-          " [Too big]" " [Confirm]" "\n>[" "]"))
-  (setq ido-max-window-height 0.5)
-  (setq ido-max-prospects 25)
-  (setq ido-enable-last-directory-history nil)
-  (setq ido-enter-matching-directory 'first)
-  (setq ido-create-new-buffer 'always)
-
-  (keymap-unset ido-common-completion-map "C-s" t)
-  (keymap-unset ido-common-completion-map "C-r" t)
-  (keymap-unset ido-common-completion-map "M-n" t)
-  (keymap-set ido-common-completion-map "C-n" 'ido-next-match)
-  (keymap-set ido-common-completion-map "C-p" 'ido-prev-match)
-
-  (defun ido-complete-or-match (matchf)
-    (let ((ido-cannot-complete-command matchf))
-      (call-interactively 'ido-complete)))
-  (defun ido-complete-or-next ()
-    (interactive)
-    (ido-complete-or-match 'ido-next-match))
-  (defun ido-complete-or-prev ()
-    (interactive)
-    (ido-complete-or-match 'ido-prev-match))
-  (defun ido-select-text-or-complete ()
-    (interactive)
-    (if (and ido-current-directory (equal "" ido-text))
-        (call-interactively 'ido-select-text)
-      (call-interactively 'ido-exit-minibuffer)))
-
-  (keymap-set ido-common-completion-map "TAB" 'ido-complete-or-next)
-  (keymap-set ido-common-completion-map "<tab>" 'ido-complete-or-next)
-  (keymap-set ido-common-completion-map "<shift-tab>" 'ido-complete-or-prev)
-  (keymap-set ido-common-completion-map "<backtab>" 'ido-complete-or-prev)
-  (keymap-set ido-common-completion-map "SPC" 'ido-exit-minibuffer)
-  (keymap-set ido-common-completion-map "RET" 'ido-select-text-or-complete)
-
-  ;; https://stackoverflow.com/questions/905338/can-i-use-ido-completing-read-instead-of-completing-read-everywhere
-  (defvar ido-enable-replace-completing-read nil
-    "If t, use ido-completing-read instead of completing-read if possible.
-
-Set it to nil using let in around-advice for functions where the
-original completing-read is required.  For example, if a function
-foo absolutely must use the original completing-read, define some
-advice like this:
-
-(defadvice foo (around original-completing-read-only activate)
-  (let (ido-enable-replace-completing-read) ad-do-it))")
-
-  ;; Replace completing-read wherever possible, unless directed otherwise
-  (defadvice completing-read
-      (around use-ido-when-possible activate)
-    (if (or (not ido-enable-replace-completing-read) ; Manual override disable ido
-            (boundp 'ido-cur-list)) ; Avoid infinite loop from ido calling this
-        ad-do-it
-      (let ((allcomp (all-completions "" collection predicate)))
-        (if allcomp
-            (setq ad-return-value
-                  (ido-completing-read prompt
-                                       allcomp
-                                       nil require-match initial-input hist def))
-          ad-do-it))))
-
-  (defmacro ido-replace-completing-read-gen (fname)
-    `(defun ,(intern (concat "ido-" (symbol-name fname))) ()
-       (interactive)
-       (let ((ido-enable-replace-completing-read t))
-         (call-interactively (quote ,fname)))))
-
-  (ido-everywhere 1)
-  (ido-mode 1))
-
 (use-package midnight
   :config
   (setq clean-buffer-list-delay-special 0)
@@ -259,17 +178,6 @@ advice like this:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MELPA packages
-;; (use-package auto-package-update
-;;   :ensure t
-;;   :custom
-;;   (auto-package-update-delete-old-versions t)
-;;   (auto-package-update-hide-results t)
-;;   :hook
-;;   (auto-package-update-before . (lambda () (message "Updating packages...")))
-;;   (auto-package-update-after . (lambda () (message "Packages updated...")))
-;;   :config
-;;   (auto-package-update-maybe))
-
 (use-package hl-todo
   :ensure t
   :after evil
@@ -391,10 +299,6 @@ advice like this:
   :config
   (yas-reload-all))
 
-(use-package yasnippet-snippets
-  :disabled
-  :after yasnippet)
-
 (use-package company
   :ensure t
   :after evil
@@ -482,7 +386,6 @@ advice like this:
 
 (use-package ivy
   :ensure t
-  :disabled
   :init
   (setq ivy-re-builders-alist
    '((counsel-describe-variable . ivy--regex-ignore-order)
@@ -503,96 +406,224 @@ advice like this:
   (ivy-mode 1))
 
 (use-package ivy-hydra
-  :ensure t
-  :disabled)
+  :ensure t)
 
 (use-package swiper
   :ensure t
-  :disabled
   :config
   (defvaralias 'swiper-history 'regexp-search-ring)
   (keymap-global-set "C-s" 'swiper-isearch))
 
 (use-package counsel
   :ensure t
-  :disabled
   :config
   (counsel-mode 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Code graveyard
 
-;; (use-package gruvbox-theme
-;;   :ensure t
-;;   :config
-;;   (load-theme 'gruvbox-dark-hard t))
+(use-package auto-package-update
+  :disabled
+  :ensure t
+  :custom
+  (auto-package-update-delete-old-versions t)
+  (auto-package-update-hide-results t)
+  :hook
+  (auto-package-update-before . (lambda () (message "Updating packages...")))
+  (auto-package-update-after . (lambda () (message "Packages updated...")))
+  :config
+  (auto-package-update-maybe))
 
-;; (use-package openwith
-;;   :custom
-;;   (openwith-associations '(("\\.pdf\\'" "zathura" (file))))
-;;   :config
-;;   (openwith-mode t))
+(use-package icomplete
+  :disabled
+  :config
+  ;; TODO use current text for dired rename
+  (fido-vertical-mode 1))
 
-;; (use-package js2-mode
-;;   :config
-;;   (setq js-indent-level 2))
-;; (use-package typescript-mode
-;;   :custom
-;;   (typescript-indent-level 2))
-;; (use-package json-mode)
+(use-package ido
+  :disabled
+  :config
+  (setq ido-enable-flex-matching t)
+  (setq ido-decorations
+        '("\n> " "" "\n  " "" "[" "]" " [No match]" " [Matched]" " [Not readable]"
+          " [Too big]" " [Confirm]" "\n>[" "]"))
+  (setq ido-max-window-height 0.5)
+  (setq ido-max-prospects 25)
+  (setq ido-enable-last-directory-history nil)
+  (setq ido-enter-matching-directory 'first)
+  (setq ido-create-new-buffer 'always)
 
-;; (use-package pdf-tools
-;;   :config 
-;;   ;; (add-hook 'pdf-view-mode 'auto-revert-mode)
-;;   (add-hook 'pdf-view-mode 'pdf-view-midnight-minor-mode)
-;;   (pdf-tools-install))
+  (keymap-unset ido-common-completion-map "C-s" t)
+  (keymap-unset ido-common-completion-map "C-r" t)
+  (keymap-unset ido-common-completion-map "M-n" t)
+  (keymap-set ido-common-completion-map "C-n" 'ido-next-match)
+  (keymap-set ido-common-completion-map "C-p" 'ido-prev-match)
 
-;; ; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
-;; (use-package tex
-;;   :ensure auctex
-;;   :after (evil pdf-tools)
-;;   :init
-;;   (setq TeX-source-correlate-mode t)
-;;   (setq TeX-source-correlate-start-server t)
-;;   (setq TeX-auto-save t)
-;;   (setq TeX-parse-self t)
-;;   (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
-;;   (setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
-;;   ;; (setq TeX-engine 'xetex)
-;;   :config
-;;   (add-hook 'LaTeX-mode-hook
-;;             (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
+  (defun ido-complete-or-match (matchf)
+    (let ((ido-cannot-complete-command matchf))
+      (call-interactively 'ido-complete)))
+  (defun ido-complete-or-next ()
+    (interactive)
+    (ido-complete-or-match 'ido-next-match))
+  (defun ido-complete-or-prev ()
+    (interactive)
+    (ido-complete-or-match 'ido-prev-match))
+  (defun ido-select-text-or-complete ()
+    (interactive)
+    (if (and ido-current-directory (equal "" ido-text))
+        (call-interactively 'ido-select-text)
+      (call-interactively 'ido-exit-minibuffer)))
 
-;;   (add-hook 'TeX-after-compilation-finished-functions 
-;;             'TeX-revert-document-buffer)
-;;   ;; (add-hook 'LaTeX-mode-hook
-;;   ;;           (lambda () (reftex-mode t) (flyspell-mode t)))
-;;   )
+  (keymap-set ido-common-completion-map "TAB" 'ido-complete-or-next)
+  (keymap-set ido-common-completion-map "<tab>" 'ido-complete-or-next)
+  (keymap-set ido-common-completion-map "<shift-tab>" 'ido-complete-or-prev)
+  (keymap-set ido-common-completion-map "<backtab>" 'ido-complete-or-prev)
+  (keymap-set ido-common-completion-map "SPC" 'ido-exit-minibuffer)
+  (keymap-set ido-common-completion-map "RET" 'ido-select-text-or-complete)
 
-;; (use-package company-c-headers
-;;   :after company
-;;   :config
-;;   (add-to-company-backends '(company-c-headers)))
+  ;; https://stackoverflow.com/questions/905338/can-i-use-ido-completing-read-instead-of-completing-read-everywhere
+  (defvar ido-enable-replace-completing-read nil
+    "If t, use ido-completing-read instead of completing-read if possible.
 
-;; (use-package company-shell
-;;   :after company
-;;   :custom
-;;   (add-to-company-backends '(company-shell company-shell-env)))
+Set it to nil using let in around-advice for functions where the
+original completing-read is required.  For example, if a function
+foo absolutely must use the original completing-read, define some
+advice like this:
 
-;; (use-package company-auctex
-;;   :after company
-;;   :config
-;;   (add-to-company-backends '(company-auctex))
-;;   (company-auctex-init))
+(defadvice foo (around original-completing-read-only activate)
+  (let (ido-enable-replace-completing-read) ad-do-it))")
 
-;; (use-package web-mode
-;;   :custom
-;;   (web-mode-code-indent-offset 2)
-;;   (web-mode-markup-indent-offset 2)
-;;   (web-mode-css-indent-offset 2)
-;;   :config
-;;   (add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.tsx$" . web-mode))
-;;   (setq web-mode-content-types-alist '(("jsx" . "\\.jsx")))
-;;   (setq web-mode-content-types-alist '(("jsx" . "\\.tsx"))))
+  ;; Replace completing-read wherever possible, unless directed otherwise
+  (defadvice completing-read
+      (around use-ido-when-possible activate)
+    (if (or (not ido-enable-replace-completing-read) ; Manual override disable ido
+            (boundp 'ido-cur-list)) ; Avoid infinite loop from ido calling this
+        ad-do-it
+      (let ((allcomp (all-completions "" collection predicate)))
+        (if allcomp
+            (setq ad-return-value
+                  (ido-completing-read prompt
+                                       allcomp
+                                       nil require-match initial-input hist def))
+          ad-do-it))))
+
+  (defmacro ido-replace-completing-read-gen (fname)
+    `(defun ,(intern (concat "ido-" (symbol-name fname))) ()
+       (interactive)
+       (let ((ido-enable-replace-completing-read t))
+         (call-interactively (quote ,fname)))))
+
+  (ido-replace-completing-read-gen read-project-desktop)
+  (ido-replace-completing-read-gen project-find-file)
+  (ido-replace-completing-read-gen project-dired)
+  (ido-replace-completing-read-gen project-vc-dir)
+  (ido-replace-completing-read-gen project-eshell)
+  (ido-replace-completing-read-gen project-compile)
+  (ido-replace-completing-read-gen project-switch-to-buffer)
+  (ido-replace-completing-read-gen project-switch-project)
+  (ido-replace-completing-read-gen project-kill-buffers)
+  (ido-replace-completing-read-gen project-forget-project)
+
+  (ido-everywhere 1)
+  (ido-mode 1))
+
+(use-package yasnippet-snippets
+  :disabled
+  :after yasnippet)
+
+(use-package gruvbox-theme
+  :disabled
+  :ensure t
+  :config
+  (load-theme 'gruvbox-dark-hard t))
+
+(use-package openwith
+  :disabled
+  :ensure t
+  :custom
+  (openwith-associations '(("\\.pdf\\'" "zathura" (file))))
+  :config
+  (openwith-mode t))
+
+(use-package js2-mode
+  :disabled
+  :ensure t
+  :config
+  (setq js-indent-level 2))
+
+(use-package typescript-mode
+  :disabled
+  :ensure t
+  :custom
+  (typescript-indent-level 2))
+
+(use-package json-mode
+  :disabled
+  :ensure t)
+
+(use-package pdf-tools
+  :disabled
+  :ensure t
+  :config 
+  ;; (add-hook 'pdf-view-mode 'auto-revert-mode)
+  (add-hook 'pdf-view-mode 'pdf-view-midnight-minor-mode)
+  (pdf-tools-install))
+
+;; https://www.reddit.com/r/emacs/comments/cd6fe2/how_to_make_emacs_a_latex_ide/
+(use-package tex
+  :disabled
+  :ensure auctex
+  :after (evil pdf-tools)
+  :init
+  (setq TeX-source-correlate-mode t)
+  (setq TeX-source-correlate-start-server t)
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+  (setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+  ;; (setq TeX-engine 'xetex)
+  :config
+  (add-hook 'LaTeX-mode-hook
+            (lambda () (set-face-foreground 'font-latex-script-char-face "#9aedfe")))
+
+  (add-hook 'TeX-after-compilation-finished-functions 
+            'TeX-revert-document-buffer)
+  ;; (add-hook 'LaTeX-mode-hook
+  ;;           (lambda () (reftex-mode t) (flyspell-mode t)))
+  )
+
+(use-package company-c-headers
+  :disabled
+  :ensure t
+  :after company
+  :config
+  (add-to-company-backends '(company-c-headers)))
+
+(use-package company-shell
+  :disabled
+  :ensure t
+  :after company
+  :custom
+  (add-to-company-backends '(company-shell company-shell-env)))
+
+(use-package company-auctex
+  :disabled
+  :ensure t
+  :after company
+  :config
+  (add-to-company-backends '(company-auctex))
+  (company-auctex-init))
+
+(use-package web-mode
+  :disabled
+  :ensure t
+  :custom
+  (web-mode-code-indent-offset 2)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  :config
+  (add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.tsx$" . web-mode))
+  (setq web-mode-content-types-alist '(("jsx" . "\\.jsx")))
+  (setq web-mode-content-types-alist '(("jsx" . "\\.tsx"))))
 
