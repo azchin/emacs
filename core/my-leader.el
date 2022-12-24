@@ -52,7 +52,7 @@
 (evil-define-key leader-states 'global (kbd "<leader> e s") 'save-project-desktop)
 (evil-define-key leader-states 'global (kbd "<leader> e r") (lambda () (interactive) (desktop-read (emacsd "cache/default-desktop") (desktop-save-mode 1))))
 (evil-define-key leader-states 'global (kbd "<leader> e p") 'read-project-desktop)
-;; (evil-define-key leader-states 'global (kbd "<leader> o l") 'org-store-link)
+(evil-define-key leader-states 'global (kbd "<leader> o l") 'org-store-link)
 ;; "o a" 'org-agent
 (evil-define-key leader-rw-states 'global (kbd "<leader> o c") 'org-capture)
 (evil-define-key leader-rw-states 'global (kbd "<leader> o a") (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows)))
