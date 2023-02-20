@@ -14,7 +14,7 @@
  '(company-show-quick-access t nil nil "Customized with use-package company")
  '(ede-project-directories '("/home/andrew/sandbox/ede"))
  '(package-selected-packages
-   '(which-key yasnippet evil-org evil-quickscope evil-commentary evil-surround rust-mode hl-todo))
+   '(tuareg tuareg-mode ocaml-mode which-key yasnippet evil-org evil-quickscope evil-commentary))
  '(tab-bar-select-tab-modifiers '(meta)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

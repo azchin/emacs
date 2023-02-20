@@ -9,7 +9,7 @@
 (blink-cursor-mode 0)
 (setq frame-resize-pixelwise t)
 (setq scroll-conservatively 128)
-(setq mouse-wheel-progressive-speed nil)
+(setq mouse-wheel-progressive-speed t)
 ;; (setq auto-window-vscroll nil)
 ;; (setq mouse-wheel-scroll-amount
 ;;       '(0.02 ((shift) . hscroll) ((meta))
@@ -48,6 +48,8 @@
                                                (tab-bar-tab-name-current))))
 (setq tab-bar-button-margin '(4 . 8))
 (setq tab-bar-format '(tab-bar-format-tabs tab-bar-separator))
+(setq tab-bar-auto-width-min '(80 8))
+(setq tab-bar-auto-width-max '(220 20))
 (add-hook 'prog-mode-hook 'tab-bar-history-mode)
 ;; (setq tab-bar-button-relief 32)
 
@@ -118,6 +120,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Line numbers
 (global-display-line-numbers-mode)
+;; (global-visual-line-mode)
 (setq display-line-numbers-width-start 3)
 (defun relative-lines() (setq display-line-numbers-type 'visual))
 (defun disable-lines() (setq display-line-numbers-type nil))

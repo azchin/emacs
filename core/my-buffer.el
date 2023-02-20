@@ -131,7 +131,8 @@ BUFFER may be either a buffer or its name (a string)."
             (when (window-live-p win)
               ;; Ignore error, in particular,
               ;; "Attempt to delete the sole visible or iconified frame".
-              (condition-case nil (delete-window win) (error (tab-bar-close-tab)))))))
+              (condition-case nil (delete-window win)
+                (error (condition-case nil (tab-bar-close-tab) (error nil))))))))
     (when (interactive-p)
       (error "Cannot kill buffer.  Not a live buffer: `%s'" buffer))))
 
@@ -181,7 +182,7 @@ BUFFER may be either a buffer or its name (a string)."
   (when desktop-save-mode
     (desktop-save-mode 0)
     (desktop-save (emacsd "cache/default-desktop")))
-  (unless daemon-mode-snapshot (save-buffers-kill-terminal))
+  (unless (daemon-mode-snapshot) (save-buffers-kill-terminal))
   (mapc 'kill-buffer-mod (buffer-list))
   ;; (mapc 'delete-frame (frame-list))
   (kill-emacs))

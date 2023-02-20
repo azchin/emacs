@@ -9,9 +9,10 @@
           (lambda () (setq gc-cons-threshold 800000)))
 
 (require 'server)
-(defvar daemon-mode-snapshot (and (boundp 'server-process)
-                                  (processp server-process)
-                                  (server-running-p)))
+(defun daemon-mode-snapshot ()
+  (and (boundp 'server-process)
+       (processp server-process)
+       (server-running-p)))
 
 (cd "~")
 (defvar home-dir default-directory)
@@ -133,7 +134,7 @@
         '("^\\ .*$" "\\*.*scratch\\*" "\\` \\*Minibuf-.*\\*\\'"
           "^\\*EMMS Playlist\\*.*$" "^[A-Za-z].*[A-Za-z]$" "^\\*.*eshell\\*"
           "^\\*Article.*\\*$" "^\\*Summary.*\\*$" "^\\*eww\\*$" "^\\*Group\\*$"
-          "^[A-Za-z].*[A-Za-z]<*[A-Za-z]>$"))
+          "^[A-Za-z].*[A-Za-z]<*[A-Za-z]>$" "^Makefile.*$"))
   (run-at-time t 1800 'clean-buffer-list))
 
 ;; Soft dependency on yasnippets and company
@@ -203,6 +204,14 @@
   :mode
   "\\.rs\\'")
 
+(use-package smalltalk-mode
+  :disabled
+  :ensure t)
+
+(use-package tuareg
+  :disabled
+  :ensure t)
+
 (use-package undo-fu
   :ensure t
   :config
@@ -229,7 +238,7 @@
         evil-want-integration t
         evil-kbd-macro-suppress-motion-error 'replay
         evil-move-beyond-eol nil
-        evil-respect-visual-line-mode nil
+        evil-respect-visual-line-mode t
         evil-undo-system 'undo-fu
         evil-want-change-word-to-end nil
         evil-search-module 'evil-search
@@ -313,7 +322,7 @@
   (setq company-tooltip-maximum-width 60)
   (setq company-selection-default nil)
   (setq company-backends
-   '((company-capf company-clang company-cmake company-keywords
+   '((company-capf company-cmake company-keywords
                    :with company-dabbrev-code :separate)))
   (setq company-frontends
    '(company-pseudo-tooltip-frontend
@@ -627,3 +636,5 @@ advice like this:
   (setq web-mode-content-types-alist '(("jsx" . "\\.jsx")))
   (setq web-mode-content-types-alist '(("jsx" . "\\.tsx"))))
 
+(use-package stagethree
+  :after (evil dired my-leader))

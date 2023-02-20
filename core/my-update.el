@@ -1,7 +1,7 @@
 (provide 'my-update)
 (require 'package)
 
-(defvar my-update-file (emacsd ".my-update"))
+(defvar my-update-file (emacsd "cache/my-update"))
 (defvar my-update-days-interval 14)
 
 (defun my-update-write-time ()
