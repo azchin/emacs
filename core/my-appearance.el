@@ -205,7 +205,4 @@
       modus-themes-tabs-accented nil
       modus-themes-mixed-fonts t)
 (load-theme 'modus-operandi) 
-;; (use-package dracula-theme
-;;   :ensure t
-;;   :config
-;;   (load-theme 'dracula t))
+;; (load-theme 'modus-vivendi) 

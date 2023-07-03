@@ -131,3 +131,4 @@ The app is chosen from your OS's preference."
 (setq tramp-default-method "ssh")
 (setq doc-view-continuous t)
 (setq use-short-answers t)
+(setq-default lexical-binding t)

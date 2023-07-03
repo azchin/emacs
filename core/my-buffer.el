@@ -187,6 +187,41 @@ BUFFER may be either a buffer or its name (a string)."
   ;; (mapc 'delete-frame (frame-list))
   (kill-emacs))
 
+(defun my-clean-buffer-list ()
+  "Kill old buffers that have not been displayed recently.
+The relevant variables are `clean-buffer-list-delay-general',
+`clean-buffer-list-delay-special', `clean-buffer-list-kill-buffer-names',
+`clean-buffer-list-kill-never-buffer-names',
+`clean-buffer-list-kill-regexps' and
+`clean-buffer-list-kill-never-regexps'.
+While processing buffers, this procedure displays messages containing
+the current date/time, buffer name, how many seconds ago it was
+displayed (can be nil if the buffer was never displayed) and its
+lifetime, i.e., its \"age\" when it will be purged."
+  (interactive)
+  (let* ((tm (current-time)) bts (ts (format-time-string "%Y-%m-%d %T" tm))
+        delay cbld bn)
+    (dolist (buf (buffer-list))
+      (when (buffer-live-p buf)
+        (setq bts (with-current-buffer buf buffer-display-time)
+              bn (buffer-name buf)
+              delay (if bts (round (float-time (time-subtract tm bts))) 0)
+              cbld (clean-buffer-list-delay bn))
+        (message "[%s] `%s' [%s %d]" ts bn delay cbld)
+        (unless (or (cl-find bn clean-buffer-list-kill-never-regexps
+                             :test (lambda (bn re)
+                                     (if (functionp re)
+                                         (funcall re bn)
+                                       (string-match re bn))))
+                    (cl-find bn clean-buffer-list-kill-never-buffer-names
+                             :test #'string-equal)
+                    (get-buffer-process buf)
+                    (and (buffer-file-name buf) (buffer-modified-p buf))
+                    (tab-bar-get-buffer-tab buf 'visible)
+                    (< delay cbld))
+          (message "[%s] killing `%s'" ts bn)
+          (kill-buffer buf))))))
+
 ;; (defun create-eshell-window ()
 ;;   "Create an eshell terminal window"
 ;;   (interactive)

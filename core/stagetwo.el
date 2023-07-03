@@ -1,9 +1,5 @@
 (provide 'stagetwo)
 
-;; Supress warnings
-(when (string-match "29\\.0\\.50" (version))
-  (setq warning-minimum-level :error))
-
 (setq gc-cons-threshold most-positive-fixnum)
 (add-hook 'emacs-startup-hook
           (lambda () (setq gc-cons-threshold 800000)))
@@ -21,11 +17,6 @@
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (setq package-archives (list melpa gnu))
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(eval-when-compile (require 'use-package))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Comments on package dependency structure:
@@ -51,7 +42,7 @@
 (use-package my-tabs ;; evil-shift-width and evil-define-key
   :after evil)
 (use-package my-leader
-  :after (evil dired org my-tabs my-desktop my-buffer))
+  :after (evil dired org my-tabs my-desktop my-buffer magit))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Built-in packages
@@ -66,11 +57,11 @@
   (setq dired-hide-details-hide-information-lines t)
   (setq dired-clean-confirm-killing-deleted-buffers nil)
   (setq dired-free-space nil)
+  (setopt dired-mouse-drag-files t)
   (setq ls-lisp-dirs-first t)
   (setq ls-lisp-use-insert-directory-program nil)
   (setq ls-lisp-use-string-collate nil)
   (add-hook 'dired-mode-hook 'dired-hide-details-mode)
-  (keymap-set dired-mode-map "<mouse-2>" 'dired-mouse-find-file)
 
   (defun dired-goto-subdir-and-focus ()
     (interactive)
@@ -112,6 +103,8 @@
   (evil-define-key 'normal dired-mode-map "f" 'find-file)
   (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory)
   (evil-define-key 'normal dired-mode-map "l" 'dired-find-file)
+  (evil-define-key 'normal dired-mode-map (kbd "<left>") 'dired-up-directory)
+  (evil-define-key 'normal dired-mode-map (kbd "<right>") 'dired-find-file)
   (evil-define-key 'normal dired-mode-map (kbd "TAB") 'dired-goto-subdir-and-focus)
   (evil-define-key 'normal dired-mode-map (kbd "<backtab>") 'dired-kill-children-subdir)
   (evil-define-key 'normal dired-mode-map (kbd "<shift-tab>") 'dired-kill-children-subdir)
@@ -132,9 +125,9 @@
         '("*scratch*" "*Messages*" "*cmd*"))
   (setq clean-buffer-list-kill-never-regexps
         '("^\\ .*$" "\\*.*scratch\\*" "\\` \\*Minibuf-.*\\*\\'"
-          "^\\*EMMS Playlist\\*.*$" "^[A-Za-z].*[A-Za-z]$" "^\\*.*eshell\\*"
+          "^\\*EMMS Playlist\\*.*$" "^\\*.*eshell\\*"
           "^\\*Article.*\\*$" "^\\*Summary.*\\*$" "^\\*eww\\*$" "^\\*Group\\*$"
-          "^[A-Za-z].*[A-Za-z]<*[A-Za-z]>$" "^Makefile.*$"))
+          "^\\([A-Za-z0-9_-]*\\.\\)+[A-Za-z0-9]*\\(<[A-Za-z0-9_-]*>\\)?$" "^Makefile.*$"))
   (run-at-time t 1800 'clean-buffer-list))
 
 ;; Soft dependency on yasnippets and company
@@ -148,28 +141,6 @@
   (add-to-list 'eglot-server-programs
                '(rust-mode . ("rust-analyzer"))))
 
-(use-package gnus
-  :commands gnus
-  :config
-  (setq gnus-select-method '(nnnil))
-  (add-hook 'kill-emacs-query-functions
-            (lambda () (when (gnus-alive-p) (gnus-group-exit)) t)))
-
-(use-package eww
-  :config
-  (setq browse-url-generic-program "vimb")
-
-  (defun buffer-local-eww-browser-default ()
-    (make-local-variable 'browse-url-browser-function)
-    (setq browse-url-browser-function 'eww-browse-url))
-
-  (defun buffer-local-generic-browser-default ()
-    (make-local-variable 'browse-url-browser-function)
-    (setq browse-url-browser-function 'browse-url-generic))
-
-  (add-hook 'gnus-mode-hook 'buffer-local-generic-browser-default)
-  (add-hook 'eww-after-render-hook 'eww-readable))
-
 (use-package flymake
   :after evil
   :commands (flymake-mode flymake-start)
@@ -177,8 +148,22 @@
   (evil-define-minor-mode-key 'normal 'flymake-mode (kbd "[ c") 'flymake-goto-prev-error)
   (evil-define-minor-mode-key 'normal 'flymake-mode (kbd "] c") 'flymake-goto-next-error))
 
+;; treesit-install-language-grammar
+(use-package treesit
+  :hook
+  (rust-mode . rust-ts-mode)
+  (c-mode . c-ts-mode)
+  (c++-mode . c++-ts-mode)
+  (python-mode . python-ts-mode))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MELPA packages
+(use-package magit
+  :ensure t)
+
+(use-package org-roam
+  :ensure t)
+
 (use-package hl-todo
   :ensure t
   :after evil
@@ -191,7 +176,13 @@
 
 (use-package markdown-mode
   :ensure t
-  :mode "\\.md\\'")
+  :mode "\\.md\\'"
+  :hook
+  (markdown-mode . auto-fill-mode))
+
+(use-package ox-gfm
+  :after org
+  :ensure t)
 
 (use-package cmake-mode
   :ensure t
@@ -203,14 +194,6 @@
   :ensure t
   :mode
   "\\.rs\\'")
-
-(use-package smalltalk-mode
-  :disabled
-  :ensure t)
-
-(use-package tuareg
-  :disabled
-  :ensure t)
 
 (use-package undo-fu
   :ensure t
@@ -254,6 +237,47 @@
   (evil-define-key '(normal insert) 'global (kbd "C-S-v") 'yank)
   (evil-define-key 'visual 'global (kbd "C-S-c") 'evil-yank)
   (evil-define-key 'insert 'global (kbd "C-S-c") 'copy-region-as-kill)
+  ;; Colemak DH remap motion keys
+  ;; Reset keys
+  ;; (evil-define-key 'motion 'global (kbd "h") nil)
+  ;; (evil-define-key 'motion 'global (kbd "j") nil)
+  ;; (evil-define-key 'motion 'global (kbd "k") nil)
+  ;; (evil-define-key 'motion 'global (kbd "l") nil)
+  ;; (evil-define-key 'motion 'global (kbd "e") nil)
+  ;; (evil-define-key 'motion 'global (kbd "n") nil)
+  ;; (evil-define-key 'normal 'global (kbd "i") nil)
+  ;; (evil-define-key 'normal 'global (kbd "o") nil)
+  ;; (evil-define-key 'normal 'global (kbd "u") nil)
+  ;; (evil-define-key 'normal 'global (kbd "y") nil)
+  ;; (evil-define-key 'motion 'global (kbd "H") nil)
+  ;; (evil-define-key 'normal 'global (kbd "J") nil)
+  ;; (evil-define-key 'motion 'global (kbd "K") nil)
+  ;; (evil-define-key 'motion 'global (kbd "L") nil)
+  ;; (evil-define-key 'motion 'global (kbd "E") nil)
+  ;; (evil-define-key 'motion 'global (kbd "N") nil)
+  ;; (evil-define-key 'normal 'global (kbd "I") nil)
+  ;; (evil-define-key 'normal 'global (kbd "O") nil)
+  ;; (evil-define-key 'normal 'global (kbd "Y") nil)
+  ;; ;; Set new keybindings
+  ;; (evil-define-key 'motion 'global (kbd "n") 'evil-backward-char)
+  ;; (evil-define-key 'motion 'global (kbd "e") 'evil-next-line)
+  ;; (evil-define-key 'motion 'global (kbd "i") 'evil-previous-line)
+  ;; (evil-define-key 'motion 'global (kbd "o") 'evil-forward-char)
+  ;; (evil-define-key 'motion 'global (kbd "k") 'evil-forward-word-end)
+  ;; (evil-define-key 'motion 'global (kbd "h") 'evil-ex-search-next)
+  ;; (evil-define-key 'normal 'global (kbd "u") 'evil-insert)
+  ;; (evil-define-key 'normal 'global (kbd "y") 'evil-open-below)
+  ;; (evil-define-key 'normal 'global (kbd "l") 'evil-undo)
+  ;; (evil-define-key 'normal 'global (kbd "j") 'evil-yank)
+  ;; (evil-define-key 'motion 'global (kbd "N") 'evil-window-top)
+  ;; (evil-define-key 'normal 'global (kbd "E") 'evil-join)
+  ;; (evil-define-key 'motion 'global (kbd "I") 'evil-lookup)
+  ;; (evil-define-key 'motion 'global (kbd "O") 'evil-bottom)
+  ;; (evil-define-key 'motion 'global (kbd "K") 'evil-forward-WORD-end)
+  ;; (evil-define-key 'motion 'global (kbd "H") 'evil-ex-search-previous)
+  ;; (evil-define-key 'normal 'global (kbd "U") 'evil-insert-line)
+  ;; (evil-define-key 'normal 'global (kbd "Y") 'evil-open-above)
+  ;; (evil-define-key 'normal 'global (kbd "J") 'evil-yank-line)
   (evil-mode 1))
 
 (use-package evil-surround
@@ -276,16 +300,11 @@
 
 (use-package evil-collection
   :ensure t
-  :after evil
+  :after (evil magit)
+  :init
+  (setq evil-magit-use-y-for-yank t)
   :config
-  (evil-collection-init
-   '(apropos auto-package-update bookmark calc calendar cmake-mode compile debug
-             dictionary diff-mode dired dired-sidebar doc-view ediff eglot
-             elisp-mode elisp-refs eshell eww go-mode grep help image
-             image-dired imenu info ivy js2-mode log-edit log-view kotlin-mode
-             org org-present org-roam outline-mode (pdf pdf-view) popup python
-             replace simple typescript-mode vc-annotate vc-dir vc-git vdiff view
-             which-key xref yaml-mode)))
+  (evil-collection-init))
 
 (use-package evil-org
   :ensure t
@@ -428,8 +447,48 @@
   :config
   (counsel-mode 1))
 
+(use-package consult
+  :disabled ;; pair w/ vertigo + magnalia and use in roam, eglot, yasnippet...
+  :ensure t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Code graveyard
+;; (unless (package-installed-p 'use-package)
+;;   (package-refresh-contents)
+;;   (package-install 'use-package))
+;; (eval-when-compile (require 'use-package))
+
+(use-package gnus
+  :disabled
+  :commands gnus
+  :config
+  (setq gnus-select-method '(nnnil))
+  (add-hook 'kill-emacs-query-functions
+            (lambda () (when (gnus-alive-p) (gnus-group-exit)) t)))
+
+(use-package eww
+  :disabled
+  :config
+  (setq browse-url-generic-program "vimb")
+
+  (defun buffer-local-eww-browser-default ()
+    (make-local-variable 'browse-url-browser-function)
+    (setq browse-url-browser-function 'eww-browse-url))
+
+  (defun buffer-local-generic-browser-default ()
+    (make-local-variable 'browse-url-browser-function)
+    (setq browse-url-browser-function 'browse-url-generic))
+
+  (add-hook 'gnus-mode-hook 'buffer-local-generic-browser-default)
+  (add-hook 'eww-after-render-hook 'eww-readable))
+
+(use-package smalltalk-mode
+  :disabled
+  :ensure t)
+
+(use-package tuareg
+  :disabled
+  :ensure t)
 
 (use-package auto-package-update
   :disabled
@@ -635,6 +694,18 @@ advice like this:
   (add-to-list 'auto-mode-alist '("\\.tsx$" . web-mode))
   (setq web-mode-content-types-alist '(("jsx" . "\\.jsx")))
   (setq web-mode-content-types-alist '(("jsx" . "\\.tsx"))))
+
+(use-package tree-sitter
+  :disabled
+  :ensure t
+  :config
+  (global-tree-sitter-mode))
+
+(use-package tree-sitter-langs
+  :disabled
+  :ensure t
+  :hook
+  (tree-sitter-after-on . tree-sitter-hl-mode))
 
 (use-package stagethree
   :after (evil dired my-leader))

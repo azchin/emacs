@@ -6,8 +6,10 @@
 (setq org-directory "~/org/")
 (setq org-agenda-files `(,(concat org-directory "agenda.org")))
 (setq org-agenda-span 'month)
+(setq org-image-actual-width nil)
 (setq org-export-with-toc nil)
 (setq org-export-with-section-numbers nil)
+(setq org-export-in-background t)
 (setq org-list-allow-alphabetical t)
 (setq org-startup-folded 'nofold)
 (setq org-hide-emphasis-markers t)
@@ -21,10 +23,10 @@
 (setq org-src-window-setup 'other-frame)
 (setq org-src-preserve-indentation t)
 (setq org-todo-keywords '((sequence "TODO" "PROG" "|" "DONE" "AXED")))
-(customize-set-variable 'safe-local-variable-values
-                        '((org-emphasis-alist . nil)
-                          (org-hide-emphasis-markers . nil)
-                          (org-pretty-entities . nil)))
+(setopt safe-local-variable-values
+        '((org-emphasis-alist . nil)
+          (org-hide-emphasis-markers . nil)
+          (org-pretty-entities . nil)))
 (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
 
 ;; (setq org-latex-compiler "pdflatex")
@@ -32,7 +34,7 @@
 (setq org-latex-pdf-process '("latexmk -pdf -bibtex %f"))
 ;; (setq org-agenda-files '(org-directory))
 ;; (setq org-agenda-file-regexp "agenda.org")
-(setq org-export-backends '(ascii html latex md odt man))
+(setopt org-export-backends '(ascii html latex odt md))
 
 (setq ispell-program-name "hunspell")
 (setq ispell-local-dictionary "en_CA")

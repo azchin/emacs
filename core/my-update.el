@@ -18,7 +18,7 @@
 (defun my-package-update ()
   (when (> (- (time-to-days (current-time)) (my-update-read-time))
            my-update-days-interval)
-    (package-update-all)
+    (package-upgrade-all)
     (my-update-write-time)))
 
 (add-hook 'after-init-hook 'my-package-update)
