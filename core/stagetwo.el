@@ -9,6 +9,8 @@
   (and (boundp 'server-process)
        (processp server-process)
        (server-running-p)))
+(unless (server-running-p)
+  (server-start))
 
 (cd "~")
 (defvar home-dir default-directory)
@@ -42,7 +44,7 @@
 (use-package my-tabs ;; evil-shift-width and evil-define-key
   :after evil)
 (use-package my-leader
-  :after (evil dired org my-tabs my-desktop my-buffer magit))
+  :after (evil evil-collection dired org my-tabs my-desktop my-buffer magit))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Built-in packages
@@ -162,7 +164,11 @@
   :ensure t)
 
 (use-package org-roam
-  :ensure t)
+  :ensure t
+  :config
+  (require 'org-roam-protocol)
+  ;; xdg-mime default org-protocol.desktop x-scheme-handler/org-protocol
+  (org-roam-db-autosync-mode))
 
 (use-package hl-todo
   :ensure t
@@ -237,47 +243,6 @@
   (evil-define-key '(normal insert) 'global (kbd "C-S-v") 'yank)
   (evil-define-key 'visual 'global (kbd "C-S-c") 'evil-yank)
   (evil-define-key 'insert 'global (kbd "C-S-c") 'copy-region-as-kill)
-  ;; Colemak DH remap motion keys
-  ;; Reset keys
-  ;; (evil-define-key 'motion 'global (kbd "h") nil)
-  ;; (evil-define-key 'motion 'global (kbd "j") nil)
-  ;; (evil-define-key 'motion 'global (kbd "k") nil)
-  ;; (evil-define-key 'motion 'global (kbd "l") nil)
-  ;; (evil-define-key 'motion 'global (kbd "e") nil)
-  ;; (evil-define-key 'motion 'global (kbd "n") nil)
-  ;; (evil-define-key 'normal 'global (kbd "i") nil)
-  ;; (evil-define-key 'normal 'global (kbd "o") nil)
-  ;; (evil-define-key 'normal 'global (kbd "u") nil)
-  ;; (evil-define-key 'normal 'global (kbd "y") nil)
-  ;; (evil-define-key 'motion 'global (kbd "H") nil)
-  ;; (evil-define-key 'normal 'global (kbd "J") nil)
-  ;; (evil-define-key 'motion 'global (kbd "K") nil)
-  ;; (evil-define-key 'motion 'global (kbd "L") nil)
-  ;; (evil-define-key 'motion 'global (kbd "E") nil)
-  ;; (evil-define-key 'motion 'global (kbd "N") nil)
-  ;; (evil-define-key 'normal 'global (kbd "I") nil)
-  ;; (evil-define-key 'normal 'global (kbd "O") nil)
-  ;; (evil-define-key 'normal 'global (kbd "Y") nil)
-  ;; ;; Set new keybindings
-  ;; (evil-define-key 'motion 'global (kbd "n") 'evil-backward-char)
-  ;; (evil-define-key 'motion 'global (kbd "e") 'evil-next-line)
-  ;; (evil-define-key 'motion 'global (kbd "i") 'evil-previous-line)
-  ;; (evil-define-key 'motion 'global (kbd "o") 'evil-forward-char)
-  ;; (evil-define-key 'motion 'global (kbd "k") 'evil-forward-word-end)
-  ;; (evil-define-key 'motion 'global (kbd "h") 'evil-ex-search-next)
-  ;; (evil-define-key 'normal 'global (kbd "u") 'evil-insert)
-  ;; (evil-define-key 'normal 'global (kbd "y") 'evil-open-below)
-  ;; (evil-define-key 'normal 'global (kbd "l") 'evil-undo)
-  ;; (evil-define-key 'normal 'global (kbd "j") 'evil-yank)
-  ;; (evil-define-key 'motion 'global (kbd "N") 'evil-window-top)
-  ;; (evil-define-key 'normal 'global (kbd "E") 'evil-join)
-  ;; (evil-define-key 'motion 'global (kbd "I") 'evil-lookup)
-  ;; (evil-define-key 'motion 'global (kbd "O") 'evil-bottom)
-  ;; (evil-define-key 'motion 'global (kbd "K") 'evil-forward-WORD-end)
-  ;; (evil-define-key 'motion 'global (kbd "H") 'evil-ex-search-previous)
-  ;; (evil-define-key 'normal 'global (kbd "U") 'evil-insert-line)
-  ;; (evil-define-key 'normal 'global (kbd "Y") 'evil-open-above)
-  ;; (evil-define-key 'normal 'global (kbd "J") 'evil-yank-line)
   (evil-mode 1))
 
 (use-package evil-surround
@@ -304,7 +269,30 @@
   :init
   (setq evil-magit-use-y-for-yank t)
   :config
-  (evil-collection-init))
+  (evil-collection-init)
+  (evil-define-motion my-evil-collection-unimpaired-next-error (count)
+    "Go to next error."
+    :jump t
+    (setq count (or count 1))
+    (cond
+     ((and (bound-and-true-p flycheck-mode)
+           (fboundp 'flycheck-next-error))
+      (flycheck-next-error count))
+     ((and (bound-and-true-p flymake-mode)
+           (fboundp 'flymake-goto-next-error))
+      (flymake-goto-next-error count))
+   (:default
+    (next-error count))))
+
+  (evil-define-motion my-evil-collection-unimpaired-previous-error (count)
+    "Go to previous error."
+    :jump t
+    (my-evil-collection-unimpaired-next-error (- (or count 1))))
+
+  (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "[ q") 'my-evil-collection-unimpaired-previous-error)
+  (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "] q") 'my-evil-collection-unimpaired-next-error)
+  (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "[ x") 'xref-go-back)
+  (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "] x") 'xref-go-forward))
 
 (use-package evil-org
   :ensure t
@@ -412,44 +400,31 @@
   :ensure t
   :commands which-key-mode)
 
-(use-package ivy
+(use-package consult
+  :disabled ;; pair w/ vertigo + marginalia and use in roam, eglot, yasnippet...
+  :ensure t)
+
+(use-package vertico
   :ensure t
   :init
-  (setq ivy-re-builders-alist
-   '((counsel-describe-variable . ivy--regex-ignore-order)
-     (counsel-describe-function . ivy--regex-ignore-order)
-     (counsel-describe-symbol . ivy--regex-ignore-order)
-     (counsel-describe-face . ivy--regex-ignore-order)
-     (counsel-descbinds . ivy--regex-ignore-order)
-     (counsel-M-x . ivy--regex-ignore-order)
-     (counsel-find-file . ivy--regex-fuzzy)
-     (counsel-dired . ivy--regex-plus)
-     (t . ivy--regex-fuzzy)))
+  (vertico-mode)
   :config
-  (setq ivy-count-format "")
-  (setq ivy-height 16)
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-use-selectable-prompt t)
-  (add-to-list 'ivy-initial-inputs-alist '(counsel-minor . ""))
-  (ivy-mode 1))
+  ;; Use `consult-completion-in-region' if Vertico is enabled.
+  ;; Otherwise use the default `completion--in-region' function.
+  (setq completion-in-region-function
+        (lambda (&rest args)
+          (apply (if vertico-mode
+                     #'consult-completion-in-region
+                   #'completion--in-region)
+                 args)))
+  )
 
-(use-package ivy-hydra
-  :ensure t)
-
-(use-package swiper
+(use-package orderless
   :ensure t
   :config
-  (defvaralias 'swiper-history 'regexp-search-ring)
-  (keymap-global-set "C-s" 'swiper-isearch))
-
-(use-package counsel
-  :ensure t
-  :config
-  (counsel-mode 1))
-
-(use-package consult
-  :disabled ;; pair w/ vertigo + magnalia and use in roam, eglot, yasnippet...
-  :ensure t)
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Code graveyard
@@ -706,6 +681,45 @@ advice like this:
   :ensure t
   :hook
   (tree-sitter-after-on . tree-sitter-hl-mode))
+
+(use-package ivy
+  :ensure t
+  :disabled
+  :init
+  (setq ivy-re-builders-alist
+   '((counsel-describe-variable . ivy--regex-ignore-order)
+     (counsel-describe-function . ivy--regex-ignore-order)
+     (counsel-describe-symbol . ivy--regex-ignore-order)
+     (counsel-describe-face . ivy--regex-ignore-order)
+     (counsel-descbinds . ivy--regex-ignore-order)
+     (counsel-M-x . ivy--regex-ignore-order)
+     (counsel-find-file . ivy--regex-fuzzy)
+     (counsel-dired . ivy--regex-plus)
+     (t . ivy--regex-fuzzy)))
+  :config
+  (setq ivy-count-format "")
+  (setq ivy-height 16)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-use-selectable-prompt t)
+  (add-to-list 'ivy-initial-inputs-alist '(counsel-minor . ""))
+  (ivy-mode 1))
+
+(use-package ivy-hydra
+  :ensure t
+  :disabled)
+
+(use-package swiper
+  :ensure t
+  :disabled
+  :config
+  (defvaralias 'swiper-history 'regexp-search-ring)
+  (keymap-global-set "C-s" 'swiper-isearch))
+
+(use-package counsel
+  :ensure t
+  :disabled
+  :config
+  (counsel-mode 1))
 
 (use-package stagethree
   :after (evil dired my-leader))
