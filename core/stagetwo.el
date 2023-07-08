@@ -44,7 +44,7 @@
 (use-package my-tabs ;; evil-shift-width and evil-define-key
   :after evil)
 (use-package my-leader
-  :after (evil evil-collection dired org my-tabs my-desktop my-buffer magit))
+  :after (evil evil-collection dired org org-roam my-tabs my-desktop my-buffer magit))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Built-in packages
@@ -127,7 +127,7 @@
         '("*scratch*" "*Messages*" "*cmd*"))
   (setq clean-buffer-list-kill-never-regexps
         '("^\\ .*$" "\\*.*scratch\\*" "\\` \\*Minibuf-.*\\*\\'"
-          "^\\*EMMS Playlist\\*.*$" "^\\*.*eshell\\*"
+          "^\\*EMMS Playlist\\*.*$" "^\\*.*eshell\\*" "^\\*Help.*\\*$"
           "^\\*Article.*\\*$" "^\\*Summary.*\\*$" "^\\*eww\\*$" "^\\*Group\\*$"
           "^\\([A-Za-z0-9_-]*\\.\\)+[A-Za-z0-9]*\\(<[A-Za-z0-9_-]*>\\)?$" "^Makefile.*$"))
   (run-at-time t 1800 'clean-buffer-list))
@@ -165,10 +165,57 @@
 
 (use-package org-roam
   :ensure t
+  :after org
   :config
   (require 'org-roam-protocol)
   ;; xdg-mime default org-protocol.desktop x-scheme-handler/org-protocol
+  (defvar my-org-roam-bibliography "~/org-roam/references.bib" "Big bibliography file")
+  (defun my-org-cite-yank-or-insert-key ()
+    (interactive)
+    (condition-case nil (my-bibtex-yank my-org-roam-bibliography)
+      (user-error (with-temp-buffer
+                    (org-mode)
+                    (insert (format "#+bibliography: %s\n" my-org-roam-bibliography))
+                    (org-cite-insert nil)
+                    (search-backward "@")
+                    (forward-char)
+                    (push-mark)
+                    (search-forward "]")
+                    (backward-char)
+                    (buffer-substring-no-properties (mark) (point))))))
+  (defun my-org-citar-open-note ()
+    (interactive)
+    (let ((citar-bibliography `(,my-org-roam-bibliography)))
+      (citar-open-notes `(,(my-org-cite-yank-or-insert-key)))))
+  (add-to-list 'org-roam-capture-templates
+               '("t" "todo" plain "%?" :target
+                 (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                            "#+title: ${title}
+#+filetags: :todo:
+")))
+  (add-to-list 'org-roam-capture-templates
+               `("p" "paper" plain "%?" :target
+                 (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                            ,(concat "#+title: ${title}
+#+bibliography: " my-org-roam-bibliography "
+"))))
   (org-roam-db-autosync-mode))
+
+(use-package citar-org-roam
+  :ensure t
+  :after (org-roam citar)
+  :config
+  (setq citar-org-roam-capture-template-key "p")
+  (citar-org-roam-mode))
+
+(use-package citar
+  :ensure t
+  :custom
+  ;; (org-cite-global-bibliography '("~/bib/references.bib"))
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar)
+  (citar-bibliography org-cite-global-bibliography))
 
 (use-package hl-todo
   :ensure t
@@ -281,8 +328,8 @@
      ((and (bound-and-true-p flymake-mode)
            (fboundp 'flymake-goto-next-error))
       (flymake-goto-next-error count))
-   (:default
-    (next-error count))))
+     (:default
+      (next-error count))))
 
   (evil-define-motion my-evil-collection-unimpaired-previous-error (count)
     "Go to previous error."
@@ -292,7 +339,8 @@
   (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "[ q") 'my-evil-collection-unimpaired-previous-error)
   (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "] q") 'my-evil-collection-unimpaired-next-error)
   (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "[ x") 'xref-go-back)
-  (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "] x") 'xref-go-forward))
+  (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "] x") 'xref-go-forward)
+  (evil-collection-define-key 'normal 'help-mode-map (kbd "SPC") nil))
 
 (use-package evil-org
   :ensure t
@@ -329,11 +377,11 @@
   (setq company-tooltip-maximum-width 60)
   (setq company-selection-default nil)
   (setq company-backends
-   '((company-capf company-cmake company-keywords
-                   :with company-dabbrev-code :separate)))
+        '((company-capf company-cmake company-keywords
+                        :with company-dabbrev-code :separate)))
   (setq company-frontends
-   '(company-pseudo-tooltip-frontend
-     company-echo-metadata-frontend))
+        '(company-pseudo-tooltip-frontend
+          company-echo-metadata-frontend))
   (defun company-shell-mode-configure ()
     (setq-local company-backends
                 '((company-capf company-keywords company-files
@@ -425,6 +473,9 @@
   (setq completion-styles '(orderless basic)
         completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package rg
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Code graveyard
@@ -687,15 +738,15 @@ advice like this:
   :disabled
   :init
   (setq ivy-re-builders-alist
-   '((counsel-describe-variable . ivy--regex-ignore-order)
-     (counsel-describe-function . ivy--regex-ignore-order)
-     (counsel-describe-symbol . ivy--regex-ignore-order)
-     (counsel-describe-face . ivy--regex-ignore-order)
-     (counsel-descbinds . ivy--regex-ignore-order)
-     (counsel-M-x . ivy--regex-ignore-order)
-     (counsel-find-file . ivy--regex-fuzzy)
-     (counsel-dired . ivy--regex-plus)
-     (t . ivy--regex-fuzzy)))
+        '((counsel-describe-variable . ivy--regex-ignore-order)
+          (counsel-describe-function . ivy--regex-ignore-order)
+          (counsel-describe-symbol . ivy--regex-ignore-order)
+          (counsel-describe-face . ivy--regex-ignore-order)
+          (counsel-descbinds . ivy--regex-ignore-order)
+          (counsel-M-x . ivy--regex-ignore-order)
+          (counsel-find-file . ivy--regex-fuzzy)
+          (counsel-dired . ivy--regex-plus)
+          (t . ivy--regex-fuzzy)))
   :config
   (setq ivy-count-format "")
   (setq ivy-height 16)

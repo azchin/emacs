@@ -31,7 +31,7 @@
 (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
 (setq org-link-frame-setup (mapcar (lambda (x) (cond ((equal (car x) 'file)
                                                       '(file . find-file))
-                                                      (t x)))
+                                                     (t x)))
                                    org-link-frame-setup))
 
 (defun my-org-toggle-appearance ()
@@ -115,3 +115,23 @@ a line containing the `setting' and `value'."
   (interactive)
   (my-org-set-top-in-buffer-setting "author"
                                     (read-string "New author: " (my-org-get-in-buffer-setting "author"))))
+
+(defun my-bibtex-yank (bibliography)
+  "Paste into specified bibliography, return key"
+  (with-temp-file bibliography
+    (bibtex-mode)
+    (or (and (progn
+               (insert-file-contents bibliography)
+               (goto-char (point-max))
+               (condition-case nil (progn (yank) t) (error nil)))
+             (progn
+               (exchange-point-and-mark)
+               (condition-case nil (bibtex-validate) (error nil)))
+             (progn
+               (deactivate-mark)
+               (let ((ret (cdr (assoc "=key=" (bibtex-parse-entry)))))
+                 (bibtex-reformat) ;; NOTE reformat with region if buffer is slow
+                 ret)))
+        (progn
+          (deactivate-mark)
+          (user-error "Yanked text is not a valid BibTeX entry")))))
