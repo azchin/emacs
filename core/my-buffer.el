@@ -98,18 +98,38 @@ is dired"
              '((lambda (name action)
                  (member (buffer-local-value 'major-mode (get-buffer name))
                          help-modes))
-               (display-buffer-help-window display-buffer-pop-up-window)))
+               (display-buffer-help-window display-buffer-pop-up-window
+                                           display-buffer-use-some-window)))
 
 (add-to-list 'display-buffer-alist
              `("\\*.*eshell\\*" display-buffer-in-side-window
                (side . bottom) (slot . 0) (window-height . 12)
                ,my-window-parameters))
 
+;; (add-to-list 'display-buffer-alist
+;;              '("^magit:"
+;;                (display-buffer-reuse-window display-buffer-pop-up-window)
+;;                (inhibit-same-window . t)))
+
+;; (setq display-buffer-base-action
+;;       '((display-buffer-reuse-mode-window
+;;          display-buffer-same-window
+;;          display-buffer-pop-up-window)
+;;         (inhibit-switch-frame . t)))
 (setq display-buffer-base-action
-      '((display-buffer-reuse-mode-window
-         display-buffer-same-window
+      '((display-buffer-same-window
          display-buffer-pop-up-window)
         (inhibit-switch-frame . t)))
+;; (setq display-buffer-base-action
+;;       '(display-buffer-same-window
+;;         (inhibit-switch-frame . t)))
+;; (setq display-buffer-base-action
+;;       '((display-buffer-use-some-frame
+;;          display-buffer-reuse-mode-window
+;;          display-buffer-same-window
+;;          display-buffer-pop-up-window)
+;;         (frame-predicate . (lambda (frame)
+;;                              (frame-parameter frame 'reuse)))))
 
 (setq Man-notify-method 'aggressive)
 ;; (setq grep-command "grep --color -nH --null ")

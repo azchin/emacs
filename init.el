@@ -2,7 +2,7 @@
   (concat user-emacs-directory file))
 (push (emacsd "core") load-path)
 
-(require 'stagetwo)
+(require 'my-packages)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -94,7 +94,7 @@
       (null-device . "/dev/null"))))
  '(ede-project-directories '("/home/andrew/sandbox/ede"))
  '(package-selected-packages
-   '(citar-org-roam citar rg tuareg-mode ocaml-mode yasnippet evil-org evil-quickscope))
+   '(org-contrib dired-sidebar avy citar-org-roam citar rg tuareg-mode ocaml-mode yasnippet evil-org evil-quickscope))
  '(tab-bar-select-tab-modifiers '(meta)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

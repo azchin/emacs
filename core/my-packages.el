@@ -1,4 +1,4 @@
-(provide 'stagetwo)
+(provide 'my-packages)
 
 (setq gc-cons-threshold most-positive-fixnum)
 (add-hook 'emacs-startup-hook
@@ -18,7 +18,10 @@
 (require 'package)
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
-(setq package-archives (list melpa gnu))
+(defvar nongnu '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
+(setq package-archives (list melpa gnu nongnu))
+
+(setq use-package-compute-statistics t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Comments on package dependency structure:
@@ -37,23 +40,63 @@
 (use-package my-buffer)
 (use-package my-desktop)
 (use-package my-extra)
+(use-package my-skeleton)
 (use-package my-update)
-(use-package my-org)
+(use-package my-org
+  :after org)
 (use-package my-parens ;; evil-define-minor-mode-key
   :after evil)
 (use-package my-tabs ;; evil-shift-width and evil-define-key
   :after evil)
+(use-package my-abbrev)
 (use-package my-leader
-  :after (evil evil-collection dired org org-roam my-tabs my-desktop my-buffer magit))
+  :after (evil evil-collection dired my-tabs my-desktop my-buffer))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Built-in packages
+(use-package org
+  :after my-leader
+  :config
+  (evil-define-key 'normal 'global (kbd "<leader> o a") (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows)))
+  (evil-define-key 'normal 'global (kbd "<leader> o l") 'org-store-link)
+  ;; "o a" 'org-agent
+  (evil-define-key 'normal 'global (kbd "<leader> o c") 'org-capture)
+  (evil-define-key 'normal 'global (kbd "<leader> a o") 'my-org-toggle-appearance)
+  (evil-define-key 'normal org-mode-map (kbd "<leader> o i") 'org-insert-structure-template)
+  (defun my-org-src ()
+    "Insert new source block or edit current block"
+    (interactive)
+    (condition-case nil
+        (org-edit-src-code)
+      (user-error (let ((mode (read-string "Major mode: ")))
+                    (org-insert-structure-template "src")
+                    (insert mode)
+                    (org-edit-src-code)))))
+  (evil-define-key 'normal org-mode-map (kbd "<leader> o s") 'my-org-src)
+  ;; (evil-define-key leader-states org-mode-map (kbd "<leader> o s") 'org-schedule)
+  ;; (evil-define-key leader-states org-mode-map (kbd "<leader> o d") 'org-deadline)
+  (evil-define-key 'normal org-mode-map (kbd "<leader> o l") 'org-insert-link)
+  (evil-define-key 'normal org-mode-map (kbd "<leader> o T") (lambda () (interactive) (insert " ") (call-interactively 'org-time-stamp) (delete-char 1)))
+  (evil-define-key 'normal org-mode-map (kbd "<leader> o t") (lambda () (interactive) (insert " ") (org-insert-time-stamp (current-time) nil t) (delete-char 1)))
+  (evil-define-key 'normal org-mode-map (kbd "<leader> o e") 'org-export-dispatch)
+  (evil-define-key 'normal org-mode-map (kbd "<leader> o p") 'org-latex-export-to-pdf)
+  (evil-define-key 'normal org-mode-map (kbd "<leader> o /") 'org-sparse-tree)
+  (evil-define-key 'normal org-mode-map (kbd "<leader> o g g") 'org-occur)
+  (evil-define-key 'normal org-mode-map (kbd "<leader> o g l") (lambda () (interactive) (org-occur "\\[\\[.*\\]\\[.*\\]\\]")))
+  (evil-define-key 'normal org-mode-map (kbd "<leader> o b") 'org-bibtex-yank)
+  (evil-define-key 'normal org-mode-map (kbd "<leader> o 5") 'org-present)
+  (evil-define-key 'normal org-mode-map (kbd "g x") 'org-open-at-point)
+  ;; (evil-define-key leader-states org-mode-map (kbd "<leader> o e l") 'org-latex-export-to-latex)
+  ;; (evil-define-key leader-states org-mode-map (kbd "<leader> o e p") 'org-latex-export-to-pdf)
+  ;; (evil-define-key 'normal 'global (kbd "<leader> o l") 'org-store-link)
+  )
+
 (use-package dired
-  :after evil-collection
   :config
   (require 'dired-x)
   (require 'dired-aux)
   (require 'ls-lisp)
+  (setq dired-kill-when-opening-new-dired-buffer t)
   (setq dired-listing-switches "-Ahl")
   (setq dired-hide-details-hide-symlink-targets nil)
   (setq dired-hide-details-hide-information-lines t)
@@ -65,56 +108,59 @@
   (setq ls-lisp-use-string-collate nil)
   (add-hook 'dired-mode-hook 'dired-hide-details-mode)
 
-  (defun dired-goto-subdir-and-focus ()
-    (interactive)
-    (call-interactively 'dired-maybe-insert-subdir)
-    (recenter 1))
+  ;; (defun dired-goto-subdir-and-focus ()
+  ;;   (interactive)
+  ;;   (call-interactively 'dired-maybe-insert-subdir)
+  ;;   (recenter 1))
 
-  (defun dired-kill-subdir-and-pop ()
-    (interactive)
-    (dired-kill-subdir)
-    (set-mark-command 1)
-    (recenter))
+  ;; (defun dired-kill-subdir-and-pop ()
+  ;;   (interactive)
+  ;;   (dired-kill-subdir)
+  ;;   (set-mark-command 1)
+  ;;   (recenter))
 
-  (defun dired-kill-subdir-and-up ()
-    (interactive)
-    (set-mark-command nil)
-    (condition-case nil
-        (progn (dired-tree-up 1)
-               (exchange-point-and-mark)
-               (dired-kill-subdir)
-               (set-mark-command 1)
-               (recenter 0))
-      (error (deactivate-mark))))
+  ;; (defun dired-kill-subdir-and-up ()
+  ;;   (interactive)
+  ;;   (set-mark-command nil)
+  ;;   (condition-case nil
+  ;;       (progn (dired-tree-up 1)
+  ;;              (exchange-point-and-mark)
+  ;;              (dired-kill-subdir)
+  ;;              (set-mark-command 1)
+  ;;              (recenter 0))
+  ;;     (error (deactivate-mark))))
 
-  (defun dired-kill-subdir-recurse (level)
-    (interactive)
-    (condition-case nil
-        (progn (dired-tree-down) (dired-kill-subdir-recurse (+ level 1)))
-      (error (condition-case nil
-                 (unless (eq level 0)
-                   (progn (dired-kill-subdir-and-up)
-                          (dired-kill-subdir-recurse (- level 1))))
-               (error nil)))))
+  ;; (defun dired-kill-subdir-recurse (level)
+  ;;   (interactive)
+  ;;   (condition-case nil
+  ;;       (progn (dired-tree-down) (dired-kill-subdir-recurse (+ level 1)))
+  ;;     (error (condition-case nil
+  ;;                (unless (eq level 0)
+  ;;                  (progn (dired-kill-subdir-and-up)
+  ;;                         (dired-kill-subdir-recurse (- level 1))))
+  ;;              (error nil)))))
 
-  (defun dired-kill-children-subdir ()
-    (interactive)
-    (dired-kill-subdir-recurse 0)
-    (dired-kill-subdir-and-up))
-
+  ;; (defun dired-kill-children-subdir ()
+  ;;   (interactive)
+  ;;   (dired-kill-subdir-recurse 0)
+  ;;   (dired-kill-subdir-and-up))
+  )
+(use-package dired
+  :after evil
+  :config
   (evil-define-key 'normal dired-mode-map "f" 'find-file)
   (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory)
   (evil-define-key 'normal dired-mode-map "l" 'dired-find-file)
   (evil-define-key 'normal dired-mode-map (kbd "<left>") 'dired-up-directory)
   (evil-define-key 'normal dired-mode-map (kbd "<right>") 'dired-find-file)
-  (evil-define-key 'normal dired-mode-map (kbd "TAB") 'dired-goto-subdir-and-focus)
-  (evil-define-key 'normal dired-mode-map (kbd "<backtab>") 'dired-kill-children-subdir)
-  (evil-define-key 'normal dired-mode-map (kbd "<shift-tab>") 'dired-kill-children-subdir)
-  (evil-define-key 'normal dired-mode-map (kbd "gu") 'dired-kill-children-subdir)
-  (evil-define-key 'normal dired-mode-map (kbd "gh") 'dired-tree-up)
-  (evil-define-key 'normal dired-mode-map (kbd "gj") 'dired-next-subdir)
-  (evil-define-key 'normal dired-mode-map (kbd "gk") 'dired-prev-subdir)
-  (evil-define-key 'normal dired-mode-map (kbd "gl") 'dired-goto-subdir-and-focus)
+  ;; (evil-define-key 'normal dired-mode-map (kbd "TAB") 'dired-goto-subdir-and-focus)
+  ;; (evil-define-key 'normal dired-mode-map (kbd "<backtab>") 'dired-kill-children-subdir)
+  ;; (evil-define-key 'normal dired-mode-map (kbd "<shift-tab>") 'dired-kill-children-subdir)
+  ;; (evil-define-key 'normal dired-mode-map (kbd "gu") 'dired-kill-children-subdir)
+  ;; (evil-define-key 'normal dired-mode-map (kbd "gh") 'dired-tree-up)
+  ;; (evil-define-key 'normal dired-mode-map (kbd "gj") 'dired-next-subdir)
+  ;; (evil-define-key 'normal dired-mode-map (kbd "gk") 'dired-prev-subdir)
+  ;; (evil-define-key 'normal dired-mode-map (kbd "gl") 'dired-goto-subdir-and-focus)
   (evil-define-key 'normal dired-mode-map [mouse-2] 'dired-mouse-find-file))
 
 (use-package midnight
@@ -161,11 +207,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MELPA packages
 (use-package magit
-  :ensure t)
+  :ensure t
+  :commands (magit-init magit-clone magit-status magit-blame)
+  :config
+  (keymap-unset magit-status-mode-map "SPC"))
 
 (use-package org-roam
   :ensure t
   :after org
+  :commands (org-roam-node-insert org-roam-capture org-roam-node-find
+                                  org-roam-buffer-toggle org-roam-buffer-display-dedicated
+                                  org-roam-graph)
   :config
   (require 'org-roam-protocol)
   ;; xdg-mime default org-protocol.desktop x-scheme-handler/org-protocol
@@ -183,10 +235,6 @@
                     (search-forward "]")
                     (backward-char)
                     (buffer-substring-no-properties (mark) (point))))))
-  (defun my-org-citar-open-note ()
-    (interactive)
-    (let ((citar-bibliography `(,my-org-roam-bibliography)))
-      (citar-open-notes `(,(my-org-cite-yank-or-insert-key)))))
   (add-to-list 'org-roam-capture-templates
                '("t" "todo" plain "%?" :target
                  (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
@@ -201,21 +249,93 @@
 "))))
   (org-roam-db-autosync-mode))
 
+(use-package org-roam-ui
+  :ensure t
+  :after org-roam
+  ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+  ;;         a hookable mode anymore, you're advised to pick something yourself
+  ;;         if you don't care about startup time, use
+  ;;  :hook (after-init . org-roam-ui-mode)
+  :commands org-roam-ui-mode
+  :config
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t
+        org-roam-ui-open-on-start t))
+
 (use-package citar-org-roam
   :ensure t
   :after (org-roam citar)
   :config
+  (defun my-org-citar-open-note ()
+    (interactive)
+    (let* ((citar-bibliography (list my-org-roam-bibliography))
+           (citekey (my-org-cite-yank-or-insert-key)))
+      (citar-open-notes (list citekey))
+      (org-roam-ref-remove (concat "@" citekey))
+      (org-roam-ref-add (concat "[cite:@" citekey "]"))
+      (call-interactively 'org-roam-tag-add)))
   (setq citar-org-roam-capture-template-key "p")
   (citar-org-roam-mode))
+
+(use-package org-present
+  :ensure t
+  :after (org evil)
+  :commands org-present
+  :init
+  ;; System Crafters' org-present config
+  (defun dw/org-present-prepare-slide ()
+    (org-overview)
+    (org-show-entry)
+    (org-show-children))
+
+  (defun dw/org-present-hook ()
+    (setq-local face-remapping-alist '((default (:height 1.5) variable-pitch)
+                                       (header-line (:height 4.5) variable-pitch)
+                                       (org-code (:height 1.55) org-code)
+                                       (org-verbatim (:height 1.55) org-verbatim)
+                                       (org-block (:height 1.25) org-block)
+                                       (org-block-begin-line (:height 0.7) org-block)
+                                       ))
+    (setq header-line-format " ")
+    (org-display-inline-images)
+    ;; (dw/org-present-prepare-slide)
+    (disable-lines)
+    (org-show-all))
+
+  (defun dw/org-present-quit-hook ()
+    (setq-local face-remapping-alist '((default variable-pitch)))
+    (setq header-line-format nil)
+    (run-hooks 'text-mode-hook)
+    (org-present-small)
+    (org-remove-inline-images))
+
+  (defun dw/org-present-prev ()
+    (interactive)
+    (org-present-prev)
+    (dw/org-present-prepare-slide))
+
+  (defun dw/org-present-next ()
+    (interactive)
+    (org-present-next)
+    (dw/org-present-prepare-slide))
+
+  :hook ((org-present-mode . dw/org-present-hook)
+         (org-present-mode . evil-force-normal-state)
+         (org-present-mode-quit . dw/org-present-quit-hook)))
 
 (use-package citar
   :ensure t
   :custom
   ;; (org-cite-global-bibliography '("~/bib/references.bib"))
+  ;; (citar-bibliography org-cite-global-bibliography)
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)
-  (org-cite-activate-processor 'citar)
-  (citar-bibliography org-cite-global-bibliography))
+  (org-cite-activate-processor 'citar))
+
+(use-package dired-sidebar
+  :ensure t
+  :commands (dired-sidebar-toggle-sidebar))
 
 (use-package hl-todo
   :ensure t
@@ -236,6 +356,20 @@
 (use-package ox-gfm
   :after org
   :ensure t)
+
+(use-package osm
+  :ensure t
+  ;; :bind ("C-c m" . osm-prefix-map) ;; Alternative: `osm-home'
+  :commands (osm-home osm-search osm-goto osm-bookmark-jump osm-gpx-show)
+  :custom
+  ;; Take a look at the customization group `osm' for more options.
+  (osm-server 'default) ;; Configure the tile server
+  (osm-copyright t)     ;; Display the copyright information
+
+  :init
+  ;; Load Org link support
+  (with-eval-after-load 'org
+    (require 'osm-ol)))
 
 (use-package cmake-mode
   :ensure t
@@ -284,6 +418,15 @@
   (evil-set-initial-state 'eshell-mode 'insert)
   (evil-set-initial-state 'vc-annotate-mode 'insert)
   (evil-set-initial-state 'gnus-mode 'emacs)
+  (evil-set-initial-state 'osm-mode 'emacs)
+  (defun simulate-key-presses (key-string)
+    (setq unread-command-events (listify-key-sequence (kbd key-string))))
+  (evil-define-key 'visual 'global (kbd "M-<down>")
+    (lambda (count) (interactive "p")
+      (simulate-key-presses (format ":m '>+%d <return> gv= gv" count))))
+  (evil-define-key 'visual 'global (kbd "M-<up>")
+    (lambda (count) (interactive "p")
+      (simulate-key-presses (format ":m '<-%d <return> gv= gv" (1+ count)))))
   (evil-define-key 'insert 'global (kbd "C-d") 'delete-char)
   (evil-define-key 'insert 'global (kbd "C-a") 'beginning-of-line)
   (evil-define-key 'insert 'global (kbd "C-e") 'end-of-line)
@@ -312,10 +455,17 @@
 
 (use-package evil-collection
   :ensure t
-  :after (evil magit)
-  :init
-  (setq evil-magit-use-y-for-yank t)
+  :after evil
   :config
+  ;; (evil-collection-init
+  ;;  '(apropos calc calendar cmake-mode company compile consult corfu debug
+  ;;            dictionary diff-mode dired dired-sidebar doc-view edebug ediff eglot
+  ;;            elisp-mode elisp-refs eshell eww flycheck flymake grep help ibuffer image
+  ;;            image-dired imenu imenu-list (indent "indent") log-edit log-view man
+  ;;            (magit magit-repos magit-submodule) magit-section magit-todos markdown-mode org
+  ;;            org-present org-roam outline (package-menu package) (pdf pdf-view) python rg
+  ;;            sh-script simple tab-bar (term term ansi-term multi-term) typescript-mode
+  ;;            vertico view vterm which-key xref))
   (evil-collection-init)
   (evil-define-motion my-evil-collection-unimpaired-next-error (count)
     "Go to next error."
@@ -340,6 +490,7 @@
   (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "] q") 'my-evil-collection-unimpaired-next-error)
   (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "[ x") 'xref-go-back)
   (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "] x") 'xref-go-forward)
+  (evil-collection-define-key 'normal 'dired-mode-map (kbd "SPC") nil)
   (evil-collection-define-key 'normal 'help-mode-map (kbd "SPC") nil))
 
 (use-package evil-org
@@ -355,6 +506,12 @@
   (evil-define-key '(normal visual) org-mode-map (kbd "L") 'org-shiftright)
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
+
+(use-package avy
+  :ensure t
+  :config
+  ;; g x w c f d a r s t
+  (setopt avy-keys '(103 120 119 99 102 100 97 114 115 116)))
 
 (use-package yasnippet
   :ensure t
@@ -449,8 +606,45 @@
   :commands which-key-mode)
 
 (use-package consult
-  :disabled ;; pair w/ vertigo + marginalia and use in roam, eglot, yasnippet...
-  :ensure t)
+  :ensure t
+  ;; The :init configuration is always executed (Not lazy)
+  :init
+
+  ;; Optionally configure the register formatting. This improves the register
+  ;; preview for `consult-register', `consult-register-load',
+  ;; `consult-register-store' and the Emacs built-ins.
+  (setq register-preview-delay 0.5
+        register-preview-function #'consult-register-format)
+
+  ;; Optionally tweak the register preview window.
+  ;; This adds thin lines, sorting and hides the mode line of the window.
+  (advice-add #'register-preview :override #'consult-register-window)
+
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+
+  :config
+  ;; Optionally configure the narrowing key.
+  ;; Both < and C-+ work reasonably well.
+  (setq consult-narrow-key "<") ;; "C-+"
+
+  (keymap-global-set "C-s" 'consult-line)
+  )
+
+(use-package marginalia
+  :ensure t
+  ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+  ;; available in the *Completions* buffer, add it to the
+  ;; `completion-list-mode-map'.
+  ;; :bind (:map minibuffer-local-map
+  ;;             ("M-A" . marginalia-cycle))
+  
+  :config
+  ;; Marginalia must be activated in the :init section of use-package such that
+  ;; the mode gets enabled right away. Note that this forces loading the
+  ;; package.
+  (marginalia-mode))
 
 (use-package vertico
   :ensure t
@@ -464,8 +658,7 @@
           (apply (if vertico-mode
                      #'consult-completion-in-region
                    #'completion--in-region)
-                 args)))
-  )
+                 args))))
 
 (use-package orderless
   :ensure t
@@ -475,7 +668,16 @@
         completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package rg
-  :ensure t)
+  :ensure t
+  :commands (rg rg-dwim-current-file rg-dwim-current-dir rg-dwim-project-dir rg-dwim))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package org-contrib
+  :ensure t
+  :after org
+  :pin "nongnu"
+  :config
+  (add-to-list 'org-modules 'ol-git-link))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Code graveyard
@@ -772,5 +974,8 @@ advice like this:
   :config
   (counsel-mode 1))
 
-(use-package stagethree
-  :after (evil dired my-leader))
+(use-package org-modern
+  :ensure t
+  :disabled
+  :after org
+  :hook (org-mode))

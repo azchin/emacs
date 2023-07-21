@@ -7,7 +7,8 @@
 (scroll-bar-mode 0)
 (setq scroll-bar-adjust-thumb-portion nil)
 (blink-cursor-mode 0)
-(setq frame-resize-pixelwise t)
+(setopt frame-resize-pixelwise t)
+(setopt frame-inhibit-implied-resize t)
 (setq scroll-conservatively 128)
 (setq mouse-wheel-progressive-speed t)
 ;; (setq auto-window-vscroll nil)
@@ -44,8 +45,8 @@
 (setq tab-bar-new-tab-to 'right)
 (setq tab-bar-tab-hints t)
 (setq-default tab-bar-tab-name-function (lambda () (concat 
-                                               (when (buffer-modified-p) "+")
-                                               (tab-bar-tab-name-current))))
+                                                    (when (buffer-modified-p) "+")
+                                                    (tab-bar-tab-name-current))))
 (setq tab-bar-button-margin '(4 . 8))
 (setq tab-bar-format '(tab-bar-format-tabs tab-bar-separator))
 (setq tab-bar-auto-width-min '(80 8))
@@ -55,17 +56,44 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Window dimensions
-(let ((win '(100 40 256 192)))
-    (add-to-list 'initial-frame-alist `(width . ,(nth 0 win)))
-    (add-to-list 'initial-frame-alist `(height . ,(nth 1 win)))
-    ;; (add-to-list 'initial-frame-alist `(left . ,(nth 2 win)))
-    ;; (add-to-list 'initial-frame-alist `(top . ,(nth 3 win)))
-    (add-to-list 'default-frame-alist `(width . ,(nth 0 win)))
-    (add-to-list 'default-frame-alist `(height . ,(nth 1 win)))
-    ;; (add-to-list 'default-frame-alist `(left . ,(nth 2 win)))
-    ;; (add-to-list 'default-frame-alist `(top . ,(nth 3 win)))
-    )
+;; (let ((win '(100 40 256 192)))
+;;     (add-to-list 'initial-frame-alist `(width . ,(nth 0 win)))
+;;     (add-to-list 'initial-frame-alist `(height . ,(nth 1 win)))
+;;     ;; (add-to-list 'initial-frame-alist `(left . ,(nth 2 win)))
+;;     ;; (add-to-list 'initial-frame-alist `(top . ,(nth 3 win)))
+;;     (add-to-list 'default-frame-alist `(width . ,(nth 0 win)))
+;;     (add-to-list 'default-frame-alist `(height . ,(nth 1 win)))
+;;     ;; (add-to-list 'default-frame-alist `(left . ,(nth 2 win)))
+;;     ;; (add-to-list 'default-frame-alist `(top . ,(nth 3 win)))
+;;     )
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; (setq my-display-offset 50)
+;; (setq my-display-gap 10)
+;; (setq my-cursed-height-magic 100)
+;; (setq my-width (- (/ (display-pixel-width) 2)
+;;                   (* my-display-offset 2)
+;;                   my-display-gap))
+;; (setq my-height (- (display-pixel-height)
+;;                    (* my-display-offset 2)
+;;                    my-cursed-height-magic))
+
+;; (add-to-list 'initial-frame-alist `(width text-pixels . ,my-width))
+;; (add-to-list 'initial-frame-alist `(height text-pixels . ,my-height))
+;; (add-to-list 'initial-frame-alist `(left . ,my-display-offset))
+;; (add-to-list 'initial-frame-alist `(top . ,my-display-offset))
+;; (setq my-frame-alist `((width text-pixels . ,my-width)
+;;                        (height text-pixels . ,my-height)
+;;                        (left . ,(- my-display-offset))
+;;                        (top . ,my-display-offset)))
+;; (make-frame my-frame-alist)
+
+;; (setq my-frame-alist '((width . 0.45)
+;;                        (height . 0.9)
+;;                        (left . 0.95)
+;;                        (top . 0.05)
+;;                        (reuse . t)))
+;; (make-frame my-frame-alist)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Fonts
@@ -79,7 +107,8 @@
 (defvar markup-font-height 120
   "Markup font height")
 (add-to-list 'default-frame-alist `(font . ,(concat default-font-family "-" (number-to-string (round default-font-height 10)))))
-(add-hook 'org-mode-hook (lambda () (buffer-face-set :family markup-font-family :height markup-font-height)))
+;; (add-hook 'org-mode-hook (lambda () (buffer-face-set :family markup-font-family :height markup-font-height)))
+(add-hook 'org-mode-hook (lambda () (setq-local face-remapping-alist '((default variable-pitch)))))
 ;; (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-10"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -94,14 +123,15 @@
 ;; (setq frame-title-format `(,(system-name) " - %b [%m] %f"  ))
 (setq frame-title-format '("%b :: %f"))
 
-(setq initial-buffer-choice t)
-(setq initial-major-mode 'org-mode)
-(setq initial-scratch-message
-      "# This buffer is for text that is not saved.
+;; (setq initial-buffer-choice t)
+(setopt initial-major-mode 'org-mode)
+(setopt initial-scratch-message
+        "# This buffer is for text that is not saved.
 # To create a file, visit it with \\[find-file] and enter text in its buffer.\n\n")
+(setopt inhibit-startup-screen t)
 ;; (fringe-mode 0)
-;; (fringe-mode '(0 . 1))
-(fringe-mode 0)
+(fringe-mode '(0 . 1))
+;; (fringe-mode '(1 . 1))
 (setq-default fringes-outside-margins t)
 (setq-default truncate-partial-width-windows 100)
 (setq-default truncate-lines nil)
@@ -122,18 +152,21 @@
 (global-display-line-numbers-mode)
 ;; (global-visual-line-mode)
 (setq display-line-numbers-width-start 3)
-(defun relative-lines() (setq display-line-numbers-type 'visual))
-(defun disable-lines() (setq display-line-numbers-type nil))
-(defun absolute-lines() (setq display-line-numbers-type t))
+(defun relative-lines() (interactive) (setq-local display-line-numbers 'relative))
+(defun visual-lines() (interactive) (setq-local display-line-numbers 'visual))
+(defun disable-lines() (interactive) (setq-local display-line-numbers nil))
+(defun absolute-lines() (interactive) (setq-local display-line-numbers t))
 
-(add-hook 'prog-mode-hook 'relative-lines)
-(add-hook 'text-mode-hook 'relative-lines)
-(add-hook 'conf-mode-hook 'relative-lines)
-(add-hook 'special-mode-hook 'relative-lines)
-(add-hook 'dired-mode-hook 'relative-lines)
+(add-hook 'prog-mode-hook 'absolute-lines)
+(add-hook 'text-mode-hook 'absolute-lines)
+(add-hook 'org-mode-hook 'absolute-lines)
+(add-hook 'conf-mode-hook 'absolute-lines)
+(add-hook 'special-mode-hook 'absolute-lines)
+(add-hook 'dired-mode-hook 'absolute-lines)
 (add-hook 'pdf-view-mode-hook 'disable-lines)
 (add-hook 'doc-view-mode-hook 'disable-lines)
 (add-hook 'image-mode-hook 'disable-lines)
+(add-hook 'osm-mode-hook 'disable-lines)
 ;; (add-hook 'org-mode-hook 'absolute-lines)
 ;; (add-hook 'minibuffer-inactive-mode-hook 'disable-lines)
 
@@ -163,6 +196,10 @@
     (remove-hook 'window-configuration-change-hook 'get-desired-display-margin t)
     (set-window-margins (selected-window) 0 0)))
 
+(defun my-zero-display-margin ()
+  (interactive)
+  (set-window-margins (selected-window) 0 0))
+
 (defvar margin-window-vsplit-commands
   '(evil-window-vsplit
     evil-window-vsplit-leader
@@ -181,7 +218,7 @@
 
 (dolist (minor-mode display-margin-mode-list)
   (add-hook (intern (concat (symbol-name minor-mode) "-hook"))
-            'setup-display-margin))
+            'setup-display-margin 90))
 (add-hook 'pre-command-hook 'pre-split-margins)
 (add-hook 'post-command-hook 'post-split-margins)
 
@@ -191,7 +228,8 @@
   (mapc 'disable-theme custom-enabled-themes))
 
 (defadvice load-theme (after theme-dont-propagate activate)
-  (load "my-late"))
+  (use-package my-late
+    :after org))
 
 (defun set-faces-to-default-font-family (faces)
   (dolist (face faces)

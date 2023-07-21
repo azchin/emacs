@@ -13,9 +13,42 @@
  delete-old-versions t
  kept-new-versions 2
  kept-old-versions 2)
- 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Commands
+(defun move-line (n)
+  "Move the current line up or down by N lines."
+  (interactive "p")
+  ;; (setq col (current-column))
+  ;; (beginning-of-line) (setq start (point))
+  ;; (end-of-line) (forward-char) (setq end (point))
+  ;; (save-excursion (forward-line n) (setq endline (point)))
+  (let* ((col (current-column))
+         (start (progn (beginning-of-line) (point)))
+         (finishline (save-excursion (forward-line (* (1+ (abs n)) (/ n (abs n)))) (point)))
+         (end (progn (end-of-line) (forward-char) (point)))
+         (line-text (delete-and-extract-region start end)))
+    (forward-line n)
+    (insert line-text)
+    ;; restore point to original column in moved line
+    (if (> finishline start) (indent-region start finishline)
+      (indent-region finishline start))
+    (forward-line -1)
+    (forward-char col)))
+
+(defun move-line-up (n)
+  "Move the current line up by N lines."
+  (interactive "p")
+  (move-line (- n)))
+
+(defun move-line-down (n)
+  "Move the current line down by N lines."
+  (interactive "p")
+  (move-line n))
+
+(keymap-global-set "M-<up>" 'move-line-up)
+(keymap-global-set "M-<down>" 'move-line-down)
+
 (defun tramp-change-sudoedit-doas ()
   (interactive)
   (delete '("sudoedit"
@@ -124,6 +157,19 @@ The app is chosen from your OS's preference."
 
 ;; Major modes
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Hideshow mode
+(defvar my-hs-hide-threshold 50
+  "Hideshow will hide all if buffer has more lines than this value")
+(defun my-hs-hide-all ()
+  "Conditionally hide all, depending on `my-hs-hide-threshold'"
+  (interactive)
+  (when (> (line-number-at-pos (point-max) t)
+           my-hs-hide-threshold)
+    (hs-hide-all)))
+(add-hook 'prog-mode-hook 'hs-minor-mode)
+;; (add-hook 'hs-minor-mode-hook 'my-hs-hide-all)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Misc

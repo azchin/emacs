@@ -1,0 +1,6 @@
+;; (setopt initial-frame-alist '((width . 0.45)
+;;                               ;; (fullscreen . maximized)
+;;                               ;; (left . 0.05)
+;;                               ;; (top . 0.1)
+;;                               (height . 0.7)))
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))

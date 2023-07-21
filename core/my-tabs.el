@@ -67,6 +67,9 @@
 (setq c-basic-offset custom-tab-width)
 (c-set-offset 'case-label 0)
 (c-set-offset 'label '*)
+(setopt c-default-style "stroustrup")
+(setopt c-ts-mode-indent-offset c-basic-offset)
+(setopt c-ts-mode-indent-style 'k&r)
 (setq css-indent-offset 2)
 
 (add-hook 'python-mode-hook (lambda () (set-tab-width python-indent-offset)))
@@ -85,8 +88,8 @@
 (defun conditional-tabify ()
   (interactive)
   (if indent-tabs-mode
-      (tabify (window-start) (window-end))
-    (untabify (window-start) (window-end))))
+      (tabify (point-min) (point-max))
+    (untabify (point-min) (point-max))))
 
 (defun indent-whole-buffer ()
   (interactive)

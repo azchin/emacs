@@ -42,14 +42,16 @@
                 (org-level-8 . 1.0)))
   (set-face-attribute (car face) nil :family markup-font-family :weight 'medium :height (cdr face)))
 (set-face-attribute 'org-table nil :family default-font-family :height default-font-height)
+(set-face-attribute 'org-checkbox nil :family default-font-family :height default-font-height)
 
 (set-face-attribute 'default nil :family default-font-family :height default-font-height)
 (set-face-attribute 'variable-pitch nil :family markup-font-family :height markup-font-height)
 (set-face-attribute 'fixed-pitch nil :family default-font-family :height default-font-height)
-(set-face-attribute 'org-block nil :family default-font-family :inherit 'default)
-(set-face-attribute 'org-block-begin-line nil :inherit 'default)
-(set-face-attribute 'org-block-end-line nil :inherit 'org-block-begin-line)
-(set-face-attribute 'org-code nil :inherit 'default)
+;; (set-face-attribute 'org-block nil :family default-font-family :inherit 'default)
+;; (set-face-attribute 'org-block-begin-line nil :inherit 'default)
+;; (set-face-attribute 'org-block-end-line nil :inherit 'org-block-begin-line)
+;; (set-face-attribute 'org-code nil :inherit 'default)
+;; (set-face-attribute 'org-date nil :inherit '(modus-themes-link-symlink))
 
 ;; TODO when new frames are made, highlight gets overridden
 (defun change-highlight-face (&optional frame)
