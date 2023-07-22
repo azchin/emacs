@@ -1,5 +1,3 @@
-(provide 'my-late)
-
 (require 'org)
 (global-hl-line-mode 1)
 ;; (set-face-attribute hl-line-face nil 
@@ -62,3 +60,5 @@
 
 (add-to-list 'after-make-frame-functions 'change-highlight-face)
 (change-highlight-face)
+
+(provide 'my-late)

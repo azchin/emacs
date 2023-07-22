@@ -1,4 +1,3 @@
-(provide 'my-tabs)
 (require 'evil)
 
 (defvar custom-tab-width 4)
@@ -103,3 +102,5 @@
   (when (equal major-mode 'fundamental-mode)
     (text-mode)))
 (add-hook 'find-file-hook 'fundamental-to-text-mode)
+
+(provide 'my-tabs)

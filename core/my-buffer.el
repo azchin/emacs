@@ -1,4 +1,3 @@
-(provide 'my-buffer)
 (require 'my-appearance)
 
 (defun split-window-with-margins (&optional window)
@@ -360,3 +359,5 @@ lifetime, i.e., its \"age\" when it will be purged."
 
 (winner-mode)
 ;; C-c LEFT, C-c RIGHT
+
+(provide 'my-buffer)

@@ -1,5 +1,3 @@
-(provide 'my-skeleton)
-
 ;; https://www.emacswiki.org/emacs/SkeletonMode
 
 (defvar *skeleton-markers* nil
@@ -49,3 +47,4 @@
   )
 
 
+(provide 'my-skeleton)

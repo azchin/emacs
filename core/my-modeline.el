@@ -1,5 +1,3 @@
-(provide 'my-modeline)
-
 (setq line-number-mode t)
 (setq column-number-mode t)
 
@@ -63,3 +61,5 @@ Containing LEFT, and RIGHT aligned respectively."
 ;;                (mode-line-minor-mode-get 'flyspell-mode)
 ;;                " (%l %C) %p"
 ;;                ))
+
+(provide 'my-modeline)

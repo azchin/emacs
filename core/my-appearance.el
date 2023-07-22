@@ -1,5 +1,3 @@
-(provide 'my-appearance)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; UI
 (menu-bar-mode 1)
@@ -156,17 +154,21 @@
 (defun visual-lines() (interactive) (setq-local display-line-numbers 'visual))
 (defun disable-lines() (interactive) (setq-local display-line-numbers nil))
 (defun absolute-lines() (interactive) (setq-local display-line-numbers t))
+(defun relative-lines-type() (setq display-line-numbers-type 'relative))
+(defun visual-lines-type() (setq display-line-numbers-type 'visual))
+(defun disable-lines-type() (setq display-line-numbers-type nil))
+(defun absolute-lines-type() (setq display-line-numbers-type t))
 
-(add-hook 'prog-mode-hook 'absolute-lines)
-(add-hook 'text-mode-hook 'absolute-lines)
-(add-hook 'org-mode-hook 'absolute-lines)
-(add-hook 'conf-mode-hook 'absolute-lines)
-(add-hook 'special-mode-hook 'absolute-lines)
-(add-hook 'dired-mode-hook 'absolute-lines)
-(add-hook 'pdf-view-mode-hook 'disable-lines)
-(add-hook 'doc-view-mode-hook 'disable-lines)
-(add-hook 'image-mode-hook 'disable-lines)
-(add-hook 'osm-mode-hook 'disable-lines)
+(add-hook 'prog-mode-hook 'visual-lines-type)
+(add-hook 'text-mode-hook 'visual-lines-type)
+(add-hook 'org-mode-hook 'visual-lines-type)
+(add-hook 'conf-mode-hook 'visual-lines-type)
+(add-hook 'special-mode-hook 'visual-lines-type)
+(add-hook 'dired-mode-hook 'visual-lines-type)
+(add-hook 'pdf-view-mode-hook 'disable-lines-type)
+(add-hook 'doc-view-mode-hook 'disable-lines-type)
+(add-hook 'image-mode-hook 'disable-lines-type)
+(add-hook 'osm-mode-hook 'disable-lines-type)
 ;; (add-hook 'org-mode-hook 'absolute-lines)
 ;; (add-hook 'minibuffer-inactive-mode-hook 'disable-lines)
 
@@ -244,3 +246,5 @@
       modus-themes-mixed-fonts t)
 (load-theme 'modus-operandi) 
 ;; (load-theme 'modus-vivendi) 
+
+(provide 'my-appearance)

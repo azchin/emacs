@@ -1,5 +1,3 @@
-(provide 'my-packages)
-
 (setq gc-cons-threshold most-positive-fixnum)
 (add-hook 'emacs-startup-hook
           (lambda () (setq gc-cons-threshold 800000)))
@@ -42,10 +40,8 @@
 (use-package my-extra)
 (use-package my-skeleton)
 (use-package my-update)
-(use-package my-org
-  :after org)
-(use-package my-parens ;; evil-define-minor-mode-key
-  :after evil)
+(use-package my-org)
+(use-package my-parens)
 (use-package my-tabs ;; evil-shift-width and evil-define-key
   :after evil)
 (use-package my-abbrev)
@@ -54,43 +50,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Built-in packages
-(use-package org
-  :after my-leader
-  :config
-  (evil-define-key 'normal 'global (kbd "<leader> o a") (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows)))
-  (evil-define-key 'normal 'global (kbd "<leader> o l") 'org-store-link)
-  ;; "o a" 'org-agent
-  (evil-define-key 'normal 'global (kbd "<leader> o c") 'org-capture)
-  (evil-define-key 'normal 'global (kbd "<leader> a o") 'my-org-toggle-appearance)
-  (evil-define-key 'normal org-mode-map (kbd "<leader> o i") 'org-insert-structure-template)
-  (defun my-org-src ()
-    "Insert new source block or edit current block"
-    (interactive)
-    (condition-case nil
-        (org-edit-src-code)
-      (user-error (let ((mode (read-string "Major mode: ")))
-                    (org-insert-structure-template "src")
-                    (insert mode)
-                    (org-edit-src-code)))))
-  (evil-define-key 'normal org-mode-map (kbd "<leader> o s") 'my-org-src)
-  ;; (evil-define-key leader-states org-mode-map (kbd "<leader> o s") 'org-schedule)
-  ;; (evil-define-key leader-states org-mode-map (kbd "<leader> o d") 'org-deadline)
-  (evil-define-key 'normal org-mode-map (kbd "<leader> o l") 'org-insert-link)
-  (evil-define-key 'normal org-mode-map (kbd "<leader> o T") (lambda () (interactive) (insert " ") (call-interactively 'org-time-stamp) (delete-char 1)))
-  (evil-define-key 'normal org-mode-map (kbd "<leader> o t") (lambda () (interactive) (insert " ") (org-insert-time-stamp (current-time) nil t) (delete-char 1)))
-  (evil-define-key 'normal org-mode-map (kbd "<leader> o e") 'org-export-dispatch)
-  (evil-define-key 'normal org-mode-map (kbd "<leader> o p") 'org-latex-export-to-pdf)
-  (evil-define-key 'normal org-mode-map (kbd "<leader> o /") 'org-sparse-tree)
-  (evil-define-key 'normal org-mode-map (kbd "<leader> o g g") 'org-occur)
-  (evil-define-key 'normal org-mode-map (kbd "<leader> o g l") (lambda () (interactive) (org-occur "\\[\\[.*\\]\\[.*\\]\\]")))
-  (evil-define-key 'normal org-mode-map (kbd "<leader> o b") 'org-bibtex-yank)
-  (evil-define-key 'normal org-mode-map (kbd "<leader> o 5") 'org-present)
-  (evil-define-key 'normal org-mode-map (kbd "g x") 'org-open-at-point)
-  ;; (evil-define-key leader-states org-mode-map (kbd "<leader> o e l") 'org-latex-export-to-latex)
-  ;; (evil-define-key leader-states org-mode-map (kbd "<leader> o e p") 'org-latex-export-to-pdf)
-  ;; (evil-define-key 'normal 'global (kbd "<leader> o l") 'org-store-link)
-  )
-
 (use-package dired
   :config
   (require 'dired-x)
@@ -144,24 +103,28 @@
   ;;   (interactive)
   ;;   (dired-kill-subdir-recurse 0)
   ;;   (dired-kill-subdir-and-up))
-  )
-(use-package dired
-  :after evil
-  :config
-  (evil-define-key 'normal dired-mode-map "f" 'find-file)
-  (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory)
-  (evil-define-key 'normal dired-mode-map "l" 'dired-find-file)
-  (evil-define-key 'normal dired-mode-map (kbd "<left>") 'dired-up-directory)
-  (evil-define-key 'normal dired-mode-map (kbd "<right>") 'dired-find-file)
-  ;; (evil-define-key 'normal dired-mode-map (kbd "TAB") 'dired-goto-subdir-and-focus)
-  ;; (evil-define-key 'normal dired-mode-map (kbd "<backtab>") 'dired-kill-children-subdir)
-  ;; (evil-define-key 'normal dired-mode-map (kbd "<shift-tab>") 'dired-kill-children-subdir)
-  ;; (evil-define-key 'normal dired-mode-map (kbd "gu") 'dired-kill-children-subdir)
-  ;; (evil-define-key 'normal dired-mode-map (kbd "gh") 'dired-tree-up)
-  ;; (evil-define-key 'normal dired-mode-map (kbd "gj") 'dired-next-subdir)
-  ;; (evil-define-key 'normal dired-mode-map (kbd "gk") 'dired-prev-subdir)
-  ;; (evil-define-key 'normal dired-mode-map (kbd "gl") 'dired-goto-subdir-and-focus)
-  (evil-define-key 'normal dired-mode-map [mouse-2] 'dired-mouse-find-file))
+
+  (keymap-set dired-mode-map "<left>" 'dired-up-directory)
+  (keymap-set dired-mode-map "<right>" 'dired-find-file)
+  (keymap-set dired-mode-map "<mouse-2>" 'dired-mouse-find-file)
+
+  (with-eval-after-load 'evil-collection
+    (evil-collection-define-key 'normal 'dired-mode-map (kbd "f") 'find-file)
+    (evil-collection-define-key 'normal 'dired-mode-map (kbd "h") 'dired-up-directory)
+    (evil-collection-define-key 'normal 'dired-mode-map (kbd "l") 'dired-find-file)
+    (evil-collection-define-key 'normal 'dired-mode-map (kbd "<left>") 'dired-up-directory)
+    (evil-collection-define-key 'normal 'dired-mode-map (kbd "<right>") 'dired-find-file)
+    (evil-collection-define-key 'normal 'dired-mode-map (kbd "<mouse-2>") 'dired-mouse-find-file)
+
+    ;; (evil-define-key 'normal dired-mode-map (kbd "TAB") 'dired-goto-subdir-and-focus)
+    ;; (evil-define-key 'normal dired-mode-map (kbd "<backtab>") 'dired-kill-children-subdir)
+    ;; (evil-define-key 'normal dired-mode-map (kbd "<shift-tab>") 'dired-kill-children-subdir)
+    ;; (evil-define-key 'normal dired-mode-map (kbd "gu") 'dired-kill-children-subdir)
+    ;; (evil-define-key 'normal dired-mode-map (kbd "gh") 'dired-tree-up)
+    ;; (evil-define-key 'normal dired-mode-map (kbd "gj") 'dired-next-subdir)
+    ;; (evil-define-key 'normal dired-mode-map (kbd "gk") 'dired-prev-subdir)
+    ;; (evil-define-key 'normal dired-mode-map (kbd "gl") 'dired-goto-subdir-and-focus)
+    ))
 
 (use-package midnight
   :config
@@ -190,11 +153,11 @@
                '(rust-mode . ("rust-analyzer"))))
 
 (use-package flymake
-  :after evil
   :commands (flymake-mode flymake-start)
   :config
-  (evil-define-minor-mode-key 'normal 'flymake-mode (kbd "[ c") 'flymake-goto-prev-error)
-  (evil-define-minor-mode-key 'normal 'flymake-mode (kbd "] c") 'flymake-goto-next-error))
+  (with-eval-after-load 'evil
+    (evil-define-minor-mode-key 'normal 'flymake-mode (kbd "[ c") 'flymake-goto-prev-error)
+    (evil-define-minor-mode-key 'normal 'flymake-mode (kbd "] c") 'flymake-goto-next-error)))
 
 ;; treesit-install-language-grammar
 (use-package treesit
@@ -339,13 +302,13 @@
 
 (use-package hl-todo
   :ensure t
-  :after evil
   :hook
   (prog-mode . hl-todo-mode)
   :config
   (setq hl-todo-wrap-movement t)
-  (evil-define-minor-mode-key 'normal 'hl-todo-mode (kbd "[ d") 'hl-todo-previous)
-  (evil-define-minor-mode-key 'normal 'hl-todo-mode (kbd "] d") 'hl-todo-next))
+  (with-eval-after-load 'evil
+    (evil-define-minor-mode-key 'normal 'hl-todo-mode (kbd "[ d") 'hl-todo-previous)
+    (evil-define-minor-mode-key 'normal 'hl-todo-mode (kbd "] d") 'hl-todo-next)))
 
 (use-package markdown-mode
   :ensure t
@@ -433,6 +396,15 @@
   (evil-define-key '(normal insert) 'global (kbd "C-S-v") 'yank)
   (evil-define-key 'visual 'global (kbd "C-S-c") 'evil-yank)
   (evil-define-key 'insert 'global (kbd "C-S-c") 'copy-region-as-kill)
+
+  (evil-define-operator my-evil-delete-paste (beg end type register yank-handler)
+    "Replace the region from BEG to END with content from the kill ring."
+    (interactive "<R><x><y>")
+    (let ((killed-text (current-kill 0 t)))
+      (evil-delete beg end type register yank-handler)
+      (insert killed-text)))
+  (evil-define-key 'normal 'global "s" 'my-evil-delete-paste)
+
   (evil-mode 1))
 
 (use-package evil-surround
@@ -520,9 +492,43 @@
   :config
   (yas-reload-all))
 
+(use-package cape
+  :ensure t
+  :config
+  (defun add-to-completion-at-point-functions (fun)
+    (setq-local completion-at-point-functions
+                (cons fun completion-at-point-functions)))
+  ;; (add-hook 'org-mode-hook (lambda () (add-to-completion-at-point-functions
+  ;;                                      (cape-company-to-capf 'company-ispell))))
+  (add-hook 'sh-mode-hook (lambda () (add-to-completion-at-point-functions 'cape-file))))
+
+(use-package corfu
+  :ensure t
+  :hook (prog-mode text-mode)
+  :bind
+  (:map corfu-map
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous)
+        ;; TODO uncomment after new corfu releas
+        ;; ("RET" . corfu-quick-insert)
+        )
+  :config
+  ;; (require 'corfu-indexed)
+  ;; (require 'corfu-quick)
+  ;; (corfu-indexed-mode)
+  (setq corfu-indexed-start 1)
+  (setq corfu-cycle t)
+  (setq corfu-auto t)
+  (setq corfu-delay 0)
+  (setq corfu-auto-prefix 2)
+  (setq corfu-preselect 'prompt)
+  (global-corfu-mode))
+
 (use-package company
   :ensure t
-  :after evil
+  :disabled
   :hook
   (sh-mode conf-mode c-mode c++-mode rust-mode latex-mode python-mode
            eglot-managed-mode)
@@ -582,12 +588,13 @@
         (call-interactively 'self-insert-command)
       (company-complete-selection)))
   
-  (evil-define-key 'insert company-mode-map (kbd "C-n")
-    'company-select-next-or-complete-selection)
-  (evil-define-key 'insert company-mode-map (kbd "C-p")
-    'company-select-previous-or-complete-selection)
-  (evil-define-key 'insert company-active-map (kbd "ESC")
-    (lambda () (interactive) (company-abort) (evil-normal-state)))
+  (with-eval-after-load 'evil
+    (evil-define-key 'insert company-mode-map (kbd "C-n")
+      'company-select-next-or-complete-selection)
+    (evil-define-key 'insert company-mode-map (kbd "C-p")
+      'company-select-previous-or-complete-selection)
+    (evil-define-key 'insert company-active-map (kbd "ESC")
+      (lambda () (interactive) (company-abort) (evil-normal-state))))
 
   ;;TODO eglot overrides some bindings, look into what's needed
   (keymap-set company-active-map "<backspace>" 'company-backspace)
@@ -663,7 +670,15 @@
 (use-package orderless
   :ensure t
   :config
-  (setq completion-styles '(orderless basic)
+  (defun orderless-fast-dispatch (word index total)
+    (and (= index 0) (= total 1) (length< word 4)
+         `(orderless-regexp . ,(concat "^" (regexp-quote word)))))
+
+  (orderless-define-completion-style orderless-fast
+    (orderless-style-dispatchers '(orderless-fast-dispatch))
+    (orderless-matching-styles '(orderless-literal orderless-regexp)))
+
+  (setq completion-styles '(orderless-fast basic)
         completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)))))
 
@@ -979,3 +994,5 @@ advice like this:
   :disabled
   :after org
   :hook (org-mode))
+
+(provide 'my-packages)

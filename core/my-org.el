@@ -1,4 +1,3 @@
-(provide 'my-org)
 (require 'org)
 (require 'org-tempo)
 (require 'ox-latex)
@@ -54,6 +53,9 @@
 
 (add-hook 'org-mode-hook 'auto-fill-mode)
 (add-hook 'org-mode-hook 'flyspell-mode)
+(with-eval-after-load 'flyspell
+  (keymap-set flyspell-mouse-map "<mouse-3>" 'flyspell-correct-word)
+  (keymap-unset flyspell-mouse-map "<mouse-2>"))
 
 (defun insert-zero-width-char ()
   (interactive) (insert-char #x200b))
@@ -135,3 +137,5 @@ a line containing the `setting' and `value'."
         (progn
           (deactivate-mark)
           (user-error "Yanked text is not a valid BibTeX entry")))))
+
+(provide 'my-org)

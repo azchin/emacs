@@ -1,5 +1,3 @@
-(provide 'my-leader)
-
 (evil-set-leader '(normal visual) (kbd "SPC"))
 
 (defvar leader-intercept-mode-map (make-sparse-keymap)
@@ -260,6 +258,38 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Package commands
+(evil-define-key 'normal 'global (kbd "<leader> o a") (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows)))
+(evil-define-key 'normal 'global (kbd "<leader> o l") 'org-store-link)
+;; "o a" 'org-agent
+(evil-define-key 'normal 'global (kbd "<leader> o c") 'org-capture)
+(evil-define-key 'normal 'global (kbd "<leader> a o") 'my-org-toggle-appearance)
+(evil-define-key 'normal org-mode-map (kbd "<leader> o i") 'org-insert-structure-template)
+(defun my-org-src ()
+  "Insert new source block or edit current block"
+  (interactive)
+  (condition-case nil
+      (org-edit-src-code)
+    (user-error (let ((mode (read-string "Major mode: ")))
+                  (org-insert-structure-template "src")
+                  (insert mode)
+                  (org-edit-src-code)))))
+(evil-define-key 'normal org-mode-map (kbd "<leader> o s") 'my-org-src)
+;; (evil-define-key leader-states org-mode-map (kbd "<leader> o s") 'org-schedule)
+;; (evil-define-key leader-states org-mode-map (kbd "<leader> o d") 'org-deadline)
+(evil-define-key 'normal org-mode-map (kbd "<leader> o l") 'org-insert-link)
+(evil-define-key 'normal org-mode-map (kbd "<leader> o T") (lambda () (interactive) (insert " ") (call-interactively 'org-time-stamp) (delete-char 1)))
+(evil-define-key 'normal org-mode-map (kbd "<leader> o t") (lambda () (interactive) (insert " ") (org-insert-time-stamp (current-time) nil t) (delete-char 1)))
+(evil-define-key 'normal org-mode-map (kbd "<leader> o e") 'org-export-dispatch)
+(evil-define-key 'normal org-mode-map (kbd "<leader> o p") 'org-latex-export-to-pdf)
+(evil-define-key 'normal org-mode-map (kbd "<leader> o /") 'org-sparse-tree)
+(evil-define-key 'normal org-mode-map (kbd "<leader> o g g") 'org-occur)
+(evil-define-key 'normal org-mode-map (kbd "<leader> o g l") (lambda () (interactive) (org-occur "\\[\\[.*\\]\\[.*\\]\\]")))
+(evil-define-key 'normal org-mode-map (kbd "<leader> o b") 'org-bibtex-yank)
+(evil-define-key 'normal org-mode-map (kbd "<leader> o 5") 'org-present)
+(evil-define-key 'normal org-mode-map (kbd "g x") 'org-open-at-point)
+;; (evil-define-key leader-states org-mode-map (kbd "<leader> o e l") 'org-latex-export-to-latex)
+;; (evil-define-key leader-states org-mode-map (kbd "<leader> o e p") 'org-latex-export-to-pdf)
+;; (evil-define-key 'normal 'global (kbd "<leader> o l") 'org-store-link)
 (evil-define-key leader-states 'global (kbd "<leader> m i") 'magit-init)
 (evil-define-key leader-states 'global (kbd "<leader> m c") 'magit-clone)
 (evil-define-key leader-states 'global (kbd "<leader> m m") 'magit-status)
@@ -300,3 +330,5 @@
 (evil-define-key 'normal 'global (kbd "<leader> r t") 'org-roam-tag-add)
 (evil-define-key 'normal 'global (kbd "<leader> r T") 'org-roam-tag-remove)
 (evil-define-key 'normal 'global (kbd "<leader> d t") 'dired-sidebar-toggle-sidebar)
+
+(provide 'my-leader)

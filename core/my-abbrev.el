@@ -1,5 +1,3 @@
-(provide 'my-abbrev)
-
 ;; http://xahlee.info/emacs/emacs/emacs_abbrev_mode.html
 (clear-abbrev-table global-abbrev-table)
 (define-abbrev-table 'global-abbrev-table
@@ -4305,3 +4303,5 @@
 
 (set-default 'abbrev-mode t)
 (setq save-abbrevs nil)
+
+(provide 'my-abbrev)

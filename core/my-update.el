@@ -1,4 +1,3 @@
-(provide 'my-update)
 (require 'package)
 
 (defvar my-update-file (emacsd "cache/my-update"))
@@ -22,3 +21,5 @@
     (my-update-write-time)))
 
 (add-hook 'after-init-hook 'my-package-update)
+
+(provide 'my-update)

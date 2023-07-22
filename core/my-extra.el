@@ -1,5 +1,3 @@
-(provide 'my-extra)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Backup
 (setq 
@@ -91,6 +89,23 @@
 ;; (global-set-key (kbd "C-c a") 'my-increment-number-at-point)
 ;; (global-set-key (kbd "C-c x") 'my-decrement-number-at-point)
 
+(defun point-at-beginning-of-word-p ()
+  "Check if point is at the beginning of a word."
+  (looking-back "\\b" 1))
+
+(defun my-replace-marked-region-with-killed-text ()
+  "Replace the marked (active) region with the text from the kill ring."
+  (interactive)
+  (let ((killed-text (current-kill 0 t)))
+    (if (use-region-p)
+        (let ((region-start (region-beginning))
+              (region-end (region-end)))
+          (delete-region region-start region-end))
+      (progn
+        (unless (point-at-beginning-of-word-p)
+          (backward-word))
+        (kill-word nil)))
+    (insert killed-text)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; External
@@ -178,3 +193,5 @@ The app is chosen from your OS's preference."
 (setq doc-view-continuous t)
 (setq use-short-answers t)
 (setq-default lexical-binding t)
+
+(provide 'my-extra)

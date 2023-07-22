@@ -1,5 +1,3 @@
-(provide 'my-desktop)
-
 (setq desktop-path `(,(emacsd "cache/default-desktop/")))
 (setq desktop-load-locked-desktop t)
 ;; (setq desktop-restore-frames nil)
@@ -58,3 +56,5 @@
     (project-identifier-encode
      (completing-read "Choose project: " (get-projects-in-cache) (lambda (x) t) t))))
   (desktop-save-mode t))
+
+(provide 'my-desktop)
