@@ -64,7 +64,7 @@
 ;;     ;; (add-to-list 'default-frame-alist `(left . ,(nth 2 win)))
 ;;     ;; (add-to-list 'default-frame-alist `(top . ,(nth 3 win)))
 ;;     )
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; (setq my-display-offset 50)
 ;; (setq my-display-gap 10)
@@ -230,8 +230,7 @@
   (mapc 'disable-theme custom-enabled-themes))
 
 (defadvice load-theme (after theme-dont-propagate activate)
-  (use-package my-late
-    :after org))
+  (load "my-late"))
 
 (defun set-faces-to-default-font-family (faces)
   (dolist (face faces)

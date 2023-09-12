@@ -2,11 +2,22 @@
 (require 'org-tempo)
 (require 'ox-latex)
 
-(setq org-directory "~/org/")
+(setq org-directory "~/drive/org/")
 (setq org-agenda-files `(,(concat org-directory "agenda.org")))
+(setq org-capture-templates
+      `(("j" "Journal Entry"
+         entry (file+olp+datetree ,(concat org-directory "journal.org")))
+        ("b" "Big Brain, Small Brain"
+         entry (file ,(concat org-directory "brain.org")))
+        ("a" "Assignment"
+         plain (file (lambda () (call-interactively 'find-file) (buffer-file-name)))
+         "#+title: %^{Title}\n#+options: date:nil author:nil\n"
+         :prepend t)))
 (setq org-agenda-span 'month)
-(setq org-image-actual-width nil)
+(setq org-image-actual-width 500)
 (setq org-export-with-toc nil)
+;; (setq org-export-with-date nil)
+;; (setq org-export-with-author nil)
 (setq org-export-with-section-numbers nil)
 (setq org-export-in-background t)
 (setq org-list-allow-alphabetical t)
@@ -18,9 +29,10 @@
 (setq org-indent-mode-turns-off-adapt-indentation t)
 (setq org-adapt-indentation nil)
 (setq org-startup-indented t)
+(setq org-startup-with-inline-images t)
 (setq org-pretty-entities t)
 (setq org-src-tab-acts-natively t)
-(setq org-src-window-setup 'other-frame)
+(setq org-src-window-setup 'reorganize-frame)
 (setq org-src-preserve-indentation t)
 (setq org-todo-keywords '((sequence "TODO" "PROG" "|" "DONE" "AXED")))
 (setopt safe-local-variable-values

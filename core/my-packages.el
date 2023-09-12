@@ -139,18 +139,20 @@
           "^\\*EMMS Playlist\\*.*$" "^\\*.*eshell\\*" "^\\*Help.*\\*$"
           "^\\*Article.*\\*$" "^\\*Summary.*\\*$" "^\\*eww\\*$" "^\\*Group\\*$"
           "^\\([A-Za-z0-9_-]*\\.\\)+[A-Za-z0-9]*\\(<[A-Za-z0-9_-]*>\\)?$" "^Makefile.*$"))
-  (run-at-time t 1800 'clean-buffer-list))
+  ;; (run-at-time t 1800 'clean-buffer-list)
+  )
 
 ;; Soft dependency on yasnippets and company
 (use-package eglot
   :hook
   (rust-mode . eglot-ensure)
+  (rust-ts-mode . eglot-ensure)
   :config
   (setq read-process-output-max (* 1024 32))
   (add-to-list 'eglot-server-programs
-               '(c-mode . ("ccls")))
+               '((c-mode c-ts-mode) . ("ccls")))
   (add-to-list 'eglot-server-programs
-               '(rust-mode . ("rust-analyzer"))))
+               '((rust-mode rust-ts-mode) . ("rust-analyzer"))))
 
 (use-package flymake
   :commands (flymake-mode flymake-start)
@@ -198,18 +200,18 @@
                     (search-forward "]")
                     (backward-char)
                     (buffer-substring-no-properties (mark) (point))))))
-  (add-to-list 'org-roam-capture-templates
-               '("t" "todo" plain "%?" :target
-                 (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                            "#+title: ${title}
-#+filetags: :todo:
-")))
-  (add-to-list 'org-roam-capture-templates
-               `("p" "paper" plain "%?" :target
-                 (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                            ,(concat "#+title: ${title}
-#+bibliography: " my-org-roam-bibliography "
-"))))
+;;   (add-to-list 'org-roam-capture-templates
+;;                '("t" "todo" plain "%?" :target
+;;                  (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+;;                             "#+title: ${title}
+;; #+filetags: :todo:
+;; ")))
+;;   (add-to-list 'org-roam-capture-templates
+;;                `("p" "paper" plain "%?" :target
+;;                  (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+;;                             ,(concat "#+title: ${title}
+;; #+bibliography: " my-org-roam-bibliography "
+;; "))))
   (org-roam-db-autosync-mode))
 
 (use-package org-roam-ui
@@ -227,6 +229,7 @@
         org-roam-ui-open-on-start t))
 
 (use-package citar-org-roam
+  :disabled
   :ensure t
   :after (org-roam citar)
   :config
@@ -314,7 +317,21 @@
   :ensure t
   :mode "\\.md\\'"
   :hook
-  (markdown-mode . auto-fill-mode))
+  (markdown-mode . auto-fill-mode)
+  :config
+  (add-hook 'markdown-mode-hook (lambda () (setq-local face-remapping-alist '((default variable-pitch)))))
+  (dolist (face '((markdown-header-face-1 . 1.4)
+                  (markdown-header-face-2 . 1.2)
+                  (markdown-header-face-3 . 1.1)
+                  (markdown-header-face-4 . 1.1)
+                  (markdown-header-face-5 . 1.0)
+                  (markdown-header-face-6 . 1.0)))
+    (set-face-attribute (car face) nil :family markup-font-family :weight 'medium :height (cdr face)))
+  (set-face-attribute 'markdown-code-face nil :family default-font-family :height default-font-height))
+
+(use-package lua-mode
+  :ensure t
+  :mode "\\.lua\\'")
 
 (use-package ox-gfm
   :after org
@@ -526,88 +543,6 @@
   (setq corfu-preselect 'prompt)
   (global-corfu-mode))
 
-(use-package company
-  :ensure t
-  :disabled
-  :hook
-  (sh-mode conf-mode c-mode c++-mode rust-mode latex-mode python-mode
-           eglot-managed-mode)
-  :config
-  (setq company-idle-delay 0.0)
-  (setq company-minimum-prefix-length 2)
-  (setq company-show-quick-access t)
-  (setq company-selection-wrap-around t)
-  (setq company-tooltip-maximum-width 60)
-  (setq company-selection-default nil)
-  (setq company-backends
-        '((company-capf company-cmake company-keywords
-                        :with company-dabbrev-code :separate)))
-  (setq company-frontends
-        '(company-pseudo-tooltip-frontend
-          company-echo-metadata-frontend))
-  (defun company-shell-mode-configure ()
-    (setq-local company-backends
-                '((company-capf company-keywords company-files
-                                :with company-dabbrev-code :separate))))
-  (defun company-org-mode-configure ()
-    (setq-local company-backends
-                '((company-capf company-ispell :with company-dabbrev :separate))))
-  (add-hook 'sh-mode-hook 'company-shell-mode-configure)
-  (add-hook 'conf-mode-hook 'company-shell-mode-configure)
-  (add-hook 'org-mode-hook 'company-org-mode-configure)
-
-  (defun set-company-faces-to-default-font-family ()
-    (dolist (face '(company-tooltip company-tooltip-common
-                                    company-tooltip-search
-                                    company-tooltip-search-selection))
-      (set-face-attribute face nil :family default-font-family)))
-  (add-hook 'company-mode-hook 'set-company-faces-to-default-font-family)
-  
-  (defun company-backspace ()
-    (interactive)
-    (if (equal company-selection-changed nil)
-        (backspace-whitespace-to-tab-stop)
-      (company-abort)))
-
-  (defun company-select-next-or-complete-selection (&optional arg)
-    "Insert selection if appropriate, or select the next candidate."
-    (interactive)
-    (if (not (company-tooltip-visible-p)) (company-manual-begin))
-    (cond ((> company-candidates-length 1) (company-select-next arg))
-          ((equal company-candidates-length 1) (company-finish (car company-candidates)))))
-
-  (defun company-select-previous-or-complete-selection ()
-    "Insert selection if appropriate, or select the previous candidate."
-    (interactive)
-    (company-select-next-or-complete-selection -1))
-
-  (defun company-complete-or-self-insert ()
-    "Complete selection if selected, otherwise self insert"
-    (interactive)
-    (if (equal company-selection-changed nil)
-        (call-interactively 'self-insert-command)
-      (company-complete-selection)))
-  
-  (with-eval-after-load 'evil
-    (evil-define-key 'insert company-mode-map (kbd "C-n")
-      'company-select-next-or-complete-selection)
-    (evil-define-key 'insert company-mode-map (kbd "C-p")
-      'company-select-previous-or-complete-selection)
-    (evil-define-key 'insert company-active-map (kbd "ESC")
-      (lambda () (interactive) (company-abort) (evil-normal-state))))
-
-  ;;TODO eglot overrides some bindings, look into what's needed
-  (keymap-set company-active-map "<backspace>" 'company-backspace)
-  (keymap-set company-active-map "C-h" nil)
-  (keymap-set company-active-map "TAB" 'company-select-next)
-  (keymap-set company-active-map "<tab>" 'company-select-next)
-  (keymap-set company-active-map "<shift-tab>" 'company-select-previous)
-  (keymap-set company-active-map "<backtab>" 'company-select-previous)
-  (keymap-set company-active-map "SPC" 'company-complete-or-self-insert)
-
-  (defun add-to-company-backends (list)
-    (setq company-backends `(,(append list (car company-backends))))))
-
 (use-package which-key
   :ensure t
   :commands which-key-mode)
@@ -692,7 +627,8 @@
   :after org
   :pin "nongnu"
   :config
-  (add-to-list 'org-modules 'ol-git-link))
+  ;; (add-to-list 'org-modules 'ol-git-link)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Code graveyard
@@ -841,6 +777,12 @@ advice like this:
 (use-package yasnippet-snippets
   :disabled
   :after yasnippet)
+
+(use-package org-ai
+  :disabled
+  :ensure t
+  :after org
+  :hook org-mode)
 
 (use-package gruvbox-theme
   :disabled
@@ -994,5 +936,87 @@ advice like this:
   :disabled
   :after org
   :hook (org-mode))
+
+(use-package company
+  :ensure t
+  :disabled
+  :hook
+  (sh-mode conf-mode c-mode c++-mode rust-mode latex-mode python-mode
+           eglot-managed-mode)
+  :config
+  (setq company-idle-delay 0.0)
+  (setq company-minimum-prefix-length 2)
+  (setq company-show-quick-access t)
+  (setq company-selection-wrap-around t)
+  (setq company-tooltip-maximum-width 60)
+  (setq company-selection-default nil)
+  (setq company-backends
+        '((company-capf company-cmake company-keywords
+                        :with company-dabbrev-code :separate)))
+  (setq company-frontends
+        '(company-pseudo-tooltip-frontend
+          company-echo-metadata-frontend))
+  (defun company-shell-mode-configure ()
+    (setq-local company-backends
+                '((company-capf company-keywords company-files
+                                :with company-dabbrev-code :separate))))
+  (defun company-org-mode-configure ()
+    (setq-local company-backends
+                '((company-capf company-ispell :with company-dabbrev :separate))))
+  (add-hook 'sh-mode-hook 'company-shell-mode-configure)
+  (add-hook 'conf-mode-hook 'company-shell-mode-configure)
+  (add-hook 'org-mode-hook 'company-org-mode-configure)
+
+  (defun set-company-faces-to-default-font-family ()
+    (dolist (face '(company-tooltip company-tooltip-common
+                                    company-tooltip-search
+                                    company-tooltip-search-selection))
+      (set-face-attribute face nil :family default-font-family)))
+  (add-hook 'company-mode-hook 'set-company-faces-to-default-font-family)
+  
+  (defun company-backspace ()
+    (interactive)
+    (if (equal company-selection-changed nil)
+        (backspace-whitespace-to-tab-stop)
+      (company-abort)))
+
+  (defun company-select-next-or-complete-selection (&optional arg)
+    "Insert selection if appropriate, or select the next candidate."
+    (interactive)
+    (if (not (company-tooltip-visible-p)) (company-manual-begin))
+    (cond ((> company-candidates-length 1) (company-select-next arg))
+          ((equal company-candidates-length 1) (company-finish (car company-candidates)))))
+
+  (defun company-select-previous-or-complete-selection ()
+    "Insert selection if appropriate, or select the previous candidate."
+    (interactive)
+    (company-select-next-or-complete-selection -1))
+
+  (defun company-complete-or-self-insert ()
+    "Complete selection if selected, otherwise self insert"
+    (interactive)
+    (if (equal company-selection-changed nil)
+        (call-interactively 'self-insert-command)
+      (company-complete-selection)))
+  
+  (with-eval-after-load 'evil
+    (evil-define-key 'insert company-mode-map (kbd "C-n")
+      'company-select-next-or-complete-selection)
+    (evil-define-key 'insert company-mode-map (kbd "C-p")
+      'company-select-previous-or-complete-selection)
+    (evil-define-key 'insert company-active-map (kbd "ESC")
+      (lambda () (interactive) (company-abort) (evil-normal-state))))
+
+  ;;TODO eglot overrides some bindings, look into what's needed
+  (keymap-set company-active-map "<backspace>" 'company-backspace)
+  (keymap-set company-active-map "C-h" nil)
+  (keymap-set company-active-map "TAB" 'company-select-next)
+  (keymap-set company-active-map "<tab>" 'company-select-next)
+  (keymap-set company-active-map "<shift-tab>" 'company-select-previous)
+  (keymap-set company-active-map "<backtab>" 'company-select-previous)
+  (keymap-set company-active-map "SPC" 'company-complete-or-self-insert)
+
+  (defun add-to-company-backends (list)
+    (setq company-backends `(,(append list (car company-backends))))))
 
 (provide 'my-packages)

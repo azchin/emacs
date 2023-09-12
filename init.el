@@ -94,7 +94,7 @@
       (null-device . "/dev/null"))))
  '(ede-project-directories '("/home/andrew/sandbox/ede"))
  '(package-selected-packages
-   '(cape org-contrib dired-sidebar avy citar-org-roam citar rg tuareg-mode ocaml-mode yasnippet evil-org evil-quickscope))
+   '(lua-mode cape org-contrib dired-sidebar avy citar-org-roam citar rg tuareg-mode ocaml-mode yasnippet evil-org evil-quickscope))
  '(tab-bar-select-tab-modifiers '(meta)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

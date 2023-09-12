@@ -1,9 +1,13 @@
 ;; http://xahlee.info/emacs/emacs/emacs_abbrev_mode.html
+(define-abbrev-table 'org-mode-abbrev-table
+  '(("otit" "#+title:")
+    ("oaut" "#+author:")
+    ("oopt" "#+options:")))
+(add-hook 'org-mode-hook (lambda () (setq local-abbrev-table org-mode-abbrev-table)))
 (clear-abbrev-table global-abbrev-table)
 (define-abbrev-table 'global-abbrev-table
   '(("sec" "security")
     ("csec" "cybersecurity")
-    ("gatech" "Georgia Tech")
     ("abt" "about")
     ("intr" "interesting")
     ("bibl" "bibliography")
