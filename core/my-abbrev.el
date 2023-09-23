@@ -6,13 +6,7 @@
 (add-hook 'org-mode-hook (lambda () (setq local-abbrev-table org-mode-abbrev-table)))
 (clear-abbrev-table global-abbrev-table)
 (define-abbrev-table 'global-abbrev-table
-  '(("sec" "security")
-    ("csec" "cybersecurity")
-    ("abt" "about")
-    ("intr" "interesting")
-    ("bibl" "bibliography")
-    ("bench" "benchmark")
-    ;; Wikipedia's common misspellings for coumputers
+  '(;; Wikipedia's common misspellings for coumputers
     ("abandonned" "abandoned")
     ("aberation" "aberration")
     ("abilityes" "abilities")

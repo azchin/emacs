@@ -48,6 +48,8 @@
 (evil-define-key leader-rw-states 'global (kbd "<leader> c f") 'fill-region)
 (evil-define-key 'visual 'global (kbd "<leader> c w") 'count-words-region)
 (evil-define-key 'normal 'global (kbd "<leader> c z") 'insert-zero-width-char)
+(evil-define-key 'visual 'global (kbd "<leader> c n") 'narrow-to-region)
+(evil-define-key 'normal 'global (kbd "<leader> c n") 'widen)
 (evil-define-key 'normal 'global (kbd "<leader> c y") (lambda () (interactive) (kill-ring-save (point-min) (point-max))))
 
 (evil-define-key 'normal 'global (kbd "<leader> e e") (lambda () (interactive) (if desktop-save-mode
@@ -68,7 +70,7 @@
 (evil-define-key 'normal 'global (kbd "<leader> f l") (lambda () (interactive) (find-file (read-file-name "Find file: " "~/clone/"))))
 (evil-define-key 'normal 'global (kbd "<leader> f o") (lambda () (interactive) (find-file (read-file-name "Find file: " "~/org/"))))
 (evil-define-key 'normal 'global (kbd "<leader> f j") (lambda () (interactive) (find-file (concat org-directory "journal.org"))))
-(evil-define-key 'normal 'global (kbd "<leader> f b") (lambda () (interactive) (find-file (concat org-directory "brain.org"))))
+(evil-define-key 'normal 'global (kbd "<leader> f b") (lambda () (interactive) (find-file (concat org-directory "beorg-notes.org"))))
 (evil-define-key 'normal 'global (kbd "<leader> f a") (lambda () (interactive) (find-file (concat org-directory "agenda.org"))))
 (evil-define-key 'normal 'global (kbd "<leader> f d") (lambda () (interactive) (find-file (read-file-name "Find file: " "~/drive/"))))
 (evil-define-key 'normal 'global (kbd "<leader> f e e") (lambda () (interactive) (find-file (read-file-name "Find file: " (emacsd "")))))

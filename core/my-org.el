@@ -7,8 +7,12 @@
 (setq org-capture-templates
       `(("j" "Journal Entry"
          entry (file+olp+datetree ,(concat org-directory "journal.org")))
-        ("b" "Big Brain, Small Brain"
-         entry (file ,(concat org-directory "brain.org")))
+        ("b" "Beorg notes"
+         entry (file ,(concat org-directory "beorg-notes.org")))
+        ("P" "Paragraph formatting"
+         plain (file (lambda () (call-interactively 'find-file) (buffer-file-name)))
+         "#+latex_header: \\usepackage{parskip}\n"
+         :prepend t)
         ("a" "Assignment"
          plain (file (lambda () (call-interactively 'find-file) (buffer-file-name)))
          "#+title: %^{Title}\n#+options: date:nil author:nil\n"
@@ -20,6 +24,7 @@
 ;; (setq org-export-with-author nil)
 (setq org-export-with-section-numbers nil)
 (setq org-export-in-background t)
+(setq org-export-preserve-breaks nil)
 (setq org-list-allow-alphabetical t)
 (setq org-startup-folded 'nofold)
 (setq org-hide-emphasis-markers t)
@@ -34,6 +39,7 @@
 (setq org-src-tab-acts-natively t)
 (setq org-src-window-setup 'reorganize-frame)
 (setq org-src-preserve-indentation t)
+(setq org-edit-src-content-indentation 4)
 (setq org-todo-keywords '((sequence "TODO" "PROG" "|" "DONE" "AXED")))
 (setopt safe-local-variable-values
         '((org-emphasis-alist . nil)

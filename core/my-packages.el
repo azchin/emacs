@@ -548,6 +548,7 @@
   :commands which-key-mode)
 
 (use-package consult
+  :disabled
   :ensure t
   ;; The :init configuration is always executed (Not lazy)
   :init
@@ -574,21 +575,8 @@
   (keymap-global-set "C-s" 'consult-line)
   )
 
-(use-package marginalia
-  :ensure t
-  ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
-  ;; available in the *Completions* buffer, add it to the
-  ;; `completion-list-mode-map'.
-  ;; :bind (:map minibuffer-local-map
-  ;;             ("M-A" . marginalia-cycle))
-  
-  :config
-  ;; Marginalia must be activated in the :init section of use-package such that
-  ;; the mode gets enabled right away. Note that this forces loading the
-  ;; package.
-  (marginalia-mode))
-
 (use-package vertico
+  :disabled
   :ensure t
   :init
   (vertico-mode)
@@ -602,20 +590,40 @@
                    #'completion--in-region)
                  args))))
 
-(use-package orderless
+(use-package ivy
+  :ensure t
+  :init
+  (setq ivy-re-builders-alist
+        '((counsel-describe-variable . ivy--regex-ignore-order)
+          (counsel-describe-function . ivy--regex-ignore-order)
+          (counsel-describe-symbol . ivy--regex-ignore-order)
+          (counsel-describe-face . ivy--regex-ignore-order)
+          (counsel-descbinds . ivy--regex-ignore-order)
+          (counsel-M-x . ivy--regex-ignore-order)
+          (counsel-find-file . ivy--regex-fuzzy)
+          (counsel-dired . ivy--regex-plus)
+          (t . ivy--regex-fuzzy)))
+  :config
+  (setq ivy-count-format "")
+  (setq ivy-height 16)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-use-selectable-prompt t)
+  (add-to-list 'ivy-initial-inputs-alist '(counsel-minor . ""))
+  (ivy-mode 1))
+
+(use-package ivy-hydra
+  :ensure t)
+
+(use-package swiper
   :ensure t
   :config
-  (defun orderless-fast-dispatch (word index total)
-    (and (= index 0) (= total 1) (length< word 4)
-         `(orderless-regexp . ,(concat "^" (regexp-quote word)))))
+  (defvaralias 'swiper-history 'regexp-search-ring)
+  (keymap-global-set "C-s" 'swiper-isearch))
 
-  (orderless-define-completion-style orderless-fast
-    (orderless-style-dispatchers '(orderless-fast-dispatch))
-    (orderless-matching-styles '(orderless-literal orderless-regexp)))
-
-  (setq completion-styles '(orderless-fast basic)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+(use-package counsel
+  :ensure t
+  :config
+  (counsel-mode 1))
 
 (use-package rg
   :ensure t
@@ -814,6 +822,37 @@ advice like this:
   :disabled
   :ensure t)
 
+(use-package marginalia
+  :disabled
+  :ensure t
+  ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+  ;; available in the *Completions* buffer, add it to the
+  ;; `completion-list-mode-map'.
+  ;; :bind (:map minibuffer-local-map
+  ;;             ("M-A" . marginalia-cycle))
+  
+  :config
+  ;; Marginalia must be activated in the :init section of use-package such that
+  ;; the mode gets enabled right away. Note that this forces loading the
+  ;; package.
+  (marginalia-mode))
+
+(use-package orderless
+  :disabled
+  :ensure t
+  :config
+  (defun orderless-fast-dispatch (word index total)
+    (and (= index 0) (= total 1) (length< word 4)
+         `(orderless-regexp . ,(concat "^" (regexp-quote word)))))
+
+  (orderless-define-completion-style orderless-fast
+    (orderless-style-dispatchers '(orderless-fast-dispatch))
+    (orderless-matching-styles '(orderless-literal orderless-regexp)))
+
+  (setq completion-styles '(orderless-fast basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
+
 (use-package pdf-tools
   :disabled
   :ensure t
@@ -891,45 +930,6 @@ advice like this:
   :ensure t
   :hook
   (tree-sitter-after-on . tree-sitter-hl-mode))
-
-(use-package ivy
-  :ensure t
-  :disabled
-  :init
-  (setq ivy-re-builders-alist
-        '((counsel-describe-variable . ivy--regex-ignore-order)
-          (counsel-describe-function . ivy--regex-ignore-order)
-          (counsel-describe-symbol . ivy--regex-ignore-order)
-          (counsel-describe-face . ivy--regex-ignore-order)
-          (counsel-descbinds . ivy--regex-ignore-order)
-          (counsel-M-x . ivy--regex-ignore-order)
-          (counsel-find-file . ivy--regex-fuzzy)
-          (counsel-dired . ivy--regex-plus)
-          (t . ivy--regex-fuzzy)))
-  :config
-  (setq ivy-count-format "")
-  (setq ivy-height 16)
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-use-selectable-prompt t)
-  (add-to-list 'ivy-initial-inputs-alist '(counsel-minor . ""))
-  (ivy-mode 1))
-
-(use-package ivy-hydra
-  :ensure t
-  :disabled)
-
-(use-package swiper
-  :ensure t
-  :disabled
-  :config
-  (defvaralias 'swiper-history 'regexp-search-ring)
-  (keymap-global-set "C-s" 'swiper-isearch))
-
-(use-package counsel
-  :ensure t
-  :disabled
-  :config
-  (counsel-mode 1))
 
 (use-package org-modern
   :ensure t
