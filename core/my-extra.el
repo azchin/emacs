@@ -65,7 +65,7 @@
                    ("-u" "%u")
                    ("-p" "Password:")
                    ("--"))))))
-(add-hook 'tramp--startup-hook 'tramp-change-sudoedit-doas)
+;; (add-hook 'tramp--startup-hook 'tramp-change-sudoedit-doas)
 
 (defun my-change-number-at-point (change increment)
   (let ((number (number-at-point))

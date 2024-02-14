@@ -98,11 +98,11 @@
 (defvar default-font-family "DejaVu Sans Mono"
   "Default face font family")
 ;; b4 font bug, we had 113 and 120, after 72, 80
-(defvar default-font-height 113
+(defvar default-font-height 140
   "Default face font height") ;; 10: 98, 11: 113, 12: 120
 (defvar markup-font-family "DejaVu Sans"
   "Markup font family")
-(defvar markup-font-height 120
+(defvar markup-font-height 160
   "Markup font height")
 (add-to-list 'default-frame-alist `(font . ,(concat default-font-family "-" (number-to-string (round default-font-height 10)))))
 ;; (add-hook 'org-mode-hook (lambda () (buffer-face-set :family markup-font-family :height markup-font-height)))
@@ -122,10 +122,10 @@
 (setq frame-title-format '("%b :: %f"))
 
 ;; (setq initial-buffer-choice t)
-(setopt initial-major-mode 'org-mode)
+(setopt initial-major-mode 'text-mode)
 (setopt initial-scratch-message
-        "# This buffer is for text that is not saved.
-# To create a file, visit it with \\[find-file] and enter text in its buffer.\n\n")
+        (format ">>>>>>>>>>>>>>>>>>>> Welcome %s, happy hacking! :3\n"
+                (capitalize (user-login-name))))
 (setopt inhibit-startup-screen t)
 ;; (fringe-mode 0)
 (fringe-mode '(0 . 1))

@@ -152,6 +152,15 @@
   ;; (run-at-time t 1800 'clean-buffer-list)
   )
 
+(use-package tramp
+  :config
+  (setq enable-remote-dir-locals t)
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+
+(use-package project
+  :config
+  (add-to-list 'project-vc-extra-root-markers ".dir-locals.el"))
+
 ;; Soft dependency on yasnippets and company
 (use-package eglot
   ;; :hook
@@ -173,6 +182,7 @@
 
 ;; treesit-install-language-grammar
 (use-package treesit
+  :disabled
   :hook
   (rust-mode . rust-ts-mode)
   (c-mode . c-ts-mode)
@@ -238,79 +248,6 @@
         org-roam-ui-update-on-save t
         org-roam-ui-open-on-start t))
 
-(use-package citar-org-roam
-  :disabled
-  :ensure t
-  :after (org-roam citar)
-  :config
-  (defun my-org-citar-open-note ()
-    (interactive)
-    (let* ((citar-bibliography (list my-org-roam-bibliography))
-           (citekey (my-org-cite-yank-or-insert-key)))
-      (citar-open-notes (list citekey))
-      (org-roam-ref-remove (concat "@" citekey))
-      (org-roam-ref-add (concat "[cite:@" citekey "]"))
-      (call-interactively 'org-roam-tag-add)))
-  (setq citar-org-roam-capture-template-key "p")
-  (citar-org-roam-mode))
-
-(use-package org-present
-  :disabled
-  :ensure t
-  :after (org evil)
-  :commands org-present
-  :init
-  ;; System Crafters' org-present config
-  (defun dw/org-present-prepare-slide ()
-    (org-overview)
-    (org-show-entry)
-    (org-show-children))
-
-  (defun dw/org-present-hook ()
-    (setq-local face-remapping-alist '((default (:height 1.5) variable-pitch)
-                                       (header-line (:height 4.5) variable-pitch)
-                                       (org-code (:height 1.55) org-code)
-                                       (org-verbatim (:height 1.55) org-verbatim)
-                                       (org-block (:height 1.25) org-block)
-                                       (org-block-begin-line (:height 0.7) org-block)
-                                       ))
-    (setq header-line-format " ")
-    (org-display-inline-images)
-    ;; (dw/org-present-prepare-slide)
-    (disable-lines)
-    (org-show-all))
-
-  (defun dw/org-present-quit-hook ()
-    (setq-local face-remapping-alist '((default variable-pitch)))
-    (setq header-line-format nil)
-    (run-hooks 'text-mode-hook)
-    (org-present-small)
-    (org-remove-inline-images))
-
-  (defun dw/org-present-prev ()
-    (interactive)
-    (org-present-prev)
-    (dw/org-present-prepare-slide))
-
-  (defun dw/org-present-next ()
-    (interactive)
-    (org-present-next)
-    (dw/org-present-prepare-slide))
-
-  :hook ((org-present-mode . dw/org-present-hook)
-         (org-present-mode . evil-force-normal-state)
-         (org-present-mode-quit . dw/org-present-quit-hook)))
-
-(use-package citar
-  :disabled
-  :ensure t
-  :custom
-  ;; (org-cite-global-bibliography '("~/bib/references.bib"))
-  ;; (citar-bibliography org-cite-global-bibliography)
-  (org-cite-insert-processor 'citar)
-  (org-cite-follow-processor 'citar)
-  (org-cite-activate-processor 'citar))
-
 (use-package dired-sidebar
   :ensure t
   :commands (dired-sidebar-toggle-sidebar))
@@ -348,21 +285,6 @@
 (use-package ox-gfm
   :after org
   :ensure t)
-
-(use-package osm
-  :disabled
-  :ensure t
-  ;; :bind ("C-c m" . osm-prefix-map) ;; Alternative: `osm-home'
-  :commands (osm-home osm-search osm-goto osm-bookmark-jump osm-gpx-show)
-  :custom
-  ;; Take a look at the customization group `osm' for more options.
-  (osm-server 'default) ;; Configure the tile server
-  (osm-copyright t)     ;; Display the copyright information
-
-  :config
-  ;; Load Org link support
-  (with-eval-after-load 'org
-    (require 'osm-ol)))
 
 (use-package cmake-mode
   :ensure t
@@ -411,7 +333,7 @@
   (evil-set-initial-state 'eshell-mode 'insert)
   (evil-set-initial-state 'vc-annotate-mode 'insert)
   (evil-set-initial-state 'gnus-mode 'emacs)
-  (evil-set-initial-state 'osm-mode 'emacs)
+  ;; (evil-set-initial-state 'osm-mode 'emacs)
   (defun simulate-key-presses (key-string)
     (setq unread-command-events (listify-key-sequence (kbd key-string))))
   (evil-define-key 'visual 'global (kbd "M-<down>")
@@ -493,6 +415,7 @@
   (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "[ x") 'xref-go-back)
   (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "] x") 'xref-go-forward)
   (evil-collection-define-key 'normal 'dired-mode-map (kbd "SPC") nil)
+  (evil-collection-define-key 'normal 'diff-mode-map (kbd "SPC") nil)
   (evil-collection-define-key 'normal 'help-mode-map (kbd "SPC") nil))
 
 (use-package evil-org
@@ -510,6 +433,7 @@
   (evil-org-agenda-set-keys))
 
 (use-package avy
+  :disabled
   :ensure t
   :config
   ;; g x w c f d a r s t
@@ -559,49 +483,6 @@
 (use-package which-key
   :ensure t
   :commands which-key-mode)
-
-(use-package consult
-  :disabled
-  :ensure t
-  ;; The :init configuration is always executed (Not lazy)
-  :init
-
-  ;; Optionally configure the register formatting. This improves the register
-  ;; preview for `consult-register', `consult-register-load',
-  ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.5
-        register-preview-function #'consult-register-format)
-
-  ;; Optionally tweak the register preview window.
-  ;; This adds thin lines, sorting and hides the mode line of the window.
-  (advice-add #'register-preview :override #'consult-register-window)
-
-  ;; Use Consult to select xref locations with preview
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
-
-  :config
-  ;; Optionally configure the narrowing key.
-  ;; Both < and C-+ work reasonably well.
-  (setq consult-narrow-key "<") ;; "C-+"
-
-  (keymap-global-set "C-s" 'consult-line)
-  )
-
-(use-package vertico
-  :disabled
-  :ensure t
-  :init
-  (vertico-mode)
-  :config
-  ;; Use `consult-completion-in-region' if Vertico is enabled.
-  ;; Otherwise use the default `completion--in-region' function.
-  (setq completion-in-region-function
-        (lambda (&rest args)
-          (apply (if vertico-mode
-                     #'consult-completion-in-region
-                   #'completion--in-region)
-                 args))))
 
 (use-package ivy
   :ensure t
@@ -1031,5 +912,137 @@ advice like this:
 
   (defun add-to-company-backends (list)
     (setq company-backends `(,(append list (car company-backends))))))
+
+(use-package org-present
+  :disabled
+  :ensure t
+  :after (org evil)
+  :commands org-present
+  :init
+  ;; System Crafters' org-present config
+  (defun dw/org-present-prepare-slide ()
+    (org-overview)
+    (org-show-entry)
+    (org-show-children))
+
+  (defun dw/org-present-hook ()
+    (setq-local face-remapping-alist '((default (:height 1.5) variable-pitch)
+                                       (header-line (:height 4.5) variable-pitch)
+                                       (org-code (:height 1.55) org-code)
+                                       (org-verbatim (:height 1.55) org-verbatim)
+                                       (org-block (:height 1.25) org-block)
+                                       (org-block-begin-line (:height 0.7) org-block)
+                                       ))
+    (setq header-line-format " ")
+    (org-display-inline-images)
+    ;; (dw/org-present-prepare-slide)
+    (disable-lines)
+    (org-show-all))
+
+  (defun dw/org-present-quit-hook ()
+    (setq-local face-remapping-alist '((default variable-pitch)))
+    (setq header-line-format nil)
+    (run-hooks 'text-mode-hook)
+    (org-present-small)
+    (org-remove-inline-images))
+
+  (defun dw/org-present-prev ()
+    (interactive)
+    (org-present-prev)
+    (dw/org-present-prepare-slide))
+
+  (defun dw/org-present-next ()
+    (interactive)
+    (org-present-next)
+    (dw/org-present-prepare-slide))
+
+  :hook ((org-present-mode . dw/org-present-hook)
+         (org-present-mode . evil-force-normal-state)
+         (org-present-mode-quit . dw/org-present-quit-hook)))
+
+(use-package citar
+  :ensure t
+  :disabled
+  :custom
+  ;; (org-cite-global-bibliography '("~/bib/references.bib"))
+  ;; (citar-bibliography org-cite-global-bibliography)
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar))
+
+(use-package citar-org-roam
+  :disabled
+  :ensure t
+  :disabled
+  :after (org-roam citar)
+  :config
+  (defun my-org-citar-open-note ()
+    (interactive)
+    (let* ((citar-bibliography (list my-org-roam-bibliography))
+           (citekey (my-org-cite-yank-or-insert-key)))
+      (citar-open-notes (list citekey))
+      (org-roam-ref-remove (concat "@" citekey))
+      (org-roam-ref-add (concat "[cite:@" citekey "]"))
+      (call-interactively 'org-roam-tag-add)))
+  (setq citar-org-roam-capture-template-key "p")
+  (citar-org-roam-mode))
+
+(use-package consult
+  :disabled
+  :ensure t
+  ;; The :init configuration is always executed (Not lazy)
+  :init
+
+  ;; Optionally configure the register formatting. This improves the register
+  ;; preview for `consult-register', `consult-register-load',
+  ;; `consult-register-store' and the Emacs built-ins.
+  (setq register-preview-delay 0.5
+        register-preview-function #'consult-register-format)
+
+  ;; Optionally tweak the register preview window.
+  ;; This adds thin lines, sorting and hides the mode line of the window.
+  (advice-add #'register-preview :override #'consult-register-window)
+
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+
+  :config
+  ;; Optionally configure the narrowing key.
+  ;; Both < and C-+ work reasonably well.
+  (setq consult-narrow-key "<") ;; "C-+"
+
+  (keymap-global-set "C-s" 'consult-line)
+  )
+
+(use-package vertico
+  :disabled
+  :ensure t
+  :init
+  (vertico-mode)
+  :config
+  ;; Use `consult-completion-in-region' if Vertico is enabled.
+  ;; Otherwise use the default `completion--in-region' function.
+  (setq completion-in-region-function
+        (lambda (&rest args)
+          (apply (if vertico-mode
+                     #'consult-completion-in-region
+                   #'completion--in-region)
+                 args))))
+
+(use-package osm
+  :disabled
+  :ensure t
+  ;; :bind ("C-c m" . osm-prefix-map) ;; Alternative: `osm-home'
+  :commands (osm-home osm-search osm-goto osm-bookmark-jump osm-gpx-show)
+  :custom
+  ;; Take a look at the customization group `osm' for more options.
+  (osm-server 'default) ;; Configure the tile server
+  (osm-copyright t)     ;; Display the copyright information
+
+  :init
+  ;; Load Org link support
+  (with-eval-after-load 'org
+    (require 'osm-ol)))
 
 (provide 'my-packages)

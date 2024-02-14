@@ -320,9 +320,9 @@
 ;;   (progn
 ;;     (evil-define-key '(normal visual operator) 'global (kbd "<down>") 'evil-avy-goto-line-below)
 ;;     (evil-define-key '(normal visual operator) 'global (kbd "<up>") 'evil-avy-goto-line-above)))
-(evil-define-key 'normal 'global (kbd "<leader> ,") 'evil-avy-goto-line)
-(evil-define-key '(normal visual operator) 'global (kbd "C-,") 'evil-avy-goto-line)
-(evil-define-key 'normal 'global (kbd "<leader> .") 'evil-avy-goto-char-2)
+;; (evil-define-key 'normal 'global (kbd "<leader> ,") 'evil-avy-goto-line)
+;; (evil-define-key '(normal visual operator) 'global (kbd "C-,") 'evil-avy-goto-line)
+;; (evil-define-key 'normal 'global (kbd "<leader> .") 'evil-avy-goto-char-2)
 (evil-define-key 'normal 'global (kbd "<leader> f s r") (lambda () (interactive) (create-new-buffer "*rust-scratch*" 'rust-mode)))
 (evil-define-key 'normal 'global (kbd "<leader> f r") (lambda () (interactive) (find-file (read-file-name "Find file: " "~/org-roam/"))))
 (evil-define-key 'normal 'global (kbd "<leader> d r") (lambda () (interactive) (dired (concat home-dir "org-roam"))))
