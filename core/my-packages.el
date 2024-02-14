@@ -180,14 +180,22 @@
     (evil-define-minor-mode-key 'normal 'flymake-mode (kbd "[ c") 'flymake-goto-prev-error)
     (evil-define-minor-mode-key 'normal 'flymake-mode (kbd "] c") 'flymake-goto-next-error)))
 
-;; treesit-install-language-grammar
+;; interactively install with [M-x treesit-install-language-grammar]
 (use-package treesit
-  :disabled
   :hook
   (rust-mode . rust-ts-mode)
   (c-mode . c-ts-mode)
   (c++-mode . c++-ts-mode)
-  (python-mode . python-ts-mode))
+  (python-mode . python-ts-mode)
+  :config
+  (setq my-treesit-langs '(rust c cpp python))
+  (setq treesit-language-source-alist (mapcar (lambda (lang) `(,lang ,(concat "https://github.com/tree-sitter/tree-sitter-" (symbol-name lang)))) my-treesit-langs))
+  (mapc (lambda (lang)
+          (unless (treesit-language-available-p lang)
+            (treesit-install-language-grammar lang)))
+        my-treesit-langs)
+  )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MELPA packages
@@ -522,6 +530,7 @@
 (use-package rg
   :ensure t
   :commands (rg rg-dwim-current-file rg-dwim-current-dir rg-dwim-project-dir rg-dwim))
+  
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package org-contrib
