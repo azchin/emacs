@@ -920,6 +920,7 @@
     ("completelyl" "completely")
     ("completetion" "completion")
     ("complier" "compiler")
+    ("copmiler" "compiler")
     ("componant" "component")
     ("comprable" "comparable")
     ("comprimise" "compromise")

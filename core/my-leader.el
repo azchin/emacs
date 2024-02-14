@@ -176,6 +176,8 @@
 (evil-define-key 'normal 'global (kbd "<leader> /") (lambda () (interactive) (evil-ex-nohighlight) (lazy-highlight-cleanup t)))
 ;; (evil-define-key leader-states 'global (kbd "<leader> /") 'lazy-highlight-cleanup)
 (evil-define-key 'normal 'global (kbd "<leader> !") 'shell-command)
+(evil-define-key 'normal 'global (kbd "<leader> =") 'my-increment-number-at-point)
+(evil-define-key 'normal 'global (kbd "<leader> -") 'my-decrement-number-at-point)
 (evil-define-key leader-states 'global (kbd "<leader> w q") 'delete-window)
 (evil-define-key 'normal 'global (kbd "<leader> w s") 'evil-window-split)
 (evil-define-key 'normal 'global (kbd "<leader> w v") 'evil-window-vsplit)

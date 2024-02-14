@@ -50,6 +50,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Built-in packages
+(use-package tramp
+  :config
+  (setopt enable-remote-dir-locals t)
+  (add-to-list 'tramp-remote-path "~/.cargo/bin")
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+
 (use-package dired
   :config
   (require 'dired-x)
@@ -107,6 +113,9 @@
   (keymap-set dired-mode-map "<left>" 'dired-up-directory)
   (keymap-set dired-mode-map "<right>" 'dired-find-file)
   (keymap-set dired-mode-map "<mouse-2>" 'dired-mouse-find-file)
+  ;; (define-key dired-mode-map [mouse-2] 'dired-mouse-find-file)
+  ;; (define-key dired-mode-map [mouse-2] 'dired-find-file)
+  ;; (keymap-set dired-mode-map "<mouse-2>" 'dired-find-file)
 
   (with-eval-after-load 'evil-collection
     (evil-collection-define-key 'normal 'dired-mode-map (kbd "f") 'find-file)
@@ -115,6 +124,7 @@
     (evil-collection-define-key 'normal 'dired-mode-map (kbd "<left>") 'dired-up-directory)
     (evil-collection-define-key 'normal 'dired-mode-map (kbd "<right>") 'dired-find-file)
     (evil-collection-define-key 'normal 'dired-mode-map (kbd "<mouse-2>") 'dired-mouse-find-file)
+    ;; (evil-collection-define-key 'normal 'dired-mode-map [mouse-2] 'dired-mouse-find-file)
 
     ;; (evil-define-key 'normal dired-mode-map (kbd "TAB") 'dired-goto-subdir-and-focus)
     ;; (evil-define-key 'normal dired-mode-map (kbd "<backtab>") 'dired-kill-children-subdir)
@@ -144,9 +154,9 @@
 
 ;; Soft dependency on yasnippets and company
 (use-package eglot
-  :hook
-  (rust-mode . eglot-ensure)
-  (rust-ts-mode . eglot-ensure)
+  ;; :hook
+  ;; (rust-mode . eglot-ensure)
+  ;; (rust-ts-mode . eglot-ensure)
   :config
   (setq read-process-output-max (* 1024 32))
   (add-to-list 'eglot-server-programs
@@ -245,6 +255,7 @@
   (citar-org-roam-mode))
 
 (use-package org-present
+  :disabled
   :ensure t
   :after (org evil)
   :commands org-present
@@ -291,6 +302,7 @@
          (org-present-mode-quit . dw/org-present-quit-hook)))
 
 (use-package citar
+  :disabled
   :ensure t
   :custom
   ;; (org-cite-global-bibliography '("~/bib/references.bib"))
@@ -338,6 +350,7 @@
   :ensure t)
 
 (use-package osm
+  :disabled
   :ensure t
   ;; :bind ("C-c m" . osm-prefix-map) ;; Alternative: `osm-home'
   :commands (osm-home osm-search osm-goto osm-bookmark-jump osm-gpx-show)
@@ -346,7 +359,7 @@
   (osm-server 'default) ;; Configure the tile server
   (osm-copyright t)     ;; Display the copyright information
 
-  :init
+  :config
   ;; Load Org link support
   (with-eval-after-load 'org
     (require 'osm-ol)))

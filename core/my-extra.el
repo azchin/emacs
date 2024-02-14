@@ -165,10 +165,10 @@ The app is chosen from your OS's preference."
     (sh-mode)))
 (add-hook 'buffer-list-update-hook 'environment-autocmd)
 
-(defun executable-autocmd ()
-  (when (string-match ".*\\.sh" (buffer-name))
-    (shell-command (concat "[ $(stat -c '%a' " buffer-file-name ") = 755 ] || chmod 755 " buffer-file-name))))
-(add-hook 'after-save-hook 'executable-autocmd)
+;; (defun executable-autocmd ()
+;;   (when (string-match ".*\\.sh" (buffer-name))
+;;     (shell-command (concat "[ $(stat -c '%a' " buffer-file-name ") = 755 ] || chmod 755 " buffer-file-name))))
+;; (add-hook 'after-save-hook 'executable-autocmd)
 
 ;; Major modes
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
@@ -195,5 +195,6 @@ The app is chosen from your OS's preference."
 (setq-default lexical-binding t)
 (setopt epa-pinentry-mode 'loopback)
 (setq epg-gpg-program "gpg2")
+(fset 'epg-wait-for-status 'ignore)
 
 (provide 'my-extra)
