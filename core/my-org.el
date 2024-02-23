@@ -40,6 +40,8 @@
 (setq org-src-window-setup 'reorganize-frame)
 (setq org-src-preserve-indentation t)
 (setq org-edit-src-content-indentation 4)
+(setq org-export-with-sub-superscripts '{})
+(setq org-use-sub-superscripts '{})
 (setq org-todo-keywords '((sequence "TODO" "PROG" "|" "DONE" "AXED")))
 (setopt safe-local-variable-values
         '((org-emphasis-alist . nil)
