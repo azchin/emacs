@@ -60,7 +60,7 @@ is dired"
     (display-buffer-in-side-window
      buffer `((side . left) (slot . 0)
               (window-width . fit-window-to-buffer)
-              (preserve-size . (t . nil)) ,my-window-parameters))))
+              (preserve-size . (t . nil)) nil))))
 
 ;; (add-to-list 'display-buffer-alist
 ;;              '(display-buffer-mode-query
@@ -103,7 +103,7 @@ is dired"
 (add-to-list 'display-buffer-alist
              `("\\*.*eshell\\*" display-buffer-in-side-window
                (side . bottom) (slot . 0) (window-height . 12)
-               ,my-window-parameters))
+               nil))
 
 ;; (add-to-list 'display-buffer-alist
 ;;              '("^magit:"
