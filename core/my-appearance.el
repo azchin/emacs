@@ -97,13 +97,23 @@
 ;; Fonts
 (defvar default-font-family "DejaVu Sans Mono"
   "Default face font family")
-;; b4 font bug, we had 113 and 120, after 72, 80
-(defvar default-font-height 140
-  "Default face font height") ;; 10: 98, 11: 113, 12: 120
 (defvar markup-font-family "DejaVu Sans"
   "Markup font family")
-(defvar markup-font-height 160
-  "Markup font height")
+;; b4 font bug, we had 113 and 120, after 72, 80
+(cond
+ ((eq system-type 'darwin)
+  (defvar default-font-height 140
+    "Default face font height") ;; 10: 98, 11: 113, 12: 120
+  (defvar markup-font-height 160
+    "Markup font height")
+  )
+ (t
+  (defvar default-font-height 113
+    "Default face font height") ;; 10: 98, 11: 113, 12: 120
+  (defvar markup-font-height 120
+    "Markup font height")
+  )
+ )
 (add-to-list 'default-frame-alist `(font . ,(concat default-font-family "-" (number-to-string (round default-font-height 10)))))
 ;; (add-hook 'org-mode-hook (lambda () (buffer-face-set :family markup-font-family :height markup-font-height)))
 (add-hook 'org-mode-hook (lambda () (setq-local face-remapping-alist '((default variable-pitch)))))
