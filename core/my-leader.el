@@ -70,7 +70,7 @@
 (evil-define-key 'normal 'global (kbd "<leader> f l") (lambda () (interactive) (find-file (read-file-name "Find file: " "~/clone/"))))
 (evil-define-key 'normal 'global (kbd "<leader> f o") (lambda () (interactive) (find-file (read-file-name "Find file: " "~/org/"))))
 (evil-define-key 'normal 'global (kbd "<leader> f j") (lambda () (interactive) (find-file (concat org-directory "journal.org"))))
-(evil-define-key 'normal 'global (kbd "<leader> f b") (lambda () (interactive) (find-file (concat org-directory "beorg-notes.org"))))
+(evil-define-key 'normal 'global (kbd "<leader> f b") (lambda () (interactive) (find-file (concat org-directory "notes.md"))))
 (evil-define-key 'normal 'global (kbd "<leader> f a") (lambda () (interactive) (find-file (concat org-directory "agenda.org"))))
 (evil-define-key 'normal 'global (kbd "<leader> f d") (lambda () (interactive) (find-file (read-file-name "Find file: " "~/drive/"))))
 (evil-define-key 'normal 'global (kbd "<leader> f e e") (lambda () (interactive) (find-file (read-file-name "Find file: " (emacsd "")))))
