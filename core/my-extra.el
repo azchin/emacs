@@ -189,7 +189,8 @@ The app is chosen from your OS's preference."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Misc
 (put 'suspend-frame 'disabled t)
-(setq tramp-default-method "ssh")
+(setq tramp-default-method "sshx") ;; use /bin/sh and .profile
+(setq tramp-chunksize 4050) ;; max 4050
 (setq doc-view-continuous t)
 (setq use-short-answers t)
 (setq-default lexical-binding t)
