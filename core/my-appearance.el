@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; UI
-(menu-bar-mode 1)
+(menu-bar-mode 0)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
 (setq scroll-bar-adjust-thumb-portion nil)
@@ -8,14 +8,20 @@
 (setopt frame-resize-pixelwise t)
 (setopt frame-inhibit-implied-resize t)
 (setq scroll-conservatively 128)
-(setq mouse-wheel-progressive-speed t)
+;; (setq mouse-wheel-progressive-speed t)
 ;; (setq auto-window-vscroll nil)
 ;; (setq mouse-wheel-scroll-amount
 ;;       '(0.02 ((shift) . hscroll) ((meta))
 ;;           ((control meta) . global-text-scale)
 ;;           ((control) . text-scale)))
-;; (pixel-scroll-precision-mode)
-;; (setq pixel-scroll-precision-large-scroll-height 64.0)
+
+(pixel-scroll-precision-mode)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+(setq scroll-step 1) ;; keyboard scroll one line at a time
+
+(setq pixel-scroll-precision-large-scroll-height 64.0)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -64,7 +70,7 @@
 ;;     ;; (add-to-list 'default-frame-alist `(left . ,(nth 2 win)))
 ;;     ;; (add-to-list 'default-frame-alist `(top . ,(nth 3 win)))
 ;;     )
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; (setq my-display-offset 50)
 ;; (setq my-display-gap 10)
@@ -187,7 +193,8 @@
 ;; TODO make minor mode
 (setq desired-display-width 100)
 
-(defvar display-margin-mode-list '(org-mode))
+;; (defvar display-margin-mode-list '(org-mode))
+(defvar display-margin-mode-list nil)
 
 (defun calculate-display-margin (width)
   (let ((selected-width (window-total-width)))

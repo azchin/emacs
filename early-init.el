@@ -3,4 +3,4 @@
 ;;                               ;; (left . 0.05)
 ;;                               ;; (top . 0.1)
 ;;                               (height . 0.7)))
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+;; (add-to-list 'initial-frame-alist '(fullscreen . maximized))
