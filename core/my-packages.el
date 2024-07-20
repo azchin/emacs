@@ -20,6 +20,7 @@
 (setq package-archives (list melpa gnu nongnu))
 
 (setq use-package-compute-statistics t)
+(setq warning-minimum-level :error)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Comments on package dependency structure:
@@ -46,7 +47,7 @@
   :after evil)
 (use-package my-abbrev)
 (use-package my-leader
-  :after (evil evil-collection dired my-tabs my-desktop my-buffer))
+  :after (evil evil-collection dired my-tabs my-desktop my-buffer my-extra))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Built-in packages
@@ -187,9 +188,14 @@
   (c-mode . c-ts-mode)
   (c++-mode . c++-ts-mode)
   (python-mode . python-ts-mode)
+  (nix-mode . nix-ts-mode)
   :config
   (setq my-treesit-langs '(rust c cpp python))
   (setq treesit-language-source-alist (mapcar (lambda (lang) `(,lang ,(concat "https://github.com/tree-sitter/tree-sitter-" (symbol-name lang)))) my-treesit-langs))
+  ;; custom languages
+  (add-to-list 'my-treesit-langs 'nix)
+  (add-to-list 'treesit-language-source-alist '(nix "https://github.com/nix-community/tree-sitter-nix"))
+  ;; install
   (mapc (lambda (lang)
           (unless (treesit-language-available-p lang)
             (treesit-install-language-grammar lang)))
@@ -304,6 +310,14 @@
   :ensure t
   :mode
   "\\.rs\\'")
+
+(use-package nix-mode
+  :ensure t
+  :mode
+  "\\.nix\\'")
+
+(use-package nix-ts-mode
+  :ensure t)
 
 (use-package undo-fu
   :ensure t
