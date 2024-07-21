@@ -40,7 +40,7 @@ Containing LEFT, and RIGHT aligned respectively."
              mode-name
              "]"
              mode-line-whitespace
-             "[%f]"
+             (:eval (and buffer-file-name "[%f]"))
              ))
      ;; Right.
      (quote ((vc-mode vc-mode)

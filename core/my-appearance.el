@@ -125,6 +125,11 @@
 (add-hook 'org-mode-hook (lambda () (setq-local face-remapping-alist '((default variable-pitch)))))
 ;; (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-10"))
 
+;; http://xahlee.info/emacs/emacs/emacs_set_font_zh.html
+(set-fontset-font t 'han (cond ((member "Noto Sans CJK SC" (font-family-list)) "Noto Sans CJK SC")))
+(set-fontset-font t 'kana (cond ((member "Noto Sans CJK JP" (font-family-list)) "Noto Sans CJK JP")))
+(set-fontset-font t 'hangul (cond ((member "Noto Sans CJK KR" (font-family-list)) "Noto Sans CJK KR")))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (set-frame-parameter (selected-frame) 'alpha '(95 . 86))
@@ -138,9 +143,9 @@
 (setq frame-title-format '("%b :: %f"))
 
 ;; (setq initial-buffer-choice t)
-(setopt initial-major-mode 'text-mode)
+(setopt initial-major-mode 'org-mode)
 (setopt initial-scratch-message
-        (format ">>>>>>>>>>>>>>>>>>>> Welcome %s, happy hacking! :3\n"
+        (format "Welcome %s, to the AIxCC デスマーチ\n"
                 (capitalize (user-login-name))))
 (setopt inhibit-startup-screen t)
 ;; (fringe-mode 0)
