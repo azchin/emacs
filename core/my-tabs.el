@@ -6,8 +6,10 @@
        (setq indent-tabs-mode (not indent-tabs-mode)))
 
 (defun set-tab-width (width)
-  (setq tab-width width)
-  (setq evil-shift-width width))
+  (setq-local tab-width width)
+  (setq-local evil-shift-width width)
+  (setq-local sh-basic-offset width)
+  (setq-local c-basic-offset width))
 
 ;; https://www.emacswiki.org/emacs/BackspaceWhitespaceToTabStop
 (defun backspace-whitespace-to-tab-stop ()
