@@ -9,7 +9,7 @@
     (let ((res (split-window-sensibly window)))
       (when margs (get-desired-display-margin)) res)))
 
-(setq split-window-preferred-function 'split-window-with-margins)
+;; (setq split-window-preferred-function 'split-window-with-margins)
 
 ;; (defvar pop-up-frame-regexp-list '("\\*Buffer List\\*"
 ;;                                    "\\*eshell\\*"

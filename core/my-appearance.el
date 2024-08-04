@@ -126,9 +126,15 @@
 ;; (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-10"))
 
 ;; http://xahlee.info/emacs/emacs/emacs_set_font_zh.html
-(set-fontset-font t 'han (cond ((member "Noto Sans CJK SC" (font-family-list)) "Noto Sans CJK SC")))
-(set-fontset-font t 'kana (cond ((member "Noto Sans CJK JP" (font-family-list)) "Noto Sans CJK JP")))
-(set-fontset-font t 'hangul (cond ((member "Noto Sans CJK KR" (font-family-list)) "Noto Sans CJK KR")))
+(defun my-configure-font ()
+  (set-fontset-font t 'han (cond ((member "Noto Sans CJK SC" (font-family-list)) "Noto Sans CJK SC")))
+  (set-fontset-font t 'kana (cond ((member "Noto Sans CJK JP" (font-family-list)) "Noto Sans CJK JP")))
+  (set-fontset-font t 'hangul (cond ((member "Noto Sans CJK KR" (font-family-list)) "Noto Sans CJK KR"))))
+(defun my-configure-font-server ()
+  (my-configure-font)
+  (remove-hook 'server-after-make-frame-hook 'my-configure-font-server))
+(add-hook 'server-after-make-frame-hook 'my-configure-font-server)
+(my-configure-font)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
