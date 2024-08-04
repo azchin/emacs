@@ -58,10 +58,7 @@
    ((and buffer-file-name (string-match-p "Xresources" buffer-file-name))
     (shell-command (concat "xrdb " buffer-file-name)))
    ((and buffer-file-name (string-match-p "/nixos-config/.*\\.nix$" buffer-file-name))
-    (shell-command (concat
-                    "sudo nixos-rebuild switch --flake "
-                    (file-name-directory buffer-file-name)
-                    " &")))
+    (shell-command "~/nixos-config/rebuild.sh &"))
    ((eq major-mode 'org-mode)
     (call-interactively 'org-latex-export-to-pdf))
    ((eq major-mode 'sh-mode)
