@@ -47,7 +47,7 @@
   :after evil)
 (use-package my-abbrev)
 (use-package my-leader
-  :after (evil evil-collection dired my-tabs my-desktop my-buffer my-extra))
+  :after (evil evil-collection dired treemacs-evil my-tabs my-desktop my-buffer my-extra))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Built-in packages
@@ -262,9 +262,21 @@
         org-roam-ui-update-on-save t
         org-roam-ui-open-on-start t))
 
-(use-package dired-sidebar
+(use-package treemacs
   :ensure t
-  :commands (dired-sidebar-toggle-sidebar))
+  :defer t)
+
+(use-package treemacs-evil
+  :ensure t
+  :after (evil))
+
+(use-package treemacs-magit
+  :ensure t
+  :after (magit treemacs))
+
+(use-package treemacs-tab-bar
+  :ensure t
+  :after (treemacs))
 
 (use-package hl-todo
   :ensure t

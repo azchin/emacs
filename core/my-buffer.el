@@ -357,7 +357,7 @@ lifetime, i.e., its \"age\" when it will be purged."
     (setq tab-close-buffer-tmp nil)
     ret))
 
-(winner-mode)
+;; (winner-mode)
 ;; C-c LEFT, C-c RIGHT
 
 (provide 'my-buffer)
