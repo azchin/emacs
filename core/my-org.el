@@ -37,7 +37,7 @@
 (setq org-startup-with-inline-images t)
 (setq org-pretty-entities t)
 (setq org-src-tab-acts-natively t)
-(setq org-src-window-setup 'reorganize-frame)
+(setq org-src-window-setup 'current-window)
 (setq org-src-preserve-indentation t)
 (setq org-edit-src-content-indentation 4)
 (setq org-export-with-sub-superscripts '{})

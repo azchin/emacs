@@ -74,9 +74,12 @@
 (setq css-indent-offset 2)
 
 (add-hook 'python-mode-hook (lambda () (set-tab-width python-indent-offset)))
+(add-hook 'python-ts-mode-hook (lambda () (set-tab-width python-indent-offset)))
 (add-hook 'js2-mode-hook (lambda () (set-tab-width 2)))
 (add-hook 'json-mode-hook (lambda () (set-tab-width 2)))
 (add-hook 'web-mode-hook (lambda () (set-tab-width 2)))
+(add-hook 'nix-mode-hook (lambda () (set-tab-width 2)))
+(add-hook 'nix-ts-mode-hook (lambda () (set-tab-width 2)))
 (add-hook 'css-mode-hook (lambda () (set-tab-width css-indent-offset)))
 
 (global-whitespace-mode)
