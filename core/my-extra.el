@@ -239,11 +239,6 @@ The app is chosen from your OS's preference."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Misc
 (put 'suspend-frame 'disabled t)
-(setq tramp-default-method "sshx") ;; use /bin/sh and .profile
-;; (add-to-list 'tramp-connection-properties
-;;              (list (regexp-quote "/sshx:ratbat:")
-;;                    "direct-async-process" t))
-(setq tramp-chunksize 4050) ;; max 4050
 (setq doc-view-continuous t)
 (setq use-short-answers t)
 (setq-default lexical-binding t)

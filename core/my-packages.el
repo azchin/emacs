@@ -54,6 +54,14 @@
 (use-package tramp
   :config
   (setopt enable-remote-dir-locals t)
+  (setq tramp-default-method "sshx") ;; use /bin/sh and .profile
+  (setq tramp-chunksize 4050) ;; max 4050
+  ;; (add-to-list 'tramp-connection-properties
+  ;;              (list (regexp-quote "/sshx:ratbat:")
+  ;;                    "direct-async-process" t))
+  (add-to-list 'tramp-connection-properties
+               (list "cs6265"
+                     "remote-shell" "/bin/bash"))
   (add-to-list 'tramp-remote-path "~/.cargo/bin")
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
