@@ -336,6 +336,11 @@
   :mode
   "\\.nix\\'")
 
+(use-package vimrc-mode
+  :ensure t
+  :mode
+  "\\.vim\\(rc\\)?\\'")
+
 (use-package nix-ts-mode
   :ensure t)
 
