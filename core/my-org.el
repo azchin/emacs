@@ -52,6 +52,9 @@
                                                       '(file . find-file))
                                                      (t x)))
                                    org-link-frame-setup))
+(setq org-babel-default-inline-header-args
+      (cons '(:exports . "code")
+            (assq-delete-all :exports org-babel-default-inline-header-args)))
 
 (defun my-org-toggle-appearance ()
   (interactive)

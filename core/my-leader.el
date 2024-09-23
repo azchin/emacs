@@ -256,7 +256,7 @@
 ;; (evil-define-key leader-states 'global (kbd "<leader> q h") 'kill-regex-buffer-frame)
 (evil-define-key leader-states 'global (kbd "<leader> q a") (lambda () (interactive) (if (daemon-mode-snapshot) (mapc 'delete-frame (frame-list))
                                                                                        (save-buffers-kill-terminal))))
-(evil-define-key leader-states 'global (kbd "<leader> q e") 'save-buffers-kill-terminal)
+(evil-define-key leader-states 'global (kbd "<leader> q e") 'server-shutdown)
 
 (evil-define-key 'normal 'global (kbd "<leader> a t") 'modus-themes-toggle)
 (evil-define-key 'normal 'global (kbd "<leader> a m") (lambda () (interactive) (menu-bar-mode 'toggle)))
@@ -304,6 +304,16 @@
 (evil-define-key 'normal org-mode-map (kbd "<leader> o b") 'org-bibtex-yank)
 (evil-define-key 'normal org-mode-map (kbd "<leader> o 5") 'org-present)
 (evil-define-key 'normal org-mode-map (kbd "g x") 'org-open-at-point)
+(evil-define-operator evil-inline-src-text (beg end type)
+  "Wrap motion or visual selection with 'src_text{' and '}'."
+  :move-point nil
+  (interactive "<R>")
+  (save-excursion
+    (goto-char end)
+    (insert "}")
+    (goto-char beg)
+    (insert "src_text{")))
+(evil-define-key '(normal visual) org-mode-map (kbd "gs") 'evil-inline-src-text)
 ;; (evil-define-key leader-states org-mode-map (kbd "<leader> o e l") 'org-latex-export-to-latex)
 ;; (evil-define-key leader-states org-mode-map (kbd "<leader> o e p") 'org-latex-export-to-pdf)
 ;; (evil-define-key 'normal 'global (kbd "<leader> o l") 'org-store-link)
