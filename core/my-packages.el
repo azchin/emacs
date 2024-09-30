@@ -195,7 +195,7 @@
   (rust-mode . rust-ts-mode)
   (c-mode . c-ts-mode)
   (c++-mode . c++-ts-mode)
-  (python-mode . python-ts-mode)
+  ;; (python-mode . python-ts-mode)
   (nix-mode . nix-ts-mode)
   :config
   (setq my-treesit-langs '(rust c cpp python))

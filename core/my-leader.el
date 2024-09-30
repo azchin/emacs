@@ -223,7 +223,6 @@
 (evil-define-key leader-states 'global (kbd "<leader> w <right>") 'evil-window-right)
 (evil-define-key leader-states 'global (kbd "<leader> w o") 'delete-other-windows)
 (evil-define-key 'normal 'global (kbd "<leader> w z") 'my-zero-display-margin)
-(evil-define-key 'normal 'global (kbd "<leader> w e") 'create-eshell-window)
 (dolist (key '("0" "1" "2" "3" "4" "5" "6"))
   (let ((command (global-key-binding (kbd (concat "C-x " key)))))
     (evil-define-key leader-states 'global (kbd (concat "<leader> " key))
@@ -262,6 +261,7 @@
 (evil-define-key 'normal 'global (kbd "<leader> a m") (lambda () (interactive) (menu-bar-mode 'toggle)))
 
 (evil-define-key 'normal 'global (kbd "<leader> l e") 'eglot)
+(evil-define-key 'normal 'global (kbd "<leader> l s") 'create-eshell-window)
 
 ;;NOTE Flyspell is by default bound to []s
 
