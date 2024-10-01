@@ -196,18 +196,20 @@
   (c-mode . c-ts-mode)
   (c++-mode . c++-ts-mode)
   ;; (python-mode . python-ts-mode)
+  (c-or-c++-mode . c-or-c++-ts-mode)
   (nix-mode . nix-ts-mode)
   :config
   (setq my-treesit-langs '(rust c cpp python))
   (setq treesit-language-source-alist (mapcar (lambda (lang) `(,lang ,(concat "https://github.com/tree-sitter/tree-sitter-" (symbol-name lang)))) my-treesit-langs))
   ;; custom languages
-  (add-to-list 'my-treesit-langs 'nix)
   (add-to-list 'treesit-language-source-alist '(nix "https://github.com/nix-community/tree-sitter-nix"))
+  ;; (add-to-list 'my-treesit-langs 'nix)
+  ;; (add-to-list 'treesit-language-source-alist '(c++ "https://github.com/tree-sitter/tree-sitter-cpp"))
   ;; install
   (mapc (lambda (lang)
           (unless (treesit-language-available-p lang)
             (treesit-install-language-grammar lang)))
-        my-treesit-langs)
+        (mapcar 'car treesit-language-source-alist))
   )
 
 
