@@ -73,6 +73,10 @@
 (setq ispell-local-dictionary "en_CA")
 (setq ispell-local-dictionary-alist
       '(("en_CA" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
+(setq text-mode-ispell-word-completion nil)
+(use-package ispell
+  :config
+  (ispell-find-hunspell-dictionaries))
 
 (add-hook 'org-mode-hook 'auto-fill-mode)
 (add-hook 'org-mode-hook 'flyspell-mode)
