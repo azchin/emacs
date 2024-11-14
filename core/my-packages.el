@@ -193,13 +193,13 @@
 (use-package treesit
   :hook
   (rust-mode . rust-ts-mode)
-  (c-mode . c-ts-mode)
-  (c++-mode . c++-ts-mode)
-  ;; (python-mode . python-ts-mode)
-  (c-or-c++-mode . c-or-c++-ts-mode)
   (nix-mode . nix-ts-mode)
+  ;; (c-mode . c-ts-mode)
+  ;; (c++-mode . c++-ts-mode)
+  ;; (python-mode . python-ts-mode)
+  ;; (c-or-c++-mode . c-or-c++-ts-mode)
   :config
-  (setq my-treesit-langs '(rust c cpp python))
+  (setq my-treesit-langs '(rust python))
   (setq treesit-language-source-alist (mapcar (lambda (lang) `(,lang ,(concat "https://github.com/tree-sitter/tree-sitter-" (symbol-name lang)))) my-treesit-langs))
   ;; custom languages
   (add-to-list 'treesit-language-source-alist '(nix "https://github.com/nix-community/tree-sitter-nix"))
@@ -735,12 +735,6 @@ advice like this:
   :ensure t
   :after org
   :hook org-mode)
-
-(use-package gruvbox-theme
-  :disabled
-  :ensure t
-  :config
-  (load-theme 'gruvbox-dark-hard t))
 
 (use-package openwith
   :disabled

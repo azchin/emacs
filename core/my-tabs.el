@@ -65,10 +65,10 @@
 ;; (setq c-basic-offset custom-tab-width
 ;;       c-default-style "linux"
 ;;       c-syntactic-indentation nil)
-(setq c-basic-offset custom-tab-width)
-(c-set-offset 'case-label 0)
-(c-set-offset 'label '*)
 (setopt c-default-style "stroustrup")
+(setq c-basic-offset custom-tab-width)
+(c-set-offset 'case-label '+)
+;; (c-set-offset 'label '*)
 (setopt c-ts-mode-indent-offset c-basic-offset)
 (setopt c-ts-mode-indent-style 'k&r)
 (setq css-indent-offset 2)
