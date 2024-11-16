@@ -292,6 +292,7 @@
   :ensure t
   :hook
   (prog-mode . hl-todo-mode)
+  (conf-mode . hl-todo-mode)
   :config
   (setq hl-todo-wrap-movement t)
   (with-eval-after-load 'evil
@@ -507,7 +508,7 @@
 
 (use-package corfu
   :ensure t
-  :hook (prog-mode text-mode)
+  :hook (prog-mode conf-mode text-mode)
   :bind
   (:map corfu-map
         ("TAB" . corfu-next)

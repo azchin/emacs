@@ -9,6 +9,8 @@
 (setq electric-pair-open-newline-between-pairs t)
 (setq electric-pair-skip-whitespace 'chomp)
 (add-hook 'prog-mode-hook 'electric-pair-local-mode)
+(add-hook 'text-mode-hook 'electric-pair-local-mode)
+(add-hook 'conf-mode-hook 'electric-pair-local-mode)
 
 ;; Modified from electric-pair-mode-map
 (with-eval-after-load 'evil

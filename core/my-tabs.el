@@ -31,6 +31,7 @@
             (backward-delete-char (- (match-end 1) (match-beginning 1)))
           (call-interactively 'backward-delete-char))))))
 
+;; TODO want to insert conf-mode-map here, but it's not there at init time
 (defvar editor-mode-maps (list prog-mode-map text-mode-map))
 (defun keymap-set-editor-key (key function)
   (dolist (map-it editor-mode-maps)

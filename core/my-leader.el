@@ -257,7 +257,10 @@
                                                                                        (save-buffers-kill-terminal))))
 (evil-define-key leader-states 'global (kbd "<leader> q e") 'server-shutdown)
 
-(evil-define-key 'normal 'global (kbd "<leader> a t") 'modus-themes-toggle)
+(evil-define-key 'normal 'global (kbd "<leader> a t")
+  (lambda () (interactive)
+    (let ((theme-list '(gruvbox-dark-hard modus-operandi modus-vivendi)))
+      (load-theme (intern (completing-read "Choose a theme: " (mapcar 'symbol-name theme-list)))))))
 (evil-define-key 'normal 'global (kbd "<leader> a m") (lambda () (interactive) (menu-bar-mode 'toggle)))
 
 (evil-define-key 'normal 'global (kbd "<leader> l e") 'eglot)
