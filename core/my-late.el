@@ -45,10 +45,12 @@
 (set-face-attribute 'default nil :family default-font-family :height default-font-height)
 (set-face-attribute 'variable-pitch nil :family markup-font-family :height markup-font-height)
 (set-face-attribute 'fixed-pitch nil :family default-font-family :height default-font-height)
-;; (set-face-attribute 'org-block nil :family default-font-family :inherit 'default)
-;; (set-face-attribute 'org-block-begin-line nil :inherit 'default)
-;; (set-face-attribute 'org-block-end-line nil :inherit 'org-block-begin-line)
-;; (set-face-attribute 'org-code nil :inherit 'default)
+(set-face-attribute 'org-block nil :family default-font-family :height default-font-height)
+(set-face-attribute 'org-block-begin-line nil :family default-font-family :height default-font-height)
+(set-face-attribute 'org-block-end-line nil :inherit 'org-block-begin-line :height default-font-height)
+(set-face-attribute 'org-code nil :family default-font-family :height default-font-height)
+(set-face-attribute 'org-verbatim nil :family default-font-family :height default-font-height)
+(set-face-attribute 'org-document-info-keyword nil :family default-font-family :height default-font-height)
 ;; (set-face-attribute 'org-date nil :inherit '(modus-themes-link-symlink))
 
 ;; TODO when new frames are made, highlight gets overridden
