@@ -483,11 +483,12 @@
   (evil-org-agenda-set-keys))
 
 (use-package avy
-  :disabled
   :ensure t
   :config
+  ;; a s w g e d i o n m
+  (setopt avy-keys '(97 115 119 103 101 100 105 111 110 109)))
   ;; g x w c f d a r s t
-  (setopt avy-keys '(103 120 119 99 102 100 97 114 115 116)))
+  ;; (setopt avy-keys '(103 120 119 99 102 100 97 114 115 116)))
 
 (use-package yasnippet
   :ensure t

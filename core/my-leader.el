@@ -335,7 +335,8 @@
 (evil-define-key 'normal 'global (kbd "<leader> g f") 'rg-dwim-current-file)
 (evil-define-key 'normal 'global (kbd "<leader> g d") 'rg-dwim-current-dir)
 (evil-define-key 'normal 'global (kbd "<leader> g p") 'rg-dwim-project-dir)
-(evil-define-key 'normal 'global (kbd "<leader> ,") 'evil-avy-goto-line)
+(evil-define-key 'normal 'global (kbd "<leader> k") 'evil-avy-goto-line)
+(evil-define-key 'normal 'global (kbd "<leader> j") 'evil-avy-goto-word-1)
 ;; (if (eq system-type 'gnu/linux)
 ;;     (progn
 ;;       (evil-define-key '(normal visual operator) 'global (kbd "j") 'evil-avy-goto-line-below)
