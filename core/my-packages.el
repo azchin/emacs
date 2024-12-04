@@ -323,6 +323,9 @@
   :after org
   :ensure t)
 
+(use-package dockerfile-mode
+  :ensure t)
+
 (use-package cmake-mode
   :ensure t
   :mode
