@@ -274,7 +274,11 @@
 
 (use-package treemacs
   :ensure t
-  :defer t)
+  :defer t
+  :config
+  (setq treemacs-display-current-project-exclusively t)
+  (setq treemacs-project-follow-mode t)
+  (treemacs-git-mode 'deferred))
 
 (use-package treemacs-evil
   :ensure t
@@ -469,6 +473,7 @@
   (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "] x") 'xref-go-forward)
   (evil-collection-define-key 'normal 'dired-mode-map (kbd "SPC") nil)
   (evil-collection-define-key 'normal 'diff-mode-map (kbd "SPC") nil)
+  (evil-collection-define-key 'normal 'Info-mode-map (kbd "SPC") nil)
   (evil-collection-define-key 'normal 'help-mode-map (kbd "SPC") nil))
 
 (use-package evil-org

@@ -262,8 +262,10 @@
     (let ((theme-list '(gruvbox-dark-hard modus-operandi modus-vivendi)))
       (load-theme (intern (completing-read "Choose a theme: " (mapcar 'symbol-name theme-list)))))))
 (evil-define-key 'normal 'global (kbd "<leader> a m") (lambda () (interactive) (menu-bar-mode 'toggle)))
+(evil-define-key 'normal org-mode-map (kbd "<leader> a o") 'my-org-toggle-appearance)
 
 (evil-define-key 'normal 'global (kbd "<leader> l e") 'eglot)
+(evil-define-key 'normal 'global (kbd "<leader> l r") 'eglot-rename)
 (evil-define-key 'normal 'global (kbd "<leader> l s") 'create-eshell-window)
 
 ;;NOTE Flyspell is by default bound to []s
@@ -282,7 +284,6 @@
 (evil-define-key 'normal 'global (kbd "<leader> o l") 'org-store-link)
 ;; "o a" 'org-agent
 (evil-define-key 'normal 'global (kbd "<leader> o c") 'org-capture)
-(evil-define-key 'normal 'global (kbd "<leader> a o") 'my-org-toggle-appearance)
 (evil-define-key 'normal org-mode-map (kbd "<leader> o i") 'org-insert-structure-template)
 (defun my-org-src ()
   "Insert new source block or edit current block"
@@ -297,7 +298,9 @@
 ;; (evil-define-key leader-states org-mode-map (kbd "<leader> o s") 'org-schedule)
 ;; (evil-define-key leader-states org-mode-map (kbd "<leader> o d") 'org-deadline)
 (evil-define-key 'normal org-mode-map (kbd "<leader> o l") 'org-insert-link)
+(evil-define-key 'normal org-mode-map (kbd "<leader> o -") 'org-toggle-checkbox)
 (evil-define-key 'normal org-mode-map (kbd "<leader> o T") (lambda () (interactive) (insert " ") (call-interactively 'org-time-stamp) (delete-char 1)))
+;; TODO figure out heading level? kinda OP
 (evil-define-key 'normal org-mode-map (kbd "<leader> o t") (lambda () (interactive) (insert " ") (org-insert-time-stamp (current-time) nil t) (delete-char 1)))
 (evil-define-key 'normal org-mode-map (kbd "<leader> o e") 'org-export-dispatch)
 (evil-define-key 'normal org-mode-map (kbd "<leader> o p") 'org-latex-export-to-pdf)

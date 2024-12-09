@@ -60,7 +60,7 @@
    ((and buffer-file-name (string-match-p "/nixos-config/.*\\.nix$" buffer-file-name))
     (shell-command "~/nixos-config/rebuild.sh &"))
    ((eq major-mode 'org-mode)
-    (call-interactively 'org-latex-export-to-pdf))
+    (call-interactively 'org-ctrl-c-ctrl-c))
    ((eq major-mode 'sh-mode)
     (shell-command (concat "chmod +x " buffer-file-name)))))
 
