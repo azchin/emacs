@@ -1,8 +1,11 @@
+;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Expanding-Abbrevs.html
 ;; http://xahlee.info/emacs/emacs/emacs_abbrev_mode.html
 (define-abbrev-table 'org-mode-abbrev-table
   '(("otit" "#+title:")
     ("oaut" "#+author:")
-    ("oopt" "#+options:")))
+    ("oopt" "#+options:")
+    ("osrc" "src_text{}" (lambda () (backward-char) (delete-char -1)))
+    ))
 (add-hook 'org-mode-hook (lambda () (setq local-abbrev-table org-mode-abbrev-table)))
 (clear-abbrev-table global-abbrev-table)
 (define-abbrev-table 'global-abbrev-table

@@ -222,6 +222,8 @@
 (evil-define-key leader-states 'global (kbd "<leader> w <up>") 'evil-window-up)
 (evil-define-key leader-states 'global (kbd "<leader> w <right>") 'evil-window-right)
 (evil-define-key leader-states 'global (kbd "<leader> w o") 'delete-other-windows)
+(evil-define-key leader-states 'global (kbd "<leader> w =") 'balance-windows)
+(evil-define-key leader-states 'global (kbd "<leader> w m") 'toggle-frame-maximized)
 (evil-define-key 'normal 'global (kbd "<leader> w z") 'my-zero-display-margin)
 (dolist (key '("0" "1" "2" "3" "4" "5" "6"))
   (let ((command (global-key-binding (kbd (concat "C-x " key)))))
