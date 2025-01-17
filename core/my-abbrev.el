@@ -4,7 +4,7 @@
   '(("otit" "#+title:")
     ("oaut" "#+author:")
     ("oopt" "#+options:")
-    ("osrc" "src_text{}" (lambda () (backward-char) (delete-char -1)))
+    ;; ("osrc" "src_text{}" (lambda () (backward-char) (delete-char -1)))
     ))
 (add-hook 'org-mode-hook (lambda () (setq local-abbrev-table org-mode-abbrev-table)))
 (clear-abbrev-table global-abbrev-table)

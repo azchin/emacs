@@ -5,12 +5,15 @@
 (defun toggle-tabs () (interactive)
        (setq indent-tabs-mode (not indent-tabs-mode)))
 
-(defun set-tab-width (width)
-  (setq-local tab-width width)
-  (setq-local evil-shift-width width)
-  (setq-local sh-basic-offset width)
-  (setq-local c-basic-offset width)
-  (setq-local tex-indent-basic width))
+(defun set-tab-width (w)
+  (interactive "sNew width: ")
+  (let ((width (if (stringp w) (string-to-number w) w)))
+    (setq-local tab-width width)
+    (setq-local evil-shift-width width)
+    (setq-local sh-basic-offset width)
+    (setq-local c-basic-offset width)
+    (setq-local tex-indent-basic width)))
+  
 
 ;; https://www.emacswiki.org/emacs/BackspaceWhitespaceToTabStop
 (defun backspace-whitespace-to-tab-stop ()
