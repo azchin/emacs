@@ -80,6 +80,7 @@
   (setq ls-lisp-dirs-first t)
   (setq ls-lisp-use-insert-directory-program nil)
   (setq ls-lisp-use-string-collate nil)
+  (setq dired-dwim-target t)
   (add-hook 'dired-mode-hook 'dired-hide-details-mode)
 
   ;; (defun dired-goto-subdir-and-focus ()

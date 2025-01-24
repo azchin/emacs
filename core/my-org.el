@@ -41,8 +41,8 @@
 (setq org-use-sub-superscripts '{})
 
 (setq org-hide-emphasis-markers nil)
-(setq org-link-descriptive nil)
-(setq org-pretty-entities nil)
+(setq org-link-descriptive t)
+(setq org-pretty-entities t)
 
 (setq org-todo-keywords '((sequence "TODO" "PROG" "|" "DONE" "AXED")))
 (setopt safe-local-variable-values
@@ -60,7 +60,7 @@
 
 (defun my-org-toggle-appearance ()
   (interactive)
-  (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
+  ;; (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
   (org-toggle-link-display)
   (org-toggle-pretty-entities))
 
