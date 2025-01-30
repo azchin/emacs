@@ -178,10 +178,10 @@
   ;; (rust-ts-mode . eglot-ensure)
   :config
   (setq read-process-output-max (* 1024 32))
+  (setq safe-local-variable-values
+        '((eglot-server-programs . (((rust-mode rust-ts-mode) "nix" "develop" "-c" "rust-analyzer")))))
   (add-to-list 'eglot-server-programs
-               '((c-mode c-ts-mode) . ("ccls")))
-  (add-to-list 'eglot-server-programs
-               '((rust-mode rust-ts-mode) . ("rust-analyzer"))))
+               '((c-mode c-ts-mode) . ("ccls"))))
 
 (use-package flymake
   :commands (flymake-mode flymake-start)

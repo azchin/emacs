@@ -69,7 +69,11 @@
    '("8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378" default))
  '(ede-project-directories '("/home/andrew/sandbox/ede"))
  '(package-selected-packages
-   '(yaml-mode dockerfile-mode yasnippet which-key vimrc-mode vertico undo-fu-session undo-fu treemacs-tab-bar treemacs-magit treemacs-evil tree-sitter-langs rust-mode rg ox-gfm osm org-roam-ui org-present org-contrib orderless nix-ts-mode nix-mode markdown-mode marginalia lua-mode ivy-hydra hl-todo gruvbox-theme evil-surround evil-quickscope evil-org evil-commentary evil-collection dired-sidebar counsel corfu consult cmake-mode citar cape))
+   '(cape cmake-mode corfu counsel dockerfile-mode evil-collection evil-commentary
+          evil-org evil-quickscope evil-surround gruvbox-theme hl-todo ivy-hydra
+          lua-mode markdown-mode nix-mode nix-ts-mode org-contrib org-roam-ui
+          ox-gfm rg rust-mode treemacs-evil treemacs-magit treemacs-tab-bar
+          undo-fu undo-fu-session vimrc-mode yaml-mode yasnippet))
  '(tab-bar-select-tab-modifiers '(meta)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
