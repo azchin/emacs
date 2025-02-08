@@ -2,9 +2,12 @@
 ;; UI
 (menu-bar-mode 0)
 (tool-bar-mode 0)
-(scroll-bar-mode 0)
+(when window-system
+  (scroll-bar-mode 0))
 (setq scroll-bar-adjust-thumb-portion nil)
 (blink-cursor-mode 0)
+(unless window-system
+  (xterm-mouse-mode))
 (setopt frame-resize-pixelwise t)
 (setopt frame-inhibit-implied-resize t)
 (setq scroll-conservatively 128)
@@ -133,8 +136,9 @@
 (defun my-configure-font-server ()
   (my-configure-font)
   (remove-hook 'server-after-make-frame-hook 'my-configure-font-server))
-(add-hook 'server-after-make-frame-hook 'my-configure-font-server)
-(my-configure-font)
+(when window-system
+  (add-hook 'server-after-make-frame-hook 'my-configure-font-server)
+  (my-configure-font))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -155,7 +159,8 @@
                 (capitalize (user-login-name))))
 (setopt inhibit-startup-screen t)
 ;; (fringe-mode 0)
-(fringe-mode '(0 . 1))
+(when window-system
+  (fringe-mode '(0 . 1)))
 ;; (fringe-mode '(1 . 1))
 (setq-default fringes-outside-margins t)
 (setq-default truncate-partial-width-windows 100)

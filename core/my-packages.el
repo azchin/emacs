@@ -391,6 +391,13 @@
         evil-split-window-below nil
         evil-vsplit-window-right nil)
   :config
+  ;; Manually set C-u keymap for terminal
+  (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
+  (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
+  (define-key evil-insert-state-map (kbd "C-u")
+              (lambda ()
+                (interactive)
+                (evil-delete (point-at-bol) (point))))
   (evil-set-initial-state 'eshell-mode 'insert)
   (evil-set-initial-state 'vc-annotate-mode 'insert)
   (evil-set-initial-state 'gnus-mode 'emacs)
@@ -440,7 +447,7 @@
 
 (use-package evil-collection
   :ensure t
-  :after evil
+  :after (evil dired)
   :config
   ;; (evil-collection-init
   ;;  '(apropos calc calendar cmake-mode company compile consult corfu debug
