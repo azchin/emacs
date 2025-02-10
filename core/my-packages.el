@@ -350,6 +350,11 @@
   :mode
   "\\.nix\\'")
 
+(use-package bison-mode
+  :ensure t
+  :mode
+  "\\.[ly]\\'")
+
 (use-package vimrc-mode
   :ensure t
   :mode
