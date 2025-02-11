@@ -48,6 +48,7 @@
 ;; (evil-define-key leader-rw-states 'global (kbd "<leader> c f") 'fill-whole-buffer)
 (evil-define-key leader-rw-states 'global (kbd "<leader> c f") 'fill-region)
 (evil-define-key 'normal 'global (kbd "<leader> c c") 'my-universal-command)
+(evil-define-key 'normal 'global (kbd "<leader> c s") 'create-eshell-window)
 (evil-define-key 'visual 'global (kbd "<leader> c w") 'count-words-region)
 (evil-define-key 'normal 'global (kbd "<leader> c z") 'insert-zero-width-char)
 (evil-define-key 'visual 'global (kbd "<leader> c n") 'narrow-to-region)
@@ -266,9 +267,9 @@
 (evil-define-key 'normal 'global (kbd "<leader> a m") (lambda () (interactive) (menu-bar-mode 'toggle)))
 (evil-define-key 'normal org-mode-map (kbd "<leader> a o") 'my-org-toggle-appearance)
 
-(evil-define-key 'normal 'global (kbd "<leader> l e") 'eglot)
+(evil-define-key 'normal 'global (kbd "<leader> l l") 'eglot)
+(evil-define-key 'normal 'global (kbd "<leader> l L") 'eglot-shutdown-all)
 (evil-define-key 'normal 'global (kbd "<leader> l r") 'eglot-rename)
-(evil-define-key 'normal 'global (kbd "<leader> l s") 'create-eshell-window)
 
 ;;NOTE Flyspell is by default bound to []s
 
@@ -305,6 +306,7 @@
 ;; TODO figure out heading level? kinda OP
 (evil-define-key 'normal org-mode-map (kbd "<leader> o t") (lambda () (interactive) (insert " ") (org-insert-time-stamp (current-time) nil t) (delete-char 1)))
 (evil-define-key 'normal org-mode-map (kbd "<leader> o e") 'org-export-dispatch)
+(evil-define-key 'normal org-mode-map (kbd "<leader> o n") 'org-narrow-to-subtree)
 (evil-define-key 'normal org-mode-map (kbd "<leader> o p") 'org-latex-export-to-pdf)
 (evil-define-key 'normal org-mode-map (kbd "<leader> o /") 'org-sparse-tree)
 (evil-define-key 'normal org-mode-map (kbd "<leader> o g g") 'org-occur)
