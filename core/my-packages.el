@@ -178,6 +178,8 @@
   ;; (rust-ts-mode . eglot-ensure)
   :config
   (setq read-process-output-max (* 1024 32))
+  (setq eglot-sync-connect nil)
+  (setq eglot-connect-timeout 30)
   (setq safe-local-variable-values
         '((eglot-server-programs . (((rust-mode rust-ts-mode) "nix" "develop" "-c" "rust-analyzer")))))
   (add-to-list 'eglot-server-programs
