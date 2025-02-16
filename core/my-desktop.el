@@ -5,6 +5,11 @@
 ;; (setq desktop-restore-in-current-display t)
 (setq desktop-restore-forces-onscreen nil)
 
+(savehist-mode)
+(setq savehist-file (emacsd "cache/history"))
+(setq savehist-autosave-interval 120)
+(add-to-list 'savehist-additional-variables 'file-name-history)
+
 (defun server-frame-desktop ()
   (desktop-save-mode nil)
   (desktop-read (emacsd "cache/default-desktop"))

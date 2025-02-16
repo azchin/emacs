@@ -529,6 +529,10 @@
                 (cons fun completion-at-point-functions)))
   ;; (add-hook 'org-mode-hook (lambda () (add-to-completion-at-point-functions
   ;;                                      (cape-company-to-capf 'company-ispell))))
+  (add-hook 'eshell-mode-hook (lambda () (add-to-completion-at-point-functions 'cape-history)))
+  (add-hook 'prog-mode-hook (lambda () (add-to-completion-at-point-functions 'cape-dabbrev)))
+  (add-hook 'eglot-managed-mode-hook (lambda () (setq-local completions-at-point-functions
+                                                            (remove 'cape-dabbrev completions-at-point-functions))))
   (add-hook 'sh-mode-hook (lambda () (add-to-completion-at-point-functions 'cape-file))))
 
 (use-package corfu
@@ -547,13 +551,13 @@
   ;; (require 'corfu-indexed)
   ;; (require 'corfu-quick)
   ;; (corfu-indexed-mode)
+  ;; (global-corfu-mode)
   (setq corfu-indexed-start 1)
   (setq corfu-cycle t)
-  (setq corfu-auto t)
+  (setq-default corfu-auto t)
   (setq corfu-delay 0)
   (setq corfu-auto-prefix 2)
-  (setq corfu-preselect 'prompt)
-  (global-corfu-mode))
+  (setq corfu-preselect 'prompt))
 
 (use-package which-key
   :ensure t
