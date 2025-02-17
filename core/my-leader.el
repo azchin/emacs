@@ -313,6 +313,8 @@
 (evil-define-key 'normal org-mode-map (kbd "<leader> o g l") (lambda () (interactive) (org-occur "\\[\\[.*\\]\\[.*\\]\\]")))
 (evil-define-key 'normal org-mode-map (kbd "<leader> o b") 'org-bibtex-yank)
 (evil-define-key 'normal org-mode-map (kbd "<leader> o 5") 'org-present)
+(evil-define-key 'normal org-mode-map (kbd "<leader> o TAB") 'org-cycle-set-visibility-according-to-property)
+(evil-define-key 'normal org-mode-map (kbd "<leader> o v") (lambda () (interactive) (org-set-property "VISIBILITY" "folded")))
 (evil-define-key 'normal org-mode-map (kbd "g x") 'org-open-at-point)
 (evil-define-operator evil-inline-src-text (beg end type)
   "Wrap motion or visual selection with 'src_text{' and '}'."
