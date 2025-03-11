@@ -44,8 +44,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Tab bar
-(tab-bar-mode)
-(setq tab-bar-show t)
+(setq tab-bar-show 1)
 (setq tab-bar-close-button-show nil)
 (setq tab-bar-close-last-tab-choice 'delete-frame)
 (setq tab-bar-new-button-show nil)
@@ -74,6 +73,7 @@
 ;;     ;; (add-to-list 'default-frame-alist `(top . ,(nth 3 win)))
 ;;     )
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(undecorated . t))
 
 ;; (setq my-display-offset 50)
 ;; (setq my-display-gap 10)

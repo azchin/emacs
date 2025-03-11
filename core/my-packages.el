@@ -15,9 +15,10 @@
 
 (require 'package)
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
+(defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (defvar nongnu '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
-(setq package-archives (list melpa gnu nongnu))
+(setq package-archives (list melpa gnu nongnu melpa-stable))
 
 (setq use-package-compute-statistics t)
 (setq warning-minimum-level :error)
@@ -223,6 +224,10 @@
   :commands (magit-init magit-clone magit-status magit-blame)
   :config
   (keymap-unset magit-status-mode-map "SPC"))
+
+(use-package gptel
+  :ensure t
+  :pin melpa-stable)
 
 (use-package org-roam
   :ensure t

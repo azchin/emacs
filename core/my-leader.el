@@ -260,12 +260,11 @@
                                                                                        (save-buffers-kill-terminal))))
 (evil-define-key leader-states 'global (kbd "<leader> q e") 'server-shutdown)
 
-(evil-define-key 'normal 'global (kbd "<leader> a t")
-  (lambda () (interactive)
-    (let ((theme-list '(gruvbox-dark-hard modus-operandi modus-vivendi)))
-      (load-theme (intern (completing-read "Choose a theme: " (mapcar 'symbol-name theme-list)))))))
-(evil-define-key 'normal 'global (kbd "<leader> a m") (lambda () (interactive) (menu-bar-mode 'toggle)))
-(evil-define-key 'normal org-mode-map (kbd "<leader> a o") 'my-org-toggle-appearance)
+;; (evil-define-key 'normal 'global (kbd "<leader> a t")
+;;   (lambda () (interactive)
+;;     (let ((theme-list '(gruvbox-dark-hard modus-operandi modus-vivendi)))
+;;       (load-theme (intern (completing-read "Choose a theme: " (mapcar 'symbol-name theme-list)))))))
+;; (evil-define-key 'normal 'global (kbd "<leader> a m") (lambda () (interactive) (menu-bar-mode 'toggle)))
 
 (evil-define-key 'normal 'global (kbd "<leader> l l") 'eglot)
 (evil-define-key 'normal 'global (kbd "<leader> l L") 'eglot-shutdown-all)
@@ -283,7 +282,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Package commands
-(evil-define-key 'normal 'global (kbd "<leader> o a") (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows)))
+;; (evil-define-key 'normal 'global (kbd "<leader> o a") (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows)))
+(evil-define-key 'normal org-mode-map (kbd "<leader> o a") 'my-org-toggle-appearance)
 (evil-define-key 'normal 'global (kbd "<leader> o l") 'org-store-link)
 ;; "o a" 'org-agent
 (evil-define-key 'normal 'global (kbd "<leader> o c") 'org-capture)
@@ -337,14 +337,17 @@
 (evil-define-key 'normal 'global (kbd "<leader> m <") 'smerge-keep-upper)
 (evil-define-key 'normal 'global (kbd "<leader> m >") 'smerge-keep-lower)
 (evil-define-key 'normal 'global (kbd "<leader> m |") 'smerge-keep-base)
+(evil-define-key 'normal 'global (kbd "<leader> m =") 'smerge-keep-all)
 (evil-define-key 'normal 'global (kbd "<leader> l c") 'company-mode)
 (evil-define-key 'normal 'global (kbd "<leader> l w") 'which-key-mode)
 (evil-define-key 'normal 'global (kbd "<leader> l m") 'osm-home)
-(evil-define-key 'normal 'global (kbd "<leader> g g") 'rg)
+(evil-define-key 'normal 'global (kbd "<leader> g G") 'rg)
+(evil-define-key 'normal 'global (kbd "<leader> g g") 'rg-project)
 (evil-define-key 'normal 'global (kbd "<leader> g f") 'rg-dwim-current-file)
 (evil-define-key 'normal 'global (kbd "<leader> g d") 'rg-dwim-current-dir)
 (evil-define-key 'normal 'global (kbd "<leader> g p") 'rg-dwim-project-dir)
 (evil-define-key 'normal 'global (kbd "<leader> k") 'evil-avy-goto-line)
+(evil-define-key 'normal 'global (kbd "<leader> a") 'evil-avy-goto-line)
 (evil-define-key 'normal 'global (kbd "<leader> j") 'evil-avy-goto-word-1)
 ;; (if (eq system-type 'gnu/linux)
 ;;     (progn
