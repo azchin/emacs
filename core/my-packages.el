@@ -182,8 +182,21 @@
   (setq read-process-output-max (* 1024 32))
   (setq eglot-sync-connect nil)
   (setq eglot-connect-timeout 30)
+  ;; TODO deduplicate this stuff
   (setq safe-local-variable-values
-        '((eglot-server-programs . (((rust-mode rust-ts-mode) "nix" "develop" "-c" "rust-analyzer")))))
+        '((eglot-server-programs . (((rust-mode rust-ts-mode) "nix" "develop" "-c" "rust-analyzer")))
+          (eglot-server-programs . ((python-mode "venv/bin/pylsp")))
+          (eval . (setq-local my-project-path
+                             (tramp-file-name-localname
+                              (tramp-dissect-file-name
+                               (file-name-directory
+                                (let ((d (dir-locals-find-file "./")))
+                                  (if (stringp d) d (car d))))))))
+          (eval . (message "Project directory set to `%s'." my-project-path))
+          (eval . (setq-local my-pylsp
+                              (concat my-project-path "venv/bin/pylsp")))
+          (eval . (setq-local eglot-server-programs  `((python-mode ,my-pylsp))))
+          ))
   (add-to-list 'eglot-server-programs
                '((c-mode c-ts-mode) . ("ccls"))))
 
@@ -532,6 +545,8 @@
   (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "] q") 'my-evil-collection-unimpaired-next-error)
   (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "[ x") 'xref-go-back)
   (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "] x") 'xref-go-forward)
+  (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "g d") 'xref-find-definitions)
+  (evil-collection-define-key 'normal 'evil-collection-unimpaired-mode-map (kbd "g r") 'xref-find-references)
   (evil-collection-define-key 'normal 'dired-mode-map (kbd "SPC") nil)
   (evil-collection-define-key 'normal 'diff-mode-map (kbd "SPC") nil)
   (evil-collection-define-key 'normal 'Info-mode-map (kbd "SPC") nil)
