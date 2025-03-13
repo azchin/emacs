@@ -73,7 +73,9 @@
 ;;     ;; (add-to-list 'default-frame-alist `(top . ,(nth 3 win)))
 ;;     )
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-(add-to-list 'default-frame-alist '(undecorated . t))
+(cond
+ ((string-equal system-type "gnu/linux")
+  (add-to-list 'default-frame-alist '(undecorated . t))))
 
 ;; (setq my-display-offset 50)
 ;; (setq my-display-gap 10)
