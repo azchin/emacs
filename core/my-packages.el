@@ -18,6 +18,7 @@
 (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (defvar nongnu '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
+(defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
 (setq package-archives (list melpa gnu nongnu melpa-stable))
 
 (setq use-package-compute-statistics t)
@@ -194,21 +195,25 @@
     (evil-define-minor-mode-key 'normal 'flymake-mode (kbd "] c") 'flymake-goto-next-error)))
 
 ;; interactively install with [M-x treesit-install-language-grammar]
+;; https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
 (use-package treesit
   :hook
   (rust-mode . rust-ts-mode)
   (nix-mode . nix-ts-mode)
+  ;; (js-mode . js-ts-mode)
   ;; (c-mode . c-ts-mode)
   ;; (c++-mode . c++-ts-mode)
   ;; (python-mode . python-ts-mode)
   ;; (c-or-c++-mode . c-or-c++-ts-mode)
   :config
-  (setq my-treesit-langs '(rust python))
+  (setq my-treesit-langs '(rust python nix json bash))
   (setq treesit-language-source-alist (mapcar (lambda (lang) `(,lang ,(concat "https://github.com/tree-sitter/tree-sitter-" (symbol-name lang)))) my-treesit-langs))
   ;; custom languages
-  (add-to-list 'treesit-language-source-alist '(nix "https://github.com/nix-community/tree-sitter-nix"))
+  ;; (add-to-list 'treesit-language-source-alist '(nix "https://github.com/nix-community/tree-sitter-nix"))
   ;; (add-to-list 'my-treesit-langs 'nix)
   ;; (add-to-list 'treesit-language-source-alist '(c++ "https://github.com/tree-sitter/tree-sitter-cpp"))
+  (add-to-list 'treesit-language-source-alist '(javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+  ;; (add-to-list 'my-treesit-langs 'js)
   ;; install
   (mapc (lambda (lang)
           (unless (treesit-language-available-p lang)
@@ -280,6 +285,22 @@
         org-roam-ui-update-on-save t
         org-roam-ui-open-on-start t))
 
+(use-package gptel
+  :ensure t
+  :pin "melpa-stable"
+  :config
+  ;; (setq anthropic-api-key (let ((auth-info (car (auth-source-search :host "api.anthropic.com" :user "apikey" :require '(:password)))))
+  ;;                           (when auth-info
+  ;;                             (funcall (plist-get auth-info :password)))))
+  ;; (setq gptel-api-key (let ((auth-info (car (auth-source-search :host "api.openai.com" :user "apikey" :require '(:password)))))
+  ;;                           (when auth-info
+  ;;                             (funcall (plist-get auth-info :password)))))
+  ;; (setq
+  ;;  gptel-model 'claude-3-sonnet-20240229 ;  "claude-3-opus-20240229" also available
+  ;;  gptel-backend (gptel-make-anthropic "Claude"
+  ;;                                      :stream t :key anthropic-api-key))
+  )
+
 (use-package treemacs
   :ensure t
   :defer t
@@ -327,9 +348,26 @@
     (set-face-attribute (car face) nil :family markup-font-family :weight 'medium :height (cdr face)))
   (set-face-attribute 'markdown-code-face nil :family default-font-family :height default-font-height))
 
+(use-package js2-mode
+  :ensure t
+  :config
+  (setq js-indent-level 2))
+
+(use-package typescript-mode
+  :ensure t
+  :custom
+  (typescript-indent-level 2))
+
+(use-package json-mode
+  :ensure t)
+
 (use-package lua-mode
   :ensure t
   :mode "\\.lua\\'")
+
+(use-package protobuf-mode
+  :ensure t
+  :mode "\\.proto\\'")
 
 (use-package ox-gfm
   :after org
@@ -780,22 +818,6 @@ advice like this:
   (openwith-associations '(("\\.pdf\\'" "zathura" (file))))
   :config
   (openwith-mode t))
-
-(use-package js2-mode
-  :disabled
-  :ensure t
-  :config
-  (setq js-indent-level 2))
-
-(use-package typescript-mode
-  :disabled
-  :ensure t
-  :custom
-  (typescript-indent-level 2))
-
-(use-package json-mode
-  :disabled
-  :ensure t)
 
 (use-package marginalia
   :disabled

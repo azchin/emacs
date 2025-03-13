@@ -221,7 +221,7 @@ The app is chosen from your OS's preference."
 ;; (add-hook 'after-save-hook 'executable-autocmd)
 
 ;; Major modes
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+;; (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Hideshow mode
@@ -233,7 +233,7 @@ The app is chosen from your OS's preference."
   (when (> (line-number-at-pos (point-max) t)
            my-hs-hide-threshold)
     (hs-hide-all)))
-(add-hook 'prog-mode-hook 'hs-minor-mode)
+;; (add-hook 'prog-mode-hook 'hs-minor-mode)
 ;; (add-hook 'hs-minor-mode-hook 'my-hs-hide-all)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
