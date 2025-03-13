@@ -245,5 +245,8 @@ The app is chosen from your OS's preference."
 (setopt epa-pinentry-mode 'loopback)
 (setq epg-gpg-program "gpg2")
 (fset 'epg-wait-for-status 'ignore)
+(when (string-equal system-type "darwin")
+  (add-to-list 'exec-path "/Library/TeX/texbin")
+  (setenv "PATH" (concat "/Library/TeX/texbin:" (getenv "PATH"))))
 
 (provide 'my-extra)
