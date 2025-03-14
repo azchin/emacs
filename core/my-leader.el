@@ -336,6 +336,7 @@
 (evil-define-key 'normal 'global (kbd "<leader> m m") 'magit-status)
 (evil-define-key 'normal 'global (kbd "<leader> m <") 'smerge-keep-upper)
 (evil-define-key 'normal 'global (kbd "<leader> m >") 'smerge-keep-lower)
+(evil-define-key 'normal 'global (kbd "<leader> m =") 'smerge-keep-all)
 (evil-define-key 'normal 'global (kbd "<leader> m |") 'smerge-keep-base)
 (evil-define-key 'normal 'global (kbd "<leader> m =") 'smerge-keep-all)
 (evil-define-key 'normal 'global (kbd "<leader> l c") 'company-mode)
