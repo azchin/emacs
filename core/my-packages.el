@@ -50,6 +50,8 @@
 (use-package my-abbrev)
 (use-package my-leader
   :after (evil evil-collection dired treemacs-evil my-tabs my-desktop my-buffer my-extra))
+(use-package my-colemak-dh
+  :after my-leader)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Built-in packages
@@ -555,16 +557,28 @@
 (use-package evil-org
   :ensure t
   :after (org evil) 
-  :hook
-  (org-mode . evil-org-mode)
-  (evil-org-mode . evil-org-set-key-theme)
   :config
   (setq evil-org-special-o/O '(table-row item))
   (setq evil-org-use-additional-insert nil)
   (evil-define-key '(normal visual) org-mode-map (kbd "H") 'org-shiftleft)
   (evil-define-key '(normal visual) org-mode-map (kbd "L") 'org-shiftright)
+
   (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
+  (evil-org-agenda-set-keys)
+
+    (defun colemak-dh-override-evil-org ()
+      "Override evil-org bindings if colemak-dh-mode is enabled."
+      (when global-colemak-dh-mode
+        (message "Both global-colemak-dh-mode and evil-org-mode are active")
+        (evil-define-key '(normal visual motion) 'evil-org-mode
+          (kbd "o") 'evil-next-line
+          (kbd "y") 'evil-org-open-below)))
+
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (evil-org-mode)
+                (evil-org-set-key-theme)
+                (colemak-dh-override-evil-org))))
 
 (use-package avy
   :ensure t
