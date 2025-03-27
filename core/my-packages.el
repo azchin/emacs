@@ -245,10 +245,6 @@
   :config
   (keymap-unset magit-status-mode-map "SPC"))
 
-(use-package gptel
-  :ensure t
-  :pin melpa-stable)
-
 (use-package org-roam
   :ensure t
   :after org
