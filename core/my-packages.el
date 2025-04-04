@@ -612,8 +612,8 @@
   ;;                                      (cape-company-to-capf 'company-ispell))))
   (add-hook 'eshell-mode-hook (lambda () (add-to-completion-at-point-functions 'cape-history)))
   (add-hook 'prog-mode-hook (lambda () (add-to-completion-at-point-functions 'cape-dabbrev)))
-  (add-hook 'eglot-managed-mode-hook (lambda () (setq-local completions-at-point-functions
-                                                            (remove 'cape-dabbrev completions-at-point-functions))))
+  (add-hook 'eglot-managed-mode-hook (lambda () (setq-local completion-at-point-functions
+                                                            (remove 'cape-dabbrev completion-at-point-functions))))
   (add-hook 'sh-mode-hook (lambda () (add-to-completion-at-point-functions 'cape-file))))
 
 (use-package corfu
