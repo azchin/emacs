@@ -224,6 +224,8 @@
 (evil-define-key leader-states 'global (kbd "<leader> w <right>") 'evil-window-right)
 (evil-define-key leader-states 'global (kbd "<leader> w o") 'delete-other-windows)
 (evil-define-key leader-states 'global (kbd "<leader> w =") 'balance-windows)
+(evil-define-key leader-states 'global (kbd "<leader> w r") 'evil-window-rotate-downwards)
+(evil-define-key leader-states 'global (kbd "<leader> w R") 'evil-window-rotate-upwards)
 (evil-define-key leader-states 'global (kbd "<leader> w m") 'toggle-frame-maximized)
 (evil-define-key 'normal 'global (kbd "<leader> w z") 'my-zero-display-margin)
 (dolist (key '("0" "1" "2" "3" "4" "5" "6"))
