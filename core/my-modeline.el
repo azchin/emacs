@@ -40,7 +40,15 @@ Containing LEFT, and RIGHT aligned respectively."
              mode-name
              "]"
              mode-line-whitespace
-             (:eval (and buffer-file-name "[%f]"))
+             (:eval (when buffer-file-name
+                      (let* ((s buffer-file-name)
+                             (len (length s))
+                             (max 20)
+                             (ellipses "... "))
+                        (format "[%s]"
+                                (if (> len max)
+                                    (concat ellipses (substring s (- len max (length ellipses))))
+                                  s)))))
              ))
      ;; Right.
      (quote ((vc-mode vc-mode)
