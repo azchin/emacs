@@ -67,7 +67,13 @@
                (list "cs6265"
                      "remote-shell" "/bin/bash"))
   (add-to-list 'tramp-remote-path "~/.cargo/bin")
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+
+  (defun my-disable-tramp-autosave ()
+    "Disable autosave for tramp buffers."
+    (when (file-remote-p buffer-file-name)
+      (setq-local auto-save-default nil)))
+  (add-hook 'find-file-hook #'my-disable-tramp-autosave))
 
 (use-package dired
   :config
@@ -197,8 +203,7 @@
           (eval . (message "Project directory set to `%s'." my-project-path))
           (eval . (setq-local my-pylsp
                               (concat my-project-path "venv/bin/pylsp")))
-          (eval . (setq-local eglot-server-programs  `((python-mode ,my-pylsp))))
-          ))
+          (eval . (setq-local eglot-server-programs  `((python-mode ,my-pylsp))))))
   (add-to-list 'eglot-server-programs
                '((c-mode c-ts-mode) . ("ccls"))))
 
