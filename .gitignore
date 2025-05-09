@@ -5,11 +5,12 @@ eln-cache
 auto-save-list
 elpa
 tramp
-convention.el
+tree-sitter
 eshell/lastdir
 eshell/history
 transient
 recentf
+org-roam.db
 session.*
 cache/*/*
 cache/*
@@ -18,8 +19,7 @@ cache/*
 !cache/undotree/.keep
 !cache/default-desktop/.keep
 projects
-url/
-newsticker/
+url
+newsticker
 network-security.data
 bookmarks
-.my-update

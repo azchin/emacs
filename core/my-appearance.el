@@ -154,7 +154,7 @@
 ;; (setq frame-title-format `(,(system-name) " - %b [%m] %f"  ))
 (setq frame-title-format '("%b :: %f"))
 
-;; (setq initial-buffer-choice t)
+(setopt initial-buffer-choice t)
 (setopt initial-major-mode 'org-mode)
 (setopt initial-scratch-message
         (format "Welcome %s, to the AIxCC デスマーチ\n"
@@ -265,7 +265,7 @@
   (mapc 'disable-theme custom-enabled-themes))
 
 (defadvice load-theme (after theme-dont-propagate activate)
-  (load "my-late"))
+  (load "my-late" nil t))
 
 (defun set-faces-to-default-font-family (faces)
   (dolist (face faces)
@@ -278,8 +278,10 @@
       modus-themes-deuteranopia t
       modus-themes-tabs-accented nil
       modus-themes-mixed-fonts t)
+
 ;; (load-theme 'modus-operandi) 
 ;; (load-theme 'modus-vivendi) 
+
 (use-package gruvbox-theme
   :ensure t
   :config
