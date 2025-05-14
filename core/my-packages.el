@@ -18,8 +18,7 @@
 (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (defvar nongnu '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
-(defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
-(setq package-archives (list melpa gnu nongnu melpa-stable))
+(setq package-archives (list gnu nongnu melpa melpa-stable))
 
 (setq use-package-compute-statistics t)
 (setq warning-minimum-level :error)
@@ -58,8 +57,13 @@
 (use-package tramp
   :config
   (setopt enable-remote-dir-locals t)
+  ;; (setopt tramp-ssh-controlmaster-options
+  ;;         (concat "-o ControlPath=/tmp/ssh-%%r@%%h:%%p "
+  ;;                 "-o ControlMaster=auto "
+  ;;                 "-o ControlPersist=yes"))
   (setq tramp-default-method "sshx") ;; use /bin/sh and .profile
-  (setq tramp-chunksize 4050) ;; max 4050
+  ;; (setq tramp-verbose 6)
+  ;; (setq tramp-chunksize 4050) ;; max 4050
   ;; (add-to-list 'tramp-connection-properties
   ;;              (list (regexp-quote "/sshx:ratbat:")
   ;;                    "direct-async-process" t))
@@ -302,20 +306,12 @@
         org-roam-ui-open-on-start t))
 
 (use-package gptel
+  :ensure t)
+
+(use-package org-ai
   :ensure t
-  :pin "melpa-stable"
-  :config
-  ;; (setq anthropic-api-key (let ((auth-info (car (auth-source-search :host "api.anthropic.com" :user "apikey" :require '(:password)))))
-  ;;                           (when auth-info
-  ;;                             (funcall (plist-get auth-info :password)))))
-  ;; (setq gptel-api-key (let ((auth-info (car (auth-source-search :host "api.openai.com" :user "apikey" :require '(:password)))))
-  ;;                           (when auth-info
-  ;;                             (funcall (plist-get auth-info :password)))))
-  ;; (setq
-  ;;  gptel-model 'claude-3-sonnet-20240229 ;  "claude-3-opus-20240229" also available
-  ;;  gptel-backend (gptel-make-anthropic "Claude"
-  ;;                                      :stream t :key anthropic-api-key))
-  )
+  :after org
+  :hook org-mode)
 
 (use-package treemacs
   :ensure t
@@ -467,7 +463,7 @@
   (evil-set-initial-state 'eshell-mode 'insert)
   (evil-set-initial-state 'vc-annotate-mode 'insert)
   (evil-set-initial-state 'gnus-mode 'emacs)
-  ;; (evil-set-initial-state 'osm-mode 'emacs)
+  (evil-set-initial-state 'osm-mode 'emacs)
   (defun simulate-key-presses (key-string)
     (setq unread-command-events (listify-key-sequence (kbd key-string))))
   (evil-define-key 'visual 'global (kbd "M-<down>")
@@ -688,6 +684,16 @@
   :ensure t
   :commands (rg rg-dwim-current-file rg-dwim-current-dir rg-dwim-project-dir rg-dwim))
   
+(use-package osm
+  :ensure t
+  ;; :bind ("C-c m" . osm-prefix-map) ;; Alternative: `osm-home'
+  :commands (osm-home osm-search osm-goto osm-bookmark-jump osm-gpx-show)
+  :custom
+  ;; Take a look at the customization group `osm' for more options.
+  (osm-server 'default) ;; Configure the tile server
+  (osm-copyright t)     ;; Display the copyright information
+  )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package org-contrib
@@ -845,12 +851,6 @@ advice like this:
 (use-package yasnippet-snippets
   :disabled
   :after yasnippet)
-
-(use-package org-ai
-  :disabled
-  :ensure t
-  :after org
-  :hook org-mode)
 
 (use-package openwith
   :disabled
@@ -1173,20 +1173,5 @@ advice like this:
                      #'consult-completion-in-region
                    #'completion--in-region)
                  args))))
-
-(use-package osm
-  :disabled
-  :ensure t
-  ;; :bind ("C-c m" . osm-prefix-map) ;; Alternative: `osm-home'
-  :commands (osm-home osm-search osm-goto osm-bookmark-jump osm-gpx-show)
-  :custom
-  ;; Take a look at the customization group `osm' for more options.
-  (osm-server 'default) ;; Configure the tile server
-  (osm-copyright t)     ;; Display the copyright information
-
-  :init
-  ;; Load Org link support
-  (with-eval-after-load 'org
-    (require 'osm-ol)))
 
 (provide 'my-packages)
