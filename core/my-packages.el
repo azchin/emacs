@@ -348,6 +348,11 @@
     (evil-define-minor-mode-key 'normal 'hl-todo-mode (kbd "[ d") 'hl-todo-previous)
     (evil-define-minor-mode-key 'normal 'hl-todo-mode (kbd "] d") 'hl-todo-next)))
 
+(use-package rainbow-identifiers
+  :ensure t
+  :hook
+  (prog-mode . rainbow-identifiers-mode))
+
 (use-package markdown-mode
   :ensure t
   :mode "\\.md\\'"
