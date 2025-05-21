@@ -13,13 +13,15 @@
    ["#ebdbb2" "#cc241d" "#98971a" "#d79921" "#458588" "#b16286" "#689d6a" "#3c3836"])
  '(company-show-quick-access t nil nil "Customized with use-package company")
  '(connection-local-criteria-alist
-   '(((:application rg :machine "ratbat") rg-vars-ratbat)
+   '(((:application rg :machine "ramjet") rg-vars-ramjet)
+     ((:application rg :machine "ratbat") rg-vars-ratbat)
      ((:application rg :machine "nixthree") rg-vars-nixthree)
      ((:application eshell) eshell-connection-default-profile)
      ((:application tramp) tramp-connection-local-default-system-profile
       tramp-connection-local-default-shell-profile)))
  '(connection-local-profile-alist
-   '((rg-vars-ratbat (rg-executable . "/home/andrew/.cargo/bin/rg"))
+   '((rg-vars-ramjet (rg-executable . "/usr/bin/rg"))
+     (rg-vars-ratbat (rg-executable . "/home/andrew/.cargo/bin/rg"))
      (rg-vars-nixthree (rg-executable . "/etc/profiles/per-user/andrew/bin/rg"))
      (eshell-connection-default-profile (eshell-path-env-list))
      (tramp-connection-local-darwin-ps-profile
@@ -72,7 +74,15 @@
  '(custom-safe-themes
    '("8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378" default))
  '(ede-project-directories '("/home/andrew/sandbox/ede"))
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(bison-mode cape cmake-mode corfu counsel dockerfile-mode evil-collection
+                evil-commentary evil-org evil-quickscope evil-surround gptel
+                gptel-aibo gruvbox-theme hl-todo ivy-hydra jinja2-mode js2-mode
+                json-mode lua-mode markdown-mode nix-mode nix-ts-mode
+                org-contrib org-roam-ui ox-gfm poly-ansible protobuf-mode rg
+                rust-mode treemacs-evil treemacs-magit treemacs-tab-bar
+                typescript-mode undo-fu undo-fu-session vimrc-mode yaml-mode
+                yasnippet))
  '(tab-bar-select-tab-modifiers '(meta)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

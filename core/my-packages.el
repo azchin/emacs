@@ -313,6 +313,10 @@
   :after org
   :hook org-mode)
 
+(use-package gptel-aibo
+  :after gptel
+  :ensure t)
+
 (use-package treemacs
   :ensure t
   :defer t
@@ -372,6 +376,10 @@
 
 (use-package json-mode
   :ensure t)
+
+(use-package poly-ansible
+  :ensure t
+  :mode ("\\.yaml\\.j2\\'" . poly-ansible-mode))
 
 (use-package lua-mode
   :ensure t
