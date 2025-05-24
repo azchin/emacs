@@ -194,6 +194,7 @@
   (setq read-process-output-max (* 1024 32))
   (setq eglot-sync-connect nil)
   (setq eglot-connect-timeout 30)
+  ;; TODO eglot-confirm-server-edits
   ;; TODO deduplicate this stuff
   (setq safe-local-variable-values
         '((eglot-server-programs . (((rust-mode rust-ts-mode) "nix" "develop" "-c" "rust-analyzer")))
@@ -351,7 +352,12 @@
 (use-package rainbow-identifiers
   :ensure t
   :hook
-  (prog-mode . rainbow-identifiers-mode))
+  (prog-mode . rainbow-identifiers-mode)
+  :config
+  (setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face)
+  (setq rainbow-identifiers-cie-l*a*b*-lightness 75)
+  (setq rainbow-identifiers-cie-l*a*b*-saturation 30)
+  (setq rainbow-identifiers-cie-l*a*b*-color-count 65536))
 
 (use-package markdown-mode
   :ensure t
