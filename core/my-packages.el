@@ -224,7 +224,7 @@
 (use-package treesit
   :hook
   (rust-mode . rust-ts-mode)
-  (nix-mode . nix-ts-mode)
+  ;; (nix-mode . nix-ts-mode)
   ;; (js-mode . js-ts-mode)
   ;; (c-mode . c-ts-mode)
   ;; (c++-mode . c++-ts-mode)
@@ -337,6 +337,10 @@
 (use-package treemacs-tab-bar
   :ensure t
   :after (treemacs))
+
+(use-package docker-tramp
+  :ensure t
+  :defer t)
 
 (use-package hl-todo
   :ensure t
@@ -676,6 +680,7 @@
           (counsel-M-x . ivy--regex-ignore-order)
           (counsel-find-file . ivy--regex-fuzzy)
           (counsel-dired . ivy--regex-plus)
+          (swiper . ivy--regex-plus)
           (t . ivy--regex-fuzzy)))
   :config
   (setq ivy-count-format "")
