@@ -71,6 +71,7 @@
                (list "cs6265"
                      "remote-shell" "/bin/bash"))
   (add-to-list 'tramp-remote-path "~/.cargo/bin")
+  (add-to-list 'tramp-remote-path "~/.local/bin")
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
   (defun my-disable-tramp-autosave ()
@@ -210,7 +211,10 @@
                               (concat my-project-path "venv/bin/pylsp")))
           (eval . (setq-local eglot-server-programs  `((python-mode ,my-pylsp))))))
   (add-to-list 'eglot-server-programs
-               '((c-mode c-ts-mode) . ("ccls"))))
+               '((c-mode c-ts-mode) . ("ccls")))
+  (add-to-list 'eglot-server-programs
+               '(python-mode . ("ruff" "server")))
+  )
 
 (use-package flymake
   :commands (flymake-mode flymake-start)
@@ -487,6 +491,8 @@
   (evil-set-initial-state 'vc-annotate-mode 'insert)
   (evil-set-initial-state 'gnus-mode 'emacs)
   (evil-set-initial-state 'osm-mode 'emacs)
+  (evil-set-initial-state 'calendar-mode 'emacs)
+  (evil-set-initial-state 'minibuffer-mode 'emacs)
   (defun simulate-key-presses (key-string)
     (setq unread-command-events (listify-key-sequence (kbd key-string))))
   (evil-define-key 'visual 'global (kbd "M-<down>")
@@ -717,6 +723,13 @@
   (osm-server 'default) ;; Configure the tile server
   (osm-copyright t)     ;; Display the copyright information
   )
+
+(use-package org-noter
+  :ensure t)
+
+(use-package zotxt
+  :ensure t
+  :requires org-noter)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
