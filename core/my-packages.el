@@ -729,7 +729,9 @@
 
 (use-package zotxt
   :ensure t
-  :requires org-noter)
+  :requires org-noter
+  :config
+  (add-hook 'org-mode-hook 'org-zotxt-mode))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -74,15 +74,7 @@
  '(custom-safe-themes
    '("8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378" default))
  '(ede-project-directories '("/home/andrew/sandbox/ede"))
- '(package-selected-packages
-   '(bison-mode cape cmake-mode corfu counsel dockerfile-mode eglot evil-collection
-                evil-commentary evil-org evil-quickscope evil-surround
-                gptel-aibo gruvbox-theme hl-todo ivy-hydra js2-mode json-mode
-                lua-mode markdown-mode nix-mode nix-ts-mode org-ai org-contrib
-                org-noter org-roam-ui osm ox-gfm poly-ansible protobuf-mode
-                rainbow-identifiers rg rust-mode treemacs-evil treemacs-magit
-                treemacs-tab-bar typescript-mode undo-fu undo-fu-session
-                vimrc-mode yasnippet zotxt))
+ '(package-selected-packages nil)
  '(tab-bar-select-tab-modifiers '(meta)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
