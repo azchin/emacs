@@ -383,6 +383,18 @@
     (set-face-attribute (car face) nil :family markup-font-family :weight 'medium :height (cdr face)))
   (set-face-attribute 'markdown-code-face nil :family default-font-family :height default-font-height))
 
+(use-package tex
+  :ensure auctex
+  :config
+  ;; (setq TeX-auto-save t)
+  ;; (setq TeX-parse-self t)
+  (setq-default TeX-master nil)
+  
+  ;; Item indentation
+  (setq LaTeX-item-indent 0)  ; Keep items aligned with \begin
+  (setq LaTeX-indent-level 2)  ; This controls continuation line indent
+  )
+
 (use-package js2-mode
   :ensure t
   :config

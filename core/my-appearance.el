@@ -175,6 +175,9 @@
 (add-hook 'c-mode-hook 'display-fill-column-indicator-mode)
 (add-hook 'c++-mode-hook 'display-fill-column-indicator-mode)
 (add-hook 'rust-mode-hook 'display-fill-column-indicator-mode)
+(add-hook 'latex-mode-hook 'display-fill-column-indicator-mode)
+(add-hook 'org-mode-hook 'display-fill-column-indicator-mode)
+(add-hook 'markdown-mode-hook 'display-fill-column-indicator-mode)
 
 ;; (global-prettify-symbols-mode 1)
 (setq font-latex-fontify-script nil)

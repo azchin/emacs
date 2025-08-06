@@ -95,6 +95,7 @@
 (evil-define-key 'normal 'global (kbd "<leader> f n m") (lambda () (interactive) (find-file (read-file-name "Find file: " "~/nixos-config/modules/"))))
 (evil-define-key 'normal 'global (kbd "<leader> f s o") (lambda () (interactive) (create-new-buffer "*org-scratch*" 'org-mode)))
 (evil-define-key 'normal 'global (kbd "<leader> f s c") (lambda () (interactive) (create-new-buffer "*c-scratch*" 'c-mode)))
+(evil-define-key 'normal 'global (kbd "<leader> f s m") (lambda () (interactive) (create-new-buffer "*markdown-scratch*" 'markdown-mode)))
 (evil-define-key 'normal 'global (kbd "<leader> f s p") (lambda () (interactive) (create-new-buffer "*python-scratch*" 'python-mode)))
 (evil-define-key 'normal 'global (kbd "<leader> f s t") (lambda () (interactive) (create-new-buffer "*text-scratch*" 'text-mode)))
 (evil-define-key 'normal 'global (kbd "<leader> f s h") (lambda () (interactive) (create-new-buffer "*script-scratch*" 'shell-script-mode)))
