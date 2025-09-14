@@ -11,9 +11,9 @@
     (setq-local tab-width width)
     (setq-local evil-shift-width width)
     (setq-local sh-basic-offset width)
-    (setq-local c-basic-offset width)
-    (setq-local tex-indent-basic width)))
+    (setq-local c-basic-offset width)))
   
+    ;; (setq-local tex-indent-basic width)
 
 ;; https://www.emacswiki.org/emacs/BackspaceWhitespaceToTabStop
 (defun backspace-whitespace-to-tab-stop ()
@@ -77,7 +77,8 @@
 (setopt c-ts-mode-indent-offset c-basic-offset)
 (setopt c-ts-mode-indent-style 'k&r)
 (setq css-indent-offset 2)
-(setq tex-indent-basic custom-tab-width)
+(setq tex-indent-basic 2)
+;; (setq tex-indent-item 2)
 
 (add-hook 'python-mode-hook (lambda () (set-tab-width python-indent-offset)))
 (add-hook 'python-ts-mode-hook (lambda () (set-tab-width python-indent-offset)))

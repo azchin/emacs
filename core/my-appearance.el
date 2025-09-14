@@ -72,8 +72,9 @@
 ;;     ;; (add-to-list 'default-frame-alist `(left . ,(nth 2 win)))
 ;;     ;; (add-to-list 'default-frame-alist `(top . ,(nth 3 win)))
 ;;     )
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 (cond
+ ((string-equal (getenv "XDG_CURRENT_DESKTOP") "openbox") t)
  ((string-equal system-type "gnu/linux")
   (add-to-list 'default-frame-alist '(undecorated . t))))
 

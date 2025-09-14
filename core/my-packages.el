@@ -49,8 +49,8 @@
 (use-package my-abbrev)
 (use-package my-leader
   :after (evil evil-collection dired treemacs-evil my-tabs my-desktop my-buffer my-extra))
-(use-package my-colemak-dh
-  :after my-leader)
+;; (use-package my-colemak-dh
+;;   :after my-leader)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Built-in packages
@@ -342,10 +342,6 @@
   :ensure t
   :after (treemacs))
 
-(use-package docker-tramp
-  :ensure t
-  :defer t)
-
 (use-package hl-todo
   :ensure t
   :hook
@@ -552,16 +548,16 @@
   :ensure t
   :after (evil dired)
   :config
-  ;; (evil-collection-init
-  ;;  '(apropos calc calendar cmake-mode company compile consult corfu debug
-  ;;            dictionary diff-mode dired dired-sidebar doc-view edebug ediff eglot
-  ;;            elisp-mode elisp-refs eshell eww flycheck flymake grep help ibuffer image
-  ;;            image-dired imenu imenu-list (indent "indent") log-edit log-view man
-  ;;            (magit magit-repos magit-submodule) magit-section magit-todos markdown-mode org
-  ;;            org-present org-roam outline (package-menu package) (pdf pdf-view) python rg
-  ;;            sh-script simple tab-bar (term term ansi-term multi-term) typescript-mode
-  ;;            vertico view vterm which-key xref))
-  (evil-collection-init)
+  (evil-collection-init
+   '(apropos calc calendar cmake-mode company compile consult corfu debug
+             dictionary diff-mode dired dired-sidebar doc-view edebug ediff eglot
+             elisp-mode elisp-refs eshell eww flycheck flymake grep help ibuffer image
+             image-dired imenu imenu-list (indent "indent") log-edit log-view man
+             (magit magit-repos magit-submodule) magit-section magit-todos markdown-mode org
+             org-present org-roam outline (package-menu package) (pdf pdf-view) python rg
+             sh-script simple tab-bar (term term ansi-term multi-term) typescript-mode
+             vertico view vterm which-key xref))
+  ; (evil-collection-init)
   (evil-define-motion my-evil-collection-unimpaired-next-error (count)
     "Go to next error."
     :jump t
@@ -594,7 +590,8 @@
 
 (use-package evil-org
   :ensure t
-  :after (org evil) 
+  :after (org evil)
+  :hook org-mode
   :config
   (setq evil-org-special-o/O '(table-row item))
   (setq evil-org-use-additional-insert nil)
@@ -622,12 +619,13 @@
           (kbd "Y") 'evil-yank-line
           ))))
 
-  (add-hook 'colemak-dh-mode-hook 'colemak-dh-override-evil-org)
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (evil-org-mode)
-              (evil-org-set-key-theme)
-              (colemak-dh-override-evil-org))))
+  ; (add-hook 'colemak-dh-mode-hook 'colemak-dh-override-evil-org)
+  ; (add-hook 'org-mode-hook
+  ;           (lambda ()
+  ;             (evil-org-mode)
+  ;             (evil-org-set-key-theme)
+  ;             (colemak-dh-override-evil-org)))
+  )
 
 (use-package avy
   :ensure t

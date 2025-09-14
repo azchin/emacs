@@ -1,6 +1,7 @@
 .last-package-update-day
 .lsp-session*
 .cache
+.org-id-locations
 eln-cache
 auto-save-list
 elpa

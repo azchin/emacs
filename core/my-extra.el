@@ -240,7 +240,7 @@ The app is chosen from your OS's preference."
 ;; Misc
 (put 'suspend-frame 'disabled t)
 (setq doc-view-continuous t)
-(setq use-short-answers t)
+; (setq use-short-answers t)
 (setq-default lexical-binding t)
 (setopt epa-pinentry-mode 'loopback)
 (setq epg-gpg-program "gpg2")
