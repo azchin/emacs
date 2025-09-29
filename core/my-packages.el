@@ -260,6 +260,7 @@
   (keymap-unset magit-status-mode-map "SPC"))
 
 (use-package org-roam
+  :disabled
   :ensure t
   :after org
   :commands (org-roam-node-insert org-roam-capture org-roam-node-find

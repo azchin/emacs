@@ -114,9 +114,9 @@
 ;; b4 font bug, we had 113 and 120, after 72, 80
 (cond
  ((eq system-type 'darwin)
-  (defvar default-font-height 140
+  (defvar default-font-height 120
     "Default face font height") ;; 10: 98, 11: 113, 12: 120
-  (defvar markup-font-height 160
+  (defvar markup-font-height 140
     "Markup font height")
   )
  (t

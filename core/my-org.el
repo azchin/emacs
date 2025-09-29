@@ -1,6 +1,6 @@
 (require 'org)
-(require 'org-tempo)
 (require 'ox-latex)
+;; (require 'org-tempo) ;; this does < s TAB
 
 (setq org-directory "~/drive/org/")
 (setq org-agenda-files `(,(concat org-directory "agenda.org")))
@@ -43,6 +43,8 @@
 (setq org-hide-emphasis-markers nil)
 (setq org-link-descriptive t)
 (setq org-pretty-entities t)
+
+(add-to-list 'org-structure-template-alist '("t" . "src text"))
 
 (setq org-todo-keywords '((sequence "TODO" "PROG" "|" "DONE" "AXED")))
 (setopt safe-local-variable-values
