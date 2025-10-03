@@ -68,6 +68,8 @@
   ;;              (list (regexp-quote "/sshx:ratbat:")
   ;;                    "direct-async-process" t))
   (add-to-list 'tramp-connection-properties
+               (list "cs6265test"
+                     "remote-shell" "/bin/bash")
                (list "cs6265"
                      "remote-shell" "/bin/bash"))
   (add-to-list 'tramp-remote-path "~/.cargo/bin")
@@ -212,8 +214,8 @@
           (eval . (setq-local eglot-server-programs  `((python-mode ,my-pylsp))))))
   (add-to-list 'eglot-server-programs
                '((c-mode c-ts-mode) . ("ccls")))
-  (add-to-list 'eglot-server-programs
-               '(python-mode . ("ruff" "server")))
+  ;; (add-to-list 'eglot-server-programs
+  ;;              '(python-mode . ("ruff" "server")))
   )
 
 (use-package flymake
@@ -360,9 +362,14 @@
   (prog-mode . rainbow-identifiers-mode)
   :config
   (setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face)
-  (setq rainbow-identifiers-cie-l*a*b*-lightness 75)
-  (setq rainbow-identifiers-cie-l*a*b*-saturation 30)
-  (setq rainbow-identifiers-cie-l*a*b*-color-count 65536))
+  (setq rainbow-identifiers-cie-l*a*b*-color-count 65536)
+  ;; This is for gruvbox dark
+  ;; (setq rainbow-identifiers-cie-l*a*b*-lightness 75)
+  ;; (setq rainbow-identifiers-cie-l*a*b*-saturation 30)
+  ;; This is for modus operandi
+  (setq rainbow-identifiers-cie-l*a*b*-lightness 20)
+  (setq rainbow-identifiers-cie-l*a*b*-saturation 90)
+  )
 
 (use-package markdown-mode
   :ensure t
@@ -454,6 +461,9 @@
   "\\.vim\\(rc\\)?\\'")
 
 (use-package nix-ts-mode
+  :ensure t)
+
+(use-package solidity-mode
   :ensure t)
 
 (use-package undo-fu

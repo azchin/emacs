@@ -27,6 +27,14 @@
 (evil-define-key leader-states 'global (kbd "<leader> x") 'execute-extended-command)
 (evil-define-key 'normal 'global (kbd "g t") (lambda (x) (interactive "P") (if x (tab-bar-select-tab x) (tab-bar-switch-to-next-tab))))
 (evil-define-key 'normal 'global (kbd "<leader> c y") 'conditional-tabify)
+(defun copy-entire-buffer ()
+  "Copy the entire buffer to the kill ring while preserving cursor position."
+  (interactive)
+  (save-excursion
+    (mark-whole-buffer)
+    (kill-ring-save (point-min) (point-max)))
+  (message "Copied entire buffer"))
+(evil-define-key 'normal 'global (kbd "<leader> y") 'copy-entire-buffer)
 (evil-define-key 'normal 'global (kbd "<leader> c T") 'toggle-tabs)
 (evil-define-key 'normal 'global (kbd "<leader> c t") (lambda () (interactive) (set-tab-width (read-number (concat "Tab width (currently " (number-to-string tab-width) "): ")))))
 (evil-define-key 'normal 'global (kbd "<leader> c i") 'indent-whole-buffer)
@@ -101,6 +109,7 @@
 (evil-define-key 'normal 'global (kbd "<leader> f s h") (lambda () (interactive) (create-new-buffer "*script-scratch*" 'shell-script-mode)))
 (evil-define-key 'normal 'global (kbd "<leader> f s l") (lambda () (interactive) (create-new-buffer "*lisp-scratch*" 'lisp-interaction-mode)))
 (evil-define-key 'normal 'global (kbd "<leader> f s r") (lambda () (interactive) (create-new-buffer "*rust-scratch*" 'rust-mode)))
+(evil-define-key 'normal 'global (kbd "<leader> f s j") (lambda () (interactive) (create-new-buffer "*js-scratch*" 'js2-mode)))
 (evil-define-key 'normal 'global (kbd "<leader> f s s") (lambda () (interactive) (switch-to-buffer "*scratch*")))
 (evil-define-key 'normal 'global (kbd "<leader> f u") (lambda () (interactive) (find-file (concat "/sudo::" (read-file-name "File (sudo): " "/")))))
 (evil-define-key 'normal 'global (kbd "<leader> p f") 'project-find-file)
