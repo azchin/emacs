@@ -237,12 +237,12 @@
   ;; (python-mode . python-ts-mode)
   ;; (c-or-c++-mode . c-or-c++-ts-mode)
   :config
-  (setq my-treesit-langs '(rust python nix json bash))
+  (setq my-treesit-langs '(rust python json bash))
   (setq treesit-language-source-alist (mapcar (lambda (lang) `(,lang ,(concat "https://github.com/tree-sitter/tree-sitter-" (symbol-name lang)))) my-treesit-langs))
   ;; custom languages
-  ;; (add-to-list 'treesit-language-source-alist '(nix "https://github.com/nix-community/tree-sitter-nix"))
   ;; (add-to-list 'my-treesit-langs 'nix)
   ;; (add-to-list 'treesit-language-source-alist '(c++ "https://github.com/tree-sitter/tree-sitter-cpp"))
+  (add-to-list 'treesit-language-source-alist '(nix "https://github.com/nix-community/tree-sitter-nix"))
   (add-to-list 'treesit-language-source-alist '(javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
   ;; (add-to-list 'my-treesit-langs 'js)
   ;; install
