@@ -237,13 +237,14 @@
   ;; (python-mode . python-ts-mode)
   ;; (c-or-c++-mode . c-or-c++-ts-mode)
   :config
-  (setq my-treesit-langs '(rust python json bash))
+  (setq my-treesit-langs '(python json bash))
   (setq treesit-language-source-alist (mapcar (lambda (lang) `(,lang ,(concat "https://github.com/tree-sitter/tree-sitter-" (symbol-name lang)))) my-treesit-langs))
   ;; custom languages
   ;; (add-to-list 'my-treesit-langs 'nix)
   ;; (add-to-list 'treesit-language-source-alist '(c++ "https://github.com/tree-sitter/tree-sitter-cpp"))
   (add-to-list 'treesit-language-source-alist '(nix "https://github.com/nix-community/tree-sitter-nix"))
   (add-to-list 'treesit-language-source-alist '(javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+  (add-to-list 'treesit-language-source-alist '(rust "https://github.com/tree-sitter/tree-sitter-rust" "v0.23.3"))
   ;; (add-to-list 'my-treesit-langs 'js)
   ;; install
   (mapc (lambda (lang)
@@ -377,6 +378,7 @@
   :hook
   (markdown-mode . auto-fill-mode)
   :config
+  (setq markdown-command "pandoc-mermaid.sh")
   (add-hook 'markdown-mode-hook (lambda () (setq-local face-remapping-alist '((default variable-pitch)))))
   (dolist (face '((markdown-header-face-1 . 1.4)
                   (markdown-header-face-2 . 1.2)
@@ -470,6 +472,30 @@
   :ensure t
   :config
   (setq undo-fu-ignore-keyboard-quit t))
+
+;; Usage: httpd-start, impatient-mode, imp-set-user-filter, http://localhost:8080/imp/, 
+;; external reqs: pandoc, mermaid-filter (npm)
+(use-package impatient-mode
+  :ensure t
+  :config
+  (defun markdown-filter (buffer)
+    (princ
+     (with-temp-buffer
+       (let ((tmpname (buffer-name))
+             ;; (markdown-command "pandoc-mermaid.sh")
+             )
+         (set-buffer buffer)
+         (set-buffer (markdown tmpname)) ; the function markdown is in `markdown-mode.el'
+         (buffer-string)))
+     (current-buffer)))
+  ;; TODO map this to modes with filters, and bind to key
+  (defun my-impatient-markdown () (interactive)
+    (unless (httpd-running-p) (httpd-start))
+    (impatient-mode)
+    (imp-set-user-filter 'markdown-filter))
+  (defun my-test-md () (interactive)
+         (markdown-filter (current-buffer)))
+  )
 
 (use-package undo-fu-session
   :ensure t

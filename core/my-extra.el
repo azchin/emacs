@@ -245,8 +245,12 @@ The app is chosen from your OS's preference."
 (setopt epa-pinentry-mode 'loopback)
 (setq epg-gpg-program "gpg2")
 (fset 'epg-wait-for-status 'ignore)
+(defun my-add-to-path (p)
+  (add-to-list 'exec-path p)
+  (setenv "PATH" (concat p ":" (getenv "PATH"))))
+(my-add-to-path (concat home-dir "bin"))
 (when (string-equal system-type "darwin")
-  (add-to-list 'exec-path "/Library/TeX/texbin")
-  (setenv "PATH" (concat "/Library/TeX/texbin:" (getenv "PATH"))))
+  (mapc 'my-add-to-path
+        `("/Library/TeX/texbin" ,(concat home-dir ".npm-global/bin"))))
 
 (provide 'my-extra)
