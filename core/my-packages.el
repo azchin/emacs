@@ -375,8 +375,8 @@
 (use-package markdown-mode
   :ensure t
   :mode "\\.md\\'"
-  :hook
-  (markdown-mode . auto-fill-mode)
+  ;; :hook
+  ;; (markdown-mode . auto-fill-mode)
   :config
   (setq markdown-command "pandoc-mermaid.sh")
   (add-hook 'markdown-mode-hook (lambda () (setq-local face-remapping-alist '((default variable-pitch)))))
