@@ -447,6 +447,11 @@
   :mode
   "\\.rs\\'")
 
+(use-package go-mode
+  :ensure t
+  :mode
+  "\\.go\\'")
+
 (use-package nix-mode
   :ensure t
   :mode
