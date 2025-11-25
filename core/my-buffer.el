@@ -133,7 +133,11 @@ is dired"
 (setq Man-notify-method 'aggressive)
 ;; (setq grep-command "grep --color -nH --null ")
 
-(setq revert-without-query '(".*"))
+;; NOTE I do not remember the original context for which this was set, so I am disabling
+;; (setq revert-without-query '(".*"))
+
+(global-auto-revert-mode)
+(setq auto-revert-remote-files t)
 
 (defun kill-buffer-and-its-windows (buffer)
   "Kill BUFFER and delete its windows.  Default is `current-buffer'.

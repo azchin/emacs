@@ -88,6 +88,7 @@
 (add-hook 'nix-mode-hook (lambda () (set-tab-width 2)))
 (add-hook 'nix-ts-mode-hook (lambda () (set-tab-width 2)))
 (add-hook 'css-mode-hook (lambda () (set-tab-width css-indent-offset)))
+(add-hook 'makefile-mode-hook (lambda () (indent-tabs-mode)))
 
 (global-whitespace-mode)
 (setq whitespace-style '(face tabs tab-mark))

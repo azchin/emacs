@@ -195,7 +195,12 @@
 ;; "s" (lambda () (interactive) (indent-whole-buffer) (save-buffer))
 (evil-define-key leader-rw-states 'global (kbd "<leader> s") 'save-buffer)
 (evil-define-key leader-states 'global (kbd "<leader> ;") 'eval-expression)
-(evil-define-key 'normal 'global (kbd "<leader> /") (lambda () (interactive) (evil-ex-nohighlight) (lazy-highlight-cleanup t)))
+;; NOTE why the heck is evil-ex-nohighlight inconsistent now...
+(defun cleanup-highlight () (interactive)
+       (dotimes (i 1)
+         (evil-ex-nohighlight))
+       (lazy-highlight-cleanup t))
+(evil-define-key 'normal 'global (kbd "<leader> /") 'cleanup-highlight)
 ;; (evil-define-key leader-states 'global (kbd "<leader> /") 'lazy-highlight-cleanup)
 (evil-define-key 'normal 'global (kbd "<leader> !") 'shell-command)
 (evil-define-key 'normal 'global (kbd "<leader> =") 'my-increment-number-at-point)
