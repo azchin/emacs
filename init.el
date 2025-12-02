@@ -77,14 +77,14 @@
  '(package-selected-packages
    '(auctex bison-mode cape citar cmake-mode consult corfu counsel dired-sidebar
             dockerfile-mode evil-collection evil-commentary evil-org
-            evil-quickscope evil-surround gptel-aibo gruvbox-theme hl-todo
-            impatient-mode ivy-hydra js2-mode json-mode lua-mode marginalia
-            markdown-mode nix-mode nix-ts-mode orderless org-ai org-contrib
-            org-noter org-present org-roam-ui osm ox-gfm poly-ansible
-            protobuf-mode rainbow-identifiers rg rust-mode solidity-mode
-            tree-sitter-langs treemacs-evil treemacs-magit treemacs-tab-bar
-            typescript-mode undo-fu undo-fu-session vertico vimrc-mode which-key
-            yasnippet zotxt))
+            evil-quickscope evil-surround go-mode gptel-aibo gruvbox-theme
+            hl-todo impatient-mode ivy-hydra js2-mode json-mode lua-mode
+            marginalia markdown-mode nix-mode nix-ts-mode orderless org-ai
+            org-contrib org-noter org-present org-roam-ui osm ox-gfm
+            poly-ansible protobuf-mode rainbow-identifiers rg rust-mode
+            solidity-mode tree-sitter-langs treemacs-evil treemacs-magit
+            treemacs-tab-bar typescript-mode undo-fu undo-fu-session vertico
+            vimrc-mode which-key yasnippet zotxt))
  '(tab-bar-select-tab-modifiers '(meta)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

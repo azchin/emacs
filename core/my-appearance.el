@@ -191,6 +191,7 @@
 (global-display-line-numbers-mode)
 ;; (global-visual-line-mode)
 (setq display-line-numbers-width-start 3)
+(setq display-line-numbers-widen t)
 (defun relative-lines() (interactive) (setq-local display-line-numbers 'relative))
 (defun visual-lines() (interactive) (setq-local display-line-numbers 'visual))
 (defun disable-lines() (interactive) (setq-local display-line-numbers nil))
@@ -202,7 +203,7 @@
 
 (add-hook 'prog-mode-hook 'relative-lines-type)
 (add-hook 'text-mode-hook 'relative-lines-type)
-(add-hook 'org-mode-hook 'visual-lines-type)
+(add-hook 'org-mode-hook 'relative-lines-type)
 (add-hook 'conf-mode-hook 'relative-lines-type)
 (add-hook 'special-mode-hook 'relative-lines-type)
 (add-hook 'dired-mode-hook 'relative-lines-type)
