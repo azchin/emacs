@@ -785,6 +785,9 @@
   :config
   (add-hook 'org-mode-hook 'org-zotxt-mode))
 
+(use-package qrencode
+  :ensure t)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package org-contrib
