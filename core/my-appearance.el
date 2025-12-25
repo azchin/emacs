@@ -62,49 +62,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Window dimensions
-;; (let ((win '(100 40 256 192)))
-;;     (add-to-list 'initial-frame-alist `(width . ,(nth 0 win)))
-;;     (add-to-list 'initial-frame-alist `(height . ,(nth 1 win)))
-;;     ;; (add-to-list 'initial-frame-alist `(left . ,(nth 2 win)))
-;;     ;; (add-to-list 'initial-frame-alist `(top . ,(nth 3 win)))
-;;     (add-to-list 'default-frame-alist `(width . ,(nth 0 win)))
-;;     (add-to-list 'default-frame-alist `(height . ,(nth 1 win)))
-;;     ;; (add-to-list 'default-frame-alist `(left . ,(nth 2 win)))
-;;     ;; (add-to-list 'default-frame-alist `(top . ,(nth 3 win)))
-;;     )
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (cond
  ((string-equal (getenv "XDG_CURRENT_DESKTOP") "openbox") t)
  ((string-equal (getenv "XDG_CURRENT_DESKTOP") "Hyprland") t)
  ((string-equal system-type "gnu/linux")
   (add-to-list 'default-frame-alist '(undecorated . t))))
-
-;; (setq my-display-offset 50)
-;; (setq my-display-gap 10)
-;; (setq my-cursed-height-magic 100)
-;; (setq my-width (- (/ (display-pixel-width) 2)
-;;                   (* my-display-offset 2)
-;;                   my-display-gap))
-;; (setq my-height (- (display-pixel-height)
-;;                    (* my-display-offset 2)
-;;                    my-cursed-height-magic))
-
-;; (add-to-list 'initial-frame-alist `(width text-pixels . ,my-width))
-;; (add-to-list 'initial-frame-alist `(height text-pixels . ,my-height))
-;; (add-to-list 'initial-frame-alist `(left . ,my-display-offset))
-;; (add-to-list 'initial-frame-alist `(top . ,my-display-offset))
-;; (setq my-frame-alist `((width text-pixels . ,my-width)
-;;                        (height text-pixels . ,my-height)
-;;                        (left . ,(- my-display-offset))
-;;                        (top . ,my-display-offset)))
-;; (make-frame my-frame-alist)
-
-;; (setq my-frame-alist '((width . 0.45)
-;;                        (height . 0.9)
-;;                        (left . 0.95)
-;;                        (top . 0.05)
-;;                        (reuse . t)))
-;; (make-frame my-frame-alist)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Fonts
@@ -149,11 +112,6 @@
 ;; (set-frame-parameter (selected-frame) 'alpha '(95 . 86))
 (defun make-frame-transparent() (interactive) (set-frame-parameter (selected-frame) 'alpha 80))
 (defun make-frame-opaque() (interactive) (set-frame-parameter (selected-frame) 'alpha 100))
-;; (add-to-list 'default-frame-alist '(alpha . (95 . 86))) ;; first(?) frame flickers
-;; (add-to-list 'default-frame-alist '(alpha . 95))
-;; (setq frame-title-format '("Emacs - %b [%m] %f"))
-;; (setq frame-title-format `(,(user-login-name) "@" ,(system-name) "     " global-mode-string "     %f" ))
-;; (setq frame-title-format `(,(system-name) " - %b [%m] %f"  ))
 (setq frame-title-format '("%b :: %f"))
 
 (setopt initial-buffer-choice t)

@@ -67,10 +67,6 @@
 (defun move-line (n)
   "Move the current line up or down by N lines."
   (interactive "p")
-  ;; (setq col (current-column))
-  ;; (beginning-of-line) (setq start (point))
-  ;; (end-of-line) (forward-char) (setq end (point))
-  ;; (save-excursion (forward-line n) (setq endline (point)))
   (let* ((col (current-column))
          (start (progn (beginning-of-line) (point)))
          (finishline (save-excursion (forward-line (* (1+ (abs n)) (/ n (abs n)))) (point)))

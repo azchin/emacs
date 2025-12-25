@@ -60,18 +60,4 @@ Containing LEFT, and RIGHT aligned respectively."
              mode-line-whitespace
              ))))))
 
-;; (setq-default mode-line-format
-;;               (list
-;   ;             (:propertize evil-mode-line-tag face (:weight bold))
-;;                mode-line-client
-;;                mode-line-remote
-;;                " %*%+"
-;;                '(:propertize " %b" face (:weight bold))
-;;                " [%m]"
-;;                '(vc-mode vc-mode)
-;;                (mode-line-minor-mode-get 'flymake-mode)
-;;                (mode-line-minor-mode-get 'flyspell-mode)
-;;                " (%l %C) %p"
-;;                ))
-
 (provide 'my-modeline)

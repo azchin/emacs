@@ -1,9 +1,5 @@
 (require 'org)
 (global-hl-line-mode 1)
-;; (set-face-attribute hl-line-face nil 
-;;                     :foreground nil
-;;                     :background (face-attribute 'default :background)
-;;                     :bold t)
 
 (set-face-attribute 'show-paren-match nil
                     :weight 'bold
@@ -13,11 +9,6 @@
 
 (set-face-italic 'font-lock-comment-face nil)
 
-;; (set-face-attribute 'whitespace-tab nil
-;;                     :background nil
-;;                     :foreground "#636363")
-;; (set-face-background 'whitespace-tab nil)
-
 (set-face-attribute 'line-number nil
                     :family default-font-family
                     :inherit 'default)
@@ -25,10 +16,6 @@
                     :inherit '(bold line-number))
 
 (set-face-attribute 'org-document-title nil :weight 'bold :height 1.5)
-;; (dolist (face '(org-level-1 org-level-2 org-level-3 org-level-4 org-level-5
-;;                             org-level-6 org-level-7 org-level-8))
-;;   (set-face-attribute face nil :weight 'bold))
-
 (set-face-attribute 'org-document-title nil :family markup-font-family :weight 'bold :height 1.5)
 (dolist (face '((org-level-1 . 1.4)
                 (org-level-2 . 1.2)

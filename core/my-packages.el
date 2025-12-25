@@ -49,8 +49,6 @@
 (use-package my-abbrev)
 (use-package my-leader
   :after (evil evil-collection dired treemacs-evil my-tabs my-desktop my-buffer my-extra))
-;; (use-package my-colemak-dh
-;;   :after my-leader)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Built-in packages
@@ -646,31 +644,6 @@
 
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys)
-
-  (defun colemak-dh-override-evil-org ()
-    "Override evil-org bindings if colemak-dh-mode is enabled."
-    (when evil-org-mode
-      (if colemak-dh-mode
-          ;; TODO inner objects map, check evil keymaps alist
-          (evil-define-key '(normal visual motion) 'evil-org-mode
-            (kbd "o") 'evil-forward-char
-            (kbd "O") 'evil-window-bottom
-            (kbd "y") 'evil-org-open-below
-            (kbd "Y") 'evil-org-open-above
-            )
-        (evil-define-key '(normal visual motion) 'evil-org-mode
-          (kbd "o") 'evil-org-open-below
-          (kbd "O") 'evil-org-open-above
-          (kbd "y") 'evil-yank
-          (kbd "Y") 'evil-yank-line
-          ))))
-
-  ; (add-hook 'colemak-dh-mode-hook 'colemak-dh-override-evil-org)
-  ; (add-hook 'org-mode-hook
-  ;           (lambda ()
-  ;             (evil-org-mode)
-  ;             (evil-org-set-key-theme)
-  ;             (colemak-dh-override-evil-org)))
   )
 
 (use-package avy
