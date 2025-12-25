@@ -422,6 +422,10 @@
   :ensure t
   :mode "\\.lua\\'")
 
+(use-package kdl-mode
+  :ensure t
+  :mode "\\.kdl\\'")
+
 (use-package protobuf-mode
   :ensure t
   :mode "\\.proto\\'")

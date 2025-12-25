@@ -78,12 +78,12 @@
    '(auctex bison-mode cape cmake-mode corfu counsel docker-tramp dockerfile-mode
             evil-collection evil-commentary evil-org evil-quickscope
             evil-surround go-mode gptel-aibo gruvbox-theme hl-todo
-            impatient-mode ivy-hydra js2-mode json-mode lua-mode markdown-mode
-            nix-mode nix-ts-mode org-ai org-contrib org-noter org-roam-ui osm
-            ox-gfm poly-ansible protobuf-mode qrencode rainbow-identifiers rg
-            rust-mode solidity-mode treemacs-evil treemacs-magit
-            treemacs-tab-bar typescript-mode undo-fu undo-fu-session vimrc-mode
-            yasnippet zotxt))
+            impatient-mode ivy-hydra js2-mode json-mode kdl-mode lua-mode
+            markdown-mode nix-mode nix-ts-mode org-ai org-contrib org-noter
+            org-roam-ui osm ox-gfm poly-ansible protobuf-mode qrencode
+            rainbow-identifiers rg rust-mode solidity-mode treemacs-evil
+            treemacs-magit treemacs-tab-bar typescript-mode undo-fu
+            undo-fu-session vimrc-mode yasnippet zotxt))
  '(tab-bar-select-tab-modifiers '(meta)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
