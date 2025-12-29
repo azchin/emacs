@@ -244,13 +244,13 @@
       modus-themes-tabs-accented nil
       modus-themes-mixed-fonts t)
 
-(load-theme 'modus-operandi) 
+;; (load-theme 'modus-operandi) 
 ;; (load-theme 'modus-vivendi) 
 
 (use-package gruvbox-theme
   :ensure t
   :config
-  ;; (load-theme 'gruvbox-dark-hard t)
+  (load-theme 'gruvbox-dark-hard t)
   )
 
 (provide 'my-appearance)

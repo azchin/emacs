@@ -363,11 +363,11 @@
   (setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face)
   (setq rainbow-identifiers-cie-l*a*b*-color-count 65536)
   ;; This is for gruvbox dark
-  ;; (setq rainbow-identifiers-cie-l*a*b*-lightness 75)
-  ;; (setq rainbow-identifiers-cie-l*a*b*-saturation 30)
+  (setq rainbow-identifiers-cie-l*a*b*-lightness 75)
+  (setq rainbow-identifiers-cie-l*a*b*-saturation 30)
   ;; This is for modus operandi
-  (setq rainbow-identifiers-cie-l*a*b*-lightness 20)
-  (setq rainbow-identifiers-cie-l*a*b*-saturation 90)
+  ;; (setq rainbow-identifiers-cie-l*a*b*-lightness 20)
+  ;; (setq rainbow-identifiers-cie-l*a*b*-saturation 90)
   )
 
 (use-package markdown-mode
