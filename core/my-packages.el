@@ -739,6 +739,12 @@
   :config
   (counsel-mode 1))
 
+(use-package evil-counsel-config
+  :no-require t
+  :after (evil counsel)
+  :config
+  (evil-define-key '(normal insert) 'global (kbd "M-y") 'counsel-yank-pop))
+
 (use-package rg
   :ensure t
   :commands (rg rg-dwim-current-file rg-dwim-current-dir rg-dwim-project-dir rg-dwim))
