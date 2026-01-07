@@ -525,7 +525,7 @@
         evil-want-integration t
         evil-kbd-macro-suppress-motion-error 'replay
         evil-move-beyond-eol nil
-        evil-respect-visual-line-mode nil
+        evil-respect-visual-line-mode t
         evil-undo-system 'undo-fu
         evil-want-change-word-to-end nil
         evil-search-module 'evil-search
