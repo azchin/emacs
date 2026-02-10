@@ -356,18 +356,22 @@
     (evil-define-minor-mode-key 'normal 'hl-todo-mode (kbd "] d") 'hl-todo-next)))
 
 (use-package rainbow-identifiers
+  :after my-appearance
   :ensure t
   :hook
   (prog-mode . rainbow-identifiers-mode)
   :config
   (setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face)
   (setq rainbow-identifiers-cie-l*a*b*-color-count 65536)
-  ;; This is for gruvbox dark
-  (setq rainbow-identifiers-cie-l*a*b*-lightness 75)
-  (setq rainbow-identifiers-cie-l*a*b*-saturation 30)
-  ;; This is for modus operandi
-  ;; (setq rainbow-identifiers-cie-l*a*b*-lightness 20)
-  ;; (setq rainbow-identifiers-cie-l*a*b*-saturation 90)
+  (if (member 'modus-operandi custom-enabled-themes)
+      ;; This is for modus operandi
+      (progn
+        (setq rainbow-identifiers-cie-l*a*b*-lightness 20)
+        (setq rainbow-identifiers-cie-l*a*b*-saturation 90))
+    ;; This is for gruvbox dark
+    (progn
+      (setq rainbow-identifiers-cie-l*a*b*-lightness 75)
+      (setq rainbow-identifiers-cie-l*a*b*-saturation 30)))
   )
 
 (use-package markdown-mode
@@ -771,6 +775,15 @@
 (use-package qrencode
   :ensure t)
 
+(use-package openwith
+  :ensure t
+  :config
+  (setq openwith-associations
+        `(("\\.pdf\\'" ,(cond
+                         ((executable-find "open") "open")
+                         (t "xdg-open"))
+           (file))))
+  (openwith-mode t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package org-contrib
@@ -928,14 +941,6 @@ advice like this:
 (use-package yasnippet-snippets
   :disabled
   :after yasnippet)
-
-(use-package openwith
-  :disabled
-  :ensure t
-  :custom
-  (openwith-associations '(("\\.pdf\\'" "zathura" (file))))
-  :config
-  (openwith-mode t))
 
 (use-package marginalia
   :disabled

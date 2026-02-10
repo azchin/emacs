@@ -82,7 +82,7 @@
   :config
   (ispell-find-hunspell-dictionaries))
 
-(add-hook 'org-mode-hook 'auto-fill-mode)
+;; (add-hook 'org-mode-hook 'auto-fill-mode)
 (add-hook 'org-mode-hook 'flyspell-mode)
 (with-eval-after-load 'flyspell
   (keymap-set flyspell-mouse-map "<mouse-3>" 'flyspell-correct-word)
