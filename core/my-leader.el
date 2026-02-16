@@ -112,7 +112,7 @@
 (evil-define-key 'normal 'global (kbd "<leader> f s j") (lambda () (interactive) (create-new-buffer "*js-scratch*" 'js2-mode)))
 (evil-define-key 'normal 'global (kbd "<leader> f s s") (lambda () (interactive) (switch-to-buffer "*scratch*")))
 (evil-define-key 'normal 'global (kbd "<leader> f u") (lambda () (interactive) (find-file (concat "/sudo::" (read-file-name "File (sudo): " "/")))))
-(evil-define-key 'normal 'global (kbd "<leader> p f") 'project-find-file)
+(evil-define-key 'normal 'global (kbd "<leader> p f") 'find-file-in-project-by-selected)
 (evil-define-key 'normal 'global (kbd "<leader> p d") 'project-dired)
 (evil-define-key 'normal 'global (kbd "<leader> p v") 'project-vc-dir)
 (evil-define-key 'normal 'global (kbd "<leader> p e") 'project-eshell)

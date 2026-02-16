@@ -157,6 +157,20 @@
         (kill-word nil)))
     (insert killed-text)))
 
+(defun project-generate-tags ()
+  "Generate etags for the current project recursively."
+  (interactive)
+  (let* ((project (project-current t))
+         (root (project-root project))
+         (default-directory root)
+         (extensions '("c" "h" "cpp" "hpp" "cc" "hh" "cxx" "hxx"))
+         (find-args (mapconcat (lambda (ext) (format "-name '*.%s'" ext))
+                               extensions " -o "))
+         (cmd (format "find . \\( %s \\) -print | xargs etags" find-args)))
+    (message "Generating tags in %s..." root)
+    (shell-command cmd)
+    (message "Tags generated in %s" root)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; External
 ;; https://oremacs.com/2015/01/04/dired-nohup/
@@ -249,6 +263,7 @@ The app is chosen from your OS's preference."
   (add-to-list 'exec-path p)
   (setenv "PATH" (concat p ":" (getenv "PATH"))))
 (my-add-to-path (concat home-dir "bin"))
+(my-add-to-path (concat home-dir ".local/bin"))
 (when (string-equal system-type "darwin")
   (mapc 'my-add-to-path
         `("/Library/TeX/texbin" ,(concat home-dir ".npm-global/bin"))))

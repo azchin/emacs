@@ -753,6 +753,11 @@
   :ensure t
   :commands (rg rg-dwim-current-file rg-dwim-current-dir rg-dwim-project-dir rg-dwim))
   
+(use-package find-file-in-project
+  :ensure t
+  :config
+  (setq ffip-use-rust-fd t))
+
 (use-package osm
   :ensure t
   ;; :bind ("C-c m" . osm-prefix-map) ;; Alternative: `osm-home'
@@ -784,6 +789,28 @@
                          (t "xdg-open"))
            (file))))
   (openwith-mode t))
+
+;; install required inheritenv dependency:
+(use-package inheritenv
+  :vc (:url "https://github.com/purcell/inheritenv" :rev :newest))
+
+;; for eat terminal backend:
+(use-package eat :ensure t)
+
+;; for vterm terminal backend:
+;; (use-package vterm :ensure t)
+
+;; install claude-code.el
+(use-package claude-code :ensure t
+  :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
+  :config
+
+  (claude-code-mode)
+  :bind-keymap ("C-c c" . claude-code-command-map)
+
+  ;; Optionally define a repeat map so that "M" will cycle thru Claude auto-accept/plan/confirm modes after invoking claude-code-cycle-mode / C-c M.
+  :bind
+  (:repeat-map my-claude-code-map ("M" . claude-code-cycle-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package org-contrib
