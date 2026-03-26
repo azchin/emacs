@@ -167,6 +167,7 @@
 (add-hook 'pdf-view-mode-hook 'disable-lines-type)
 (add-hook 'doc-view-mode-hook 'disable-lines-type)
 (add-hook 'image-mode-hook 'disable-lines-type)
+(add-hook 'vterm-mode-hook 'disable-lines-type)
 (add-hook 'osm-mode-hook 'disable-lines-type)
 ;; (add-hook 'org-mode-hook 'absolute-lines)
 ;; (add-hook 'minibuffer-inactive-mode-hook 'disable-lines)

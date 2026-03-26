@@ -798,7 +798,16 @@
 (use-package eat :ensure t)
 
 ;; for vterm terminal backend:
-;; (use-package vterm :ensure t)
+(use-package vterm :ensure t
+  :config
+  (add-hook 'vterm-mode-hook
+          (lambda ()
+            (setq-local global-hl-line-mode nil)  ;; hl-line kills perf
+            (setq-local truncate-lines t)         ;; avoid costly line wrapping
+            (setq-local bidi-paragraph-direction 'left-to-right)
+            (setq-local bidi-inhibit-bpa t)
+            ))
+  (setq vterm-timer-delay 0.03))
 
 ;; install claude-code.el
 (use-package claude-code :ensure t

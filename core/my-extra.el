@@ -258,6 +258,7 @@ The app is chosen from your OS's preference."
 (setq-default lexical-binding t)
 (setopt epa-pinentry-mode 'loopback)
 (setq epg-gpg-program "gpg2")
+(setq ediff-split-window-function 'split-window-horizontally)
 (fset 'epg-wait-for-status 'ignore)
 (defun my-add-to-path (p)
   (add-to-list 'exec-path p)

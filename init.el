@@ -74,7 +74,7 @@
  '(custom-safe-themes
    '("8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378" default))
  '(ede-project-directories '("/home/andrew/sandbox/ede"))
- '(package-selected-packages '(claude-code eat find-file-in-project inheritenv vterm))
+ '(package-selected-packages '(claude-code inheritenv))
  '(package-vc-selected-packages
    '((claude-code :url "https://github.com/stevemolitor/claude-code.el")))
  '(tab-bar-select-tab-modifiers '(meta)))
