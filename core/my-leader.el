@@ -306,7 +306,7 @@
 ;; Package commands
 ;; (evil-define-key 'normal 'global (kbd "<leader> o a") (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows)))
 (evil-define-key 'normal org-mode-map (kbd "<leader> o A") 'my-org-toggle-appearance)
-(evil-define-key 'normal org-mode-map (kbd "<leader> o a") 'org-agenda)
+(evil-define-key 'normal 'global (kbd "<leader> o a") 'org-agenda)
 (evil-define-key 'normal 'global (kbd "<leader> o l") 'org-store-link)
 ;; "o a" 'org-agent
 (evil-define-key 'normal 'global (kbd "<leader> o c") 'org-capture)
@@ -373,7 +373,7 @@
 (evil-define-key 'normal 'global (kbd "<leader> k") 'evil-avy-goto-line)
 ;; (evil-define-key 'normal 'global (kbd "<leader> a") 'evil-avy-goto-line)
 (evil-define-key 'normal 'global (kbd "<leader> j") 'evil-avy-goto-word-1)
-(evil-define-key 'normal 'global (kbd "<leader> a") 'gptel-aibo)
+;; (evil-define-key 'normal 'global (kbd "<leader> a") 'gptel-aibo)
 ;; (if (eq system-type 'gnu/linux)
 ;;     (progn
 ;;       (evil-define-key '(normal visual operator) 'global (kbd "j") 'evil-avy-goto-line-below)

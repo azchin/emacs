@@ -14,6 +14,9 @@
          ,(concat "* %(read-string \"Title: \") "
                   "<%(format-time-string \"%Y-%m-%d\") "
                   "%^{Start|00:00|01:00|02:00|03:00|04:00|05:00|06:00|07:00|08:00|09:00|10:00|11:00|12:00|13:00|14:00|15:00|16:00|17:00|18:00|19:00|20:00|21:00|22:00|23:00}>"))
+        ("p" "Planned task"
+         entry (file+headline ,(concat org-directory "agenda.org") "Planned")
+         "* TODO %^{Title}")
         ("P" "Paragraph formatting"
          plain (file (lambda () (call-interactively 'find-file) (buffer-file-name)))
          "#+latex_header: \\usepackage{parskip}\n"
@@ -153,6 +156,132 @@ a line containing the `setting' and `value'."
   (interactive)
   (my-org-set-top-in-buffer-setting "author"
                                     (read-string "New author: " (my-org-get-in-buffer-setting "author"))))
+
+(defun my-org-agenda-archive-tasks ()
+  "Refile children of \"Tasks\" to \"Archived\" in agenda.org.
+If a region is active in agenda.org, only refile headings whose
+subtree overlaps the region."
+  (interactive)
+  (let* ((file (expand-file-name "agenda.org" org-directory))
+         (buf (or (find-buffer-visiting file)
+                  (find-file-noselect file)))
+         (region-active (and (use-region-p) (eq (current-buffer) buf)))
+         (rbeg (and region-active (region-beginning)))
+         (rend (and region-active (region-end))))
+    (with-current-buffer buf
+      (let ((archived-pos (org-find-exact-headline-in-buffer "Archived"))
+            (tasks-pos    (org-find-exact-headline-in-buffer "Tasks")))
+        (unless archived-pos (user-error "No \"Archived\" heading in %s" file))
+        (unless tasks-pos    (user-error "No \"Tasks\" heading in %s" file))
+        (let* ((rfloc (list "Archived" file nil archived-pos))
+               (tasks-level (save-excursion
+                              (goto-char tasks-pos) (org-current-level)))
+               (child-level (1+ tasks-level))
+               markers)
+          (save-excursion
+            (goto-char tasks-pos)
+            (let ((end (save-excursion (org-end-of-subtree t t))))
+              (while (re-search-forward org-heading-regexp end t)
+                (beginning-of-line)
+                (when (= (org-current-level) child-level)
+                  (let ((hbeg (point))
+                        (hend (save-excursion (org-end-of-subtree t t))))
+                    (when (or (not region-active)
+                              (and (< hbeg rend) (> hend rbeg)))
+                      (push (copy-marker hbeg) markers))))
+                (end-of-line))))
+          (setq markers (nreverse markers))
+          (dolist (m markers)
+            (goto-char m)
+            (org-refile nil nil rfloc)
+            (set-marker m nil))
+          (message "Archived %d task(s)" (length markers)))))))
+
+(defun my-org-read-hour-block (&optional prompt)
+  "Prompt for an HH:00 time of day and return <YYYY-MM-DD HH:00>."
+  (let* ((hours (mapcar (lambda (h) (format "%02d:00" h)) (number-sequence 0 23)))
+         (hour (completing-read (or prompt "Start: ") hours nil nil)))
+    (format "<%s %s>" (format-time-string "%Y-%m-%d") hour)))
+
+(defun my-org-agenda-schedule-planned ()
+  "Schedule task(s) from \"Planned\" into \"Tasks\" in agenda.org.
+If a region is active in agenda.org, process every Planned heading
+whose subtree overlaps the region; otherwise prompt to pick one.
+For each, prompt for an hour-block timestamp, drop the TODO state,
+append the timestamp to the title, and refile under \"Tasks\"."
+  (interactive)
+  (let* ((file (expand-file-name "agenda.org" org-directory))
+         (buf (or (find-buffer-visiting file)
+                  (find-file-noselect file)))
+         (region-active (and (use-region-p) (eq (current-buffer) buf)))
+         (rbeg (and region-active (region-beginning)))
+         (rend (and region-active (region-end))))
+    (with-current-buffer buf
+      (let ((planned-pos (org-find-exact-headline-in-buffer "Planned"))
+            (tasks-pos   (org-find-exact-headline-in-buffer "Tasks")))
+        (unless planned-pos (user-error "No \"Planned\" heading in %s" file))
+        (unless tasks-pos   (user-error "No \"Tasks\" heading in %s" file))
+        (let* ((rfloc (list "Tasks" file nil tasks-pos))
+               (planned-level (save-excursion
+                                (goto-char planned-pos) (org-current-level)))
+               (child-level (1+ planned-level))
+               markers)
+          (save-excursion
+            (goto-char planned-pos)
+            (let ((end (save-excursion (org-end-of-subtree t t))))
+              (while (re-search-forward org-heading-regexp end t)
+                (beginning-of-line)
+                (when (= (org-current-level) child-level)
+                  (let ((hbeg (point))
+                        (hend (save-excursion (org-end-of-subtree t t))))
+                    (when (or (not region-active)
+                              (and (< hbeg rend) (> hend rbeg)))
+                      (push (copy-marker hbeg) markers))))
+                (end-of-line))))
+          (setq markers (nreverse markers))
+          (when (null markers)
+            (user-error "No matching tasks under \"Planned\""))
+          (unless region-active
+            (let* ((alist (mapcar
+                           (lambda (m)
+                             (cons (save-excursion
+                                     (goto-char m)
+                                     (org-get-heading t t t t))
+                                   m))
+                           markers))
+                   (choice (completing-read "Planned task: " alist nil t)))
+              (setq markers (list (cdr (assoc choice alist))))))
+          (dolist (m markers)
+            (goto-char m)
+            (let* ((title (org-get-heading t t t t))
+                   (ts    (my-org-read-hour-block
+                           (format "Start for %s: " title))))
+              (org-edit-headline (format "%s %s" title ts))
+              (org-todo 'none)
+              (org-refile nil nil rfloc))
+            (set-marker m nil))
+          (message "Scheduled %d task(s)" (length markers)))))))
+
+(defun my-org-agenda-sort-tasks ()
+  "Sort children of \"Tasks\" in agenda.org by timestamp."
+  (interactive)
+  (let* ((file (expand-file-name "agenda.org" org-directory))
+         (buf (or (find-buffer-visiting file)
+                  (find-file-noselect file))))
+    (with-current-buffer buf
+      (let ((tasks-pos (org-find-exact-headline-in-buffer "Tasks")))
+        (unless tasks-pos (user-error "No \"Tasks\" heading in %s" file))
+        (save-excursion
+          (goto-char tasks-pos)
+          (org-sort-entries nil ?t))))))
+
+(require 'transient)
+(transient-define-prefix my-org-agenda-dispatch ()
+  "Dispatcher for agenda.org actions."
+  ["Agenda"
+   ("a" "Archive tasks"        my-org-agenda-archive-tasks)
+   ("s" "Sort tasks by time"   my-org-agenda-sort-tasks)
+   ("p" "Schedule planned"     my-org-agenda-schedule-planned)])
 
 (defun my-bibtex-yank (bibliography)
   "Paste into specified bibliography, return key"

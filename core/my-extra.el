@@ -63,6 +63,11 @@
          (when-let ((proj (project-current)))
            (file-exists-p (expand-file-name "Makefile" (project-root proj)))))
     (shell-command (format "make -C %s &" (shell-quote-argument (project-root (project-current))))))
+   ((and buffer-file-name
+         (boundp 'org-directory)
+         (file-equal-p buffer-file-name
+                       (expand-file-name "agenda.org" org-directory)))
+    (call-interactively 'my-org-agenda-dispatch))
    ((eq major-mode 'org-mode)
     (call-interactively 'org-ctrl-c-ctrl-c))
    ((eq major-mode 'sh-mode)
