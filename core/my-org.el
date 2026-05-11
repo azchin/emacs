@@ -76,7 +76,7 @@
 (setq org-latex-pdf-process '("latexmk -pdf -bibtex %f"))
 ;; (setq org-agenda-files '(org-directory))
 ;; (setq org-agenda-file-regexp "agenda.org")
-(setopt org-export-backends '(ascii html latex odt md))
+(setopt org-export-backends '(ascii html latex beamer odt md))
 
 (setq ispell-program-name "hunspell")
 (setq ispell-local-dictionary "en_CA")
