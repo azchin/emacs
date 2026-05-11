@@ -23,6 +23,10 @@
 ;;    state))
 ;; (evil-define-key leader-states leader-intercept-mode-map (kbd leader-key-string) 'evil-send-leader)
 
+(evil-define-key nil 'global (kbd "C-c a") 'org-agenda)
+(evil-define-key nil 'global (kbd "C-c c") 'org-capture)
+(evil-define-key nil 'global (kbd "C-c l") 'org-store-link)
+
 (evil-define-key leader-states 'global (kbd (concat "<leader> " leader-key-string)) 'keyboard-quit)
 (evil-define-key leader-states 'global (kbd "<leader> x") 'execute-extended-command)
 (evil-define-key 'normal 'global (kbd "g t") (lambda (x) (interactive "P") (if x (tab-bar-select-tab x) (tab-bar-switch-to-next-tab))))
@@ -301,7 +305,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Package commands
 ;; (evil-define-key 'normal 'global (kbd "<leader> o a") (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows)))
-(evil-define-key 'normal org-mode-map (kbd "<leader> o a") 'my-org-toggle-appearance)
+(evil-define-key 'normal org-mode-map (kbd "<leader> o A") 'my-org-toggle-appearance)
+(evil-define-key 'normal org-mode-map (kbd "<leader> o a") 'org-agenda)
 (evil-define-key 'normal 'global (kbd "<leader> o l") 'org-store-link)
 ;; "o a" 'org-agent
 (evil-define-key 'normal 'global (kbd "<leader> o c") 'org-capture)

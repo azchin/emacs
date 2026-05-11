@@ -91,6 +91,7 @@
   (setq dired-hide-details-hide-information-lines t)
   (setq dired-clean-confirm-killing-deleted-buffers nil)
   (setq dired-free-space nil)
+  (setq dired-recursive-copies 'always)
   (setopt dired-mouse-drag-files t)
   (setq ls-lisp-dirs-first t)
   (setq ls-lisp-use-insert-directory-program nil)
@@ -606,6 +607,9 @@
              sh-script simple tab-bar (term term ansi-term multi-term) typescript-mode
              vertico view vterm which-key xref))
   ; (evil-collection-init)
+
+  (evil-set-initial-state 'org-agenda-mode 'emacs)
+  
   (evil-define-motion my-evil-collection-unimpaired-next-error (count)
     "Go to next error."
     :jump t
