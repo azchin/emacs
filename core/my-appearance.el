@@ -115,9 +115,9 @@
 (setq frame-title-format '("%b :: %f"))
 
 (setopt initial-buffer-choice t)
-(setopt initial-major-mode 'org-mode)
+(setopt initial-major-mode 'text-mode)
 (setopt initial-scratch-message
-        (format "Welcome %s, to the AIxCC デスマーチ\n"
+        (format "Begun, the agent wars have. 🤖\n\n"
                 (capitalize (user-login-name))))
 (setopt inhibit-startup-screen t)
 ;; (fringe-mode 0)
