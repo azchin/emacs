@@ -157,8 +157,28 @@ a line containing the `setting' and `value'."
   (my-org-set-top-in-buffer-setting "author"
                                     (read-string "New author: " (my-org-get-in-buffer-setting "author"))))
 
+(defun my-org-done-keywords ()
+  "Return the list of \"done\" keywords from `org-todo-keywords'.
+Done keywords are those that appear after the \"|\" separator in
+each sequence.  Falls back to parsing `org-todo-keywords' when
+`org-done-keywords' is not set in the current buffer."
+  (or org-done-keywords
+      (let (done)
+        (dolist (seq org-todo-keywords)
+          (let ((kws (if (symbolp (car seq)) (cdr seq) seq))
+                (past nil))
+            (dolist (kw kws)
+              (let ((bare (replace-regexp-in-string "(.*)$" "" kw)))
+                (cond ((string= bare "|") (setq past t))
+                      (past (push bare done)))))))
+        (nreverse done))))
+
 (defun my-org-agenda-archive-tasks ()
-  "Refile children of \"Tasks\" to \"Archived\" in agenda.org.
+  "Refile children of \"Tasks\" in agenda.org.
+Tasks whose TODO state is a \"done\" keyword (anything past the
+\"|\" in `org-todo-keywords') are refiled under \"Archived\".
+Remaining tasks have their trailing timestamp stripped, are reset
+to TODO, and refiled under \"Planned\".
 If a region is active in agenda.org, only refile headings whose
 subtree overlaps the region."
   (interactive)
@@ -169,15 +189,19 @@ subtree overlaps the region."
          (rbeg (and region-active (region-beginning)))
          (rend (and region-active (region-end))))
     (with-current-buffer buf
-      (let ((archived-pos (org-find-exact-headline-in-buffer "Archived"))
-            (tasks-pos    (org-find-exact-headline-in-buffer "Tasks")))
-        (unless archived-pos (user-error "No \"Archived\" heading in %s" file))
-        (unless tasks-pos    (user-error "No \"Tasks\" heading in %s" file))
-        (let* ((rfloc (list "Archived" file nil archived-pos))
+      (let ((archived-mk (org-find-exact-headline-in-buffer "Archived"))
+            (planned-mk  (org-find-exact-headline-in-buffer "Planned"))
+            (tasks-pos   (org-find-exact-headline-in-buffer "Tasks" nil t)))
+        (unless archived-mk (user-error "No \"Archived\" heading in %s" file))
+        (unless planned-mk  (user-error "No \"Planned\" heading in %s" file))
+        (unless tasks-pos   (user-error "No \"Tasks\" heading in %s" file))
+        (set-marker-insertion-type archived-mk t)
+        (set-marker-insertion-type planned-mk t)
+        (let* ((done-kws (my-org-done-keywords))
                (tasks-level (save-excursion
                               (goto-char tasks-pos) (org-current-level)))
                (child-level (1+ tasks-level))
-               markers)
+               archive-markers plan-markers)
           (save-excursion
             (goto-char tasks-pos)
             (let ((end (save-excursion (org-end-of-subtree t t))))
@@ -185,17 +209,35 @@ subtree overlaps the region."
                 (beginning-of-line)
                 (when (= (org-current-level) child-level)
                   (let ((hbeg (point))
-                        (hend (save-excursion (org-end-of-subtree t t))))
+                        (hend (save-excursion (org-end-of-subtree t t)))
+                        (kw   (org-get-todo-state)))
                     (when (or (not region-active)
                               (and (< hbeg rend) (> hend rbeg)))
-                      (push (copy-marker hbeg) markers))))
+                      (if (and kw (member kw done-kws))
+                          (push (copy-marker hbeg) archive-markers)
+                        (push (copy-marker hbeg) plan-markers)))))
                 (end-of-line))))
-          (setq markers (nreverse markers))
-          (dolist (m markers)
+          ;; Archived: process in source order so appends preserve order.
+          (setq archive-markers (nreverse archive-markers))
+          (dolist (m archive-markers)
             (goto-char m)
-            (org-refile nil nil rfloc)
+            (org-refile nil nil (list "Archived" file nil archived-mk))
             (set-marker m nil))
-          (message "Archived %d task(s)" (length markers)))))))
+          ;; Planned: leave reversed; top-insert each so source order is restored.
+          (let ((org-reverse-note-order t))
+            (dolist (m plan-markers)
+              (goto-char m)
+              (let* ((title (org-get-heading t t t t))
+                     (clean (replace-regexp-in-string
+                             "[ \t]*<[^>]+>[ \t]*\\'" "" title)))
+                (org-edit-headline clean)
+                (org-todo "TODO")
+                (org-refile nil nil (list "Planned" file nil planned-mk)))
+              (set-marker m nil)))
+          (set-marker archived-mk nil)
+          (set-marker planned-mk nil)
+          (message "Archived %d, replanned %d"
+                   (length archive-markers) (length plan-markers)))))))
 
 (defun my-org-read-hour-block (&optional prompt)
   "Prompt for an HH:00 time of day and return <YYYY-MM-DD HH:00>."
@@ -279,9 +321,9 @@ append the timestamp to the title, and refile under \"Tasks\"."
 (transient-define-prefix my-org-agenda-dispatch ()
   "Dispatcher for agenda.org actions."
   ["Agenda"
-   ("a" "Archive tasks"        my-org-agenda-archive-tasks)
-   ("s" "Sort tasks by time"   my-org-agenda-sort-tasks)
-   ("p" "Schedule planned"     my-org-agenda-schedule-planned)])
+   ("r" "Archive tasks"         my-org-agenda-archive-tasks)
+   ("s" "Sort tasks by time"    my-org-agenda-sort-tasks)
+   ("t" "Schedule planned task" my-org-agenda-schedule-planned)])
 
 (defun my-bibtex-yank (bibliography)
   "Paste into specified bibliography, return key"
