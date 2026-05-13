@@ -74,7 +74,17 @@
  '(custom-safe-themes
    '("8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378" default))
  '(ede-project-directories '("/home/andrew/sandbox/ede"))
- '(package-selected-packages '(claude-code inheritenv))
+ '(package-selected-packages
+   '(auctex bison-mode cape claude-code cmake-mode corfu counsel docker-tramp
+            dockerfile-mode eat evil-collection evil-commentary evil-org
+            evil-quickscope evil-surround find-file-in-project go-mode
+            gptel-aibo grip-mode gruvbox-theme hl-todo impatient-mode ivy-hydra
+            js2-mode json-mode kdl-mode lua-mode markdown-mode nix-mode
+            nix-ts-mode openwith org-ai org-contrib org-noter org-roam-ui osm
+            ox-gfm poly-ansible protobuf-mode qrencode rainbow-identifiers rg
+            rust-mode solidity-mode treemacs-evil treemacs-magit
+            treemacs-tab-bar typescript-mode undo-fu undo-fu-session vimrc-mode
+            vterm yasnippet zotxt))
  '(package-vc-selected-packages
    '((claude-code :url "https://github.com/stevemolitor/claude-code.el")))
  '(tab-bar-select-tab-modifiers '(meta)))

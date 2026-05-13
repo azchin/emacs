@@ -305,6 +305,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Package commands
 ;; (evil-define-key 'normal 'global (kbd "<leader> o a") (lambda () (interactive) (create-new-frame-command 'org-agenda-list) (delete-other-windows)))
+(evil-define-key 'normal markdown-mode-map (kbd "<leader> g") 'grip-mode)
 (evil-define-key 'normal org-mode-map (kbd "<leader> o A") 'my-org-toggle-appearance)
 (evil-define-key 'normal 'global (kbd "<leader> o a") 'org-agenda)
 (evil-define-key 'normal 'global (kbd "<leader> o l") 'org-store-link)

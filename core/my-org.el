@@ -4,6 +4,11 @@
 
 (setq org-directory "~/drive/org/")
 (setq org-agenda-files `(,(concat org-directory "agenda.org")))
+
+(defun my-org-today-stamp ()
+  "Return today's date with day-of-week, e.g. \"2026-05-12 Tue\"."
+  (format-time-string "%Y-%m-%d %a"))
+
 (setq org-capture-templates
       `(("j" "Journal Entry"
          entry (file+olp+datetree ,(concat org-directory "journal.org")))
@@ -12,7 +17,7 @@
         ("t" "Task (hour block)"
          entry (file+headline ,(concat org-directory "agenda.org") "Tasks")
          ,(concat "* %(read-string \"Title: \") "
-                  "<%(format-time-string \"%Y-%m-%d\") "
+                  "<%(my-org-today-stamp) "
                   "%^{Start|00:00|01:00|02:00|03:00|04:00|05:00|06:00|07:00|08:00|09:00|10:00|11:00|12:00|13:00|14:00|15:00|16:00|17:00|18:00|19:00|20:00|21:00|22:00|23:00}>"))
         ("p" "Planned task"
          entry (file+headline ,(concat org-directory "agenda.org") "Planned")
@@ -243,7 +248,7 @@ subtree overlaps the region."
   "Prompt for an HH:00 time of day and return <YYYY-MM-DD HH:00>."
   (let* ((hours (mapcar (lambda (h) (format "%02d:00" h)) (number-sequence 0 23)))
          (hour (completing-read (or prompt "Start: ") hours nil nil)))
-    (format "<%s %s>" (format-time-string "%Y-%m-%d") hour)))
+    (format "<%s %s>" (format-time-string "%Y-%m-%d %a") hour)))
 
 (defun my-org-agenda-schedule-planned ()
   "Schedule task(s) from \"Planned\" into \"Tasks\" in agenda.org.

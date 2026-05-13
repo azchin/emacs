@@ -801,6 +801,15 @@
 ;; for eat terminal backend:
 (use-package eat :ensure t)
 
+(use-package grip-mode
+  :ensure t
+  :config
+  (setq grip-command 'auto)
+  (require 'auth-source)
+  (let ((credential (auth-source-user-and-password "api.github.com")))
+    (setq grip-github-user (car credential)
+          grip-github-password (cadr credential))))
+
 ;; for vterm terminal backend:
 (use-package vterm :ensure t
   :config

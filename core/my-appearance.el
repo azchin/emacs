@@ -117,7 +117,7 @@
 (setopt initial-buffer-choice t)
 (setopt initial-major-mode 'text-mode)
 (setopt initial-scratch-message
-        (format "Begun, the agent wars have. 🤖\n\n"
+        (format "Welcome, %s. Begun, the agent wars have. 🤖\n\n"
                 (capitalize (user-login-name))))
 (setopt inhibit-startup-screen t)
 ;; (fringe-mode 0)
