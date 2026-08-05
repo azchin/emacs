@@ -812,6 +812,7 @@
 
 ;; for vterm terminal backend:
 (use-package vterm :ensure t
+  :disabled
   :config
   (add-hook 'vterm-mode-hook
           (lambda ()

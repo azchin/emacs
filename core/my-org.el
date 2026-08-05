@@ -252,17 +252,29 @@ subtree overlaps the region."
 
 (defun my-org-agenda-schedule-planned ()
   "Schedule task(s) from \"Planned\" into \"Tasks\" in agenda.org.
-If a region is active in agenda.org, process every Planned heading
-whose subtree overlaps the region; otherwise prompt to pick one.
-For each, prompt for an hour-block timestamp, drop the TODO state,
-append the timestamp to the title, and refile under \"Tasks\"."
+If point is on a level-2 heading under \"Planned\" in agenda.org,
+schedule that heading.  Else if a region is active in agenda.org,
+process every Planned heading whose subtree overlaps the region;
+otherwise prompt to pick one.  For each, prompt for an hour-block
+timestamp, drop the TODO state, append the timestamp to the title,
+and refile under \"Tasks\"."
   (interactive)
   (let* ((file (expand-file-name "agenda.org" org-directory))
          (buf (or (find-buffer-visiting file)
                   (find-file-noselect file)))
-         (region-active (and (use-region-p) (eq (current-buffer) buf)))
+         (in-buf (eq (current-buffer) buf))
+         (region-active (and in-buf (use-region-p)))
          (rbeg (and region-active (region-beginning)))
-         (rend (and region-active (region-end))))
+         (rend (and region-active (region-end)))
+         (on-planned-heading
+          (and in-buf (not region-active)
+               (org-at-heading-p)
+               (= (org-current-level) 2)
+               (save-excursion
+                 (org-up-heading-safe)
+                 (string= (org-get-heading t t t t) "Planned"))))
+         (point-marker (and on-planned-heading
+                            (copy-marker (line-beginning-position)))))
     (with-current-buffer buf
       (let ((planned-pos (org-find-exact-headline-in-buffer "Planned"))
             (tasks-pos   (org-find-exact-headline-in-buffer "Tasks")))
@@ -273,31 +285,35 @@ append the timestamp to the title, and refile under \"Tasks\"."
                                 (goto-char planned-pos) (org-current-level)))
                (child-level (1+ planned-level))
                markers)
-          (save-excursion
-            (goto-char planned-pos)
-            (let ((end (save-excursion (org-end-of-subtree t t))))
-              (while (re-search-forward org-heading-regexp end t)
-                (beginning-of-line)
-                (when (= (org-current-level) child-level)
-                  (let ((hbeg (point))
-                        (hend (save-excursion (org-end-of-subtree t t))))
-                    (when (or (not region-active)
-                              (and (< hbeg rend) (> hend rbeg)))
-                      (push (copy-marker hbeg) markers))))
-                (end-of-line))))
-          (setq markers (nreverse markers))
-          (when (null markers)
-            (user-error "No matching tasks under \"Planned\""))
-          (unless region-active
-            (let* ((alist (mapcar
-                           (lambda (m)
-                             (cons (save-excursion
-                                     (goto-char m)
-                                     (org-get-heading t t t t))
-                                   m))
-                           markers))
-                   (choice (completing-read "Planned task: " alist nil t)))
-              (setq markers (list (cdr (assoc choice alist))))))
+          (cond
+           (on-planned-heading
+            (setq markers (list point-marker)))
+           (t
+            (save-excursion
+              (goto-char planned-pos)
+              (let ((end (save-excursion (org-end-of-subtree t t))))
+                (while (re-search-forward org-heading-regexp end t)
+                  (beginning-of-line)
+                  (when (= (org-current-level) child-level)
+                    (let ((hbeg (point))
+                          (hend (save-excursion (org-end-of-subtree t t))))
+                      (when (or (not region-active)
+                                (and (< hbeg rend) (> hend rbeg)))
+                        (push (copy-marker hbeg) markers))))
+                  (end-of-line))))
+            (setq markers (nreverse markers))
+            (when (null markers)
+              (user-error "No matching tasks under \"Planned\""))
+            (unless region-active
+              (let* ((alist (mapcar
+                             (lambda (m)
+                               (cons (save-excursion
+                                       (goto-char m)
+                                       (org-get-heading t t t t))
+                                     m))
+                             markers))
+                     (choice (completing-read "Planned task: " alist nil t)))
+                (setq markers (list (cdr (assoc choice alist))))))))
           (dolist (m markers)
             (goto-char m)
             (let* ((title (org-get-heading t t t t))
