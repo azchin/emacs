@@ -810,31 +810,6 @@
     (setq grip-github-user (car credential)
           grip-github-password (cadr credential))))
 
-;; for vterm terminal backend:
-(use-package vterm :ensure t
-  :disabled
-  :config
-  (add-hook 'vterm-mode-hook
-          (lambda ()
-            (setq-local global-hl-line-mode nil)  ;; hl-line kills perf
-            (setq-local truncate-lines t)         ;; avoid costly line wrapping
-            (setq-local bidi-paragraph-direction 'left-to-right)
-            (setq-local bidi-inhibit-bpa t)
-            ))
-  (setq vterm-timer-delay 0.03))
-
-;; install claude-code.el
-(use-package claude-code :ensure t
-  :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
-  :config
-
-  (claude-code-mode)
-  :bind-keymap ("C-c c" . claude-code-command-map)
-
-  ;; Optionally define a repeat map so that "M" will cycle thru Claude auto-accept/plan/confirm modes after invoking claude-code-cycle-mode / C-c M.
-  :bind
-  (:repeat-map my-claude-code-map ("M" . claude-code-cycle-mode)))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package org-contrib
   :ensure t
