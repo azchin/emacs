@@ -13,14 +13,16 @@
    ["#ebdbb2" "#cc241d" "#98971a" "#d79921" "#458588" "#b16286" "#689d6a" "#3c3836"])
  '(company-show-quick-access t nil nil "Customized with use-package company")
  '(connection-local-criteria-alist
-   '(((:application rg :machine "ramjet") rg-vars-ramjet)
+   '(((:application vc-git) vc-git-connection-default-profile)
+     ((:application rg :machine "ramjet") rg-vars-ramjet)
      ((:application rg :machine "ratbat") rg-vars-ratbat)
      ((:application rg :machine "nixthree") rg-vars-nixthree)
      ((:application eshell) eshell-connection-default-profile)
      ((:application tramp) tramp-connection-local-default-system-profile
       tramp-connection-local-default-shell-profile)))
  '(connection-local-profile-alist
-   '((rg-vars-ramjet (rg-executable . "/usr/bin/rg"))
+   '((vc-git-connection-default-profile (vc-git--program-version))
+     (rg-vars-ramjet (rg-executable . "/usr/bin/rg"))
      (rg-vars-ratbat (rg-executable . "/home/andrew/.cargo/bin/rg"))
      (rg-vars-nixthree (rg-executable . "/etc/profiles/per-user/andrew/bin/rg"))
      (eshell-connection-default-profile (eshell-path-env-list))
